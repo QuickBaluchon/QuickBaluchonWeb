@@ -7,3 +7,20 @@
 .btn-round{
   border-radius: 15px !important;
 }
+
+.wrapper {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+}
+
+.form-round input{
+  background-color: #efefef;
+  border-radius: 15px;
+  border: none;
+}
+
+.visual {
+  display: none;
+  width: inherit;
+}

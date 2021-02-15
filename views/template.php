@@ -30,9 +30,12 @@
   <body>
 
     <!-- HEADER -->
-    <header>
-      <?php if(!empty($this->_header))require($this->_header); ?>
-    </header>
+      <?php if(!empty($this->_header)) {
+        echo '<header>';
+        require($this->_header);
+        echo '</header>';
+      }
+      ?>
 
     <!-- MAIN -->
     <main>

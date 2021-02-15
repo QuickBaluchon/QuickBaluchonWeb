@@ -14,7 +14,7 @@ class ControllerHome {
     }
     else{
       $this->_view = new View('Home');
-      $this->_view->generate([]);
+      $this->_view->generateView([]);
     }
   }
 

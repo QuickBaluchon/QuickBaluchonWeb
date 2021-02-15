@@ -15,8 +15,8 @@ abstract class Api {
       $url = getenv('JAWSDB_URL');
       $dbparts = parse_url($url);
       $host = $dbparts['host'];
-      $dbn = 'hedwige';
-      $port = 3306;
+      $dbn = ltrim($dbparts['path'],'/');
+      $port = $dbparts['port'];
       $usr = $dbparts['user'];
       $pwd = $dbparts['pass'];
     } else {
@@ -26,9 +26,13 @@ abstract class Api {
       $usr = 'root';
       $pwd = 'root';
     }
+    try {
+      self::$_Db = $pdo = new PDO("mysql:host=$host;dbname=$dbn;port=$port", $usr, $pwd);
+      self::$_Db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch(PDOException $e) {
+      echo "Connection failed: " . $e->getMessage();
+    }
 
-    self::$_Db = $pdo = new PDO("mysql:host=$host;dbname=$dbn;port=$port", $usr, $pwd);
-    self::$_Db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
   }
 
   protected function getDb(): PDO {

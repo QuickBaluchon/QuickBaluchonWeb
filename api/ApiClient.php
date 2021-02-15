@@ -65,7 +65,9 @@ class ApiClient extends Api {
     self::$_params[] = $id;
     $client = $this->get('CLIENT');
     if( count($client) == 1 )
-      return $client;
+      return $client[0];
+    else
+      return [];
   }
 
   public function login() {

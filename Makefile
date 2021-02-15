@@ -1,4 +1,4 @@
-CFLAGS = -I../libraries/libxl/include_c -L../libraries/libxl/lib -lxl -l mysqlclient
+CFLAGS = -Ilibraries/libxl/include_c -Llibraries/libxl/lib -lxl -l mysqlclient
 
 program: libxl.dylib
 	gcc main.c -o main $(CFLAGS)

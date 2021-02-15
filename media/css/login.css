@@ -1,0 +1,16 @@
+
+img{
+  display: none;
+  width: inherit;
+}
+
+#heroBanner-login input{
+  background-color: #efefef;
+  border-radius: 15px;
+  border: none;
+}
+
+#signup-links .btn{padding: 0px;}
+#signup-links .input-group-text{
+  width: 250px;
+}

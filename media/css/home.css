@@ -1,0 +1,13 @@
+
+/* HERO BANNER */
+#heroBanner-home{ margin-top: 100px; margin-bottom: 100px; }
+
+#heroBanner-img-delivery{
+  width: 580px;
+  display: none;
+}
+
+/* FOLLOW PACKAGE */
+#followPackage-img-package{display: none; width: 300px;}
+#followPackage-home h1{color: #F2CC8F}
+#followPackage-home .btn{padding: 0px;}

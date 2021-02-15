@@ -1,0 +1,9 @@
+.dark-gradient-section{
+  background: linear-gradient(261.61deg, #3D405B 0%, #292A35 100%);
+  padding-top: 100px;
+  padding-bottom: 150px;
+}
+
+.btn-round{
+  border-radius: 15px !important;
+}

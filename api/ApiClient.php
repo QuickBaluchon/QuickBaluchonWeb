@@ -144,8 +144,5 @@ class ApiClient extends Api {
       var_dump($_FILES);
       echo "url[0]: $url[0] | url[1]: $url[1] ";
     }
-
   }
-
 }
-

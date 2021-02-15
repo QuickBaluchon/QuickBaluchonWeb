@@ -13,7 +13,7 @@ char *dbname = "xaozppxjop6wx0s1" ;
 
 
 typedef struct Data {
-  double weight;
+  double weight ;
   double length;
   double height;
   double width ;

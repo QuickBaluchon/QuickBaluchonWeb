@@ -6,6 +6,8 @@ define('API_ROOT', WEB_ROOT . 'api/');
 
 echo WEB_ROOT;
 
+var_dump( parse_url(getenv('JAWSDB_URL')) );die();
+
 // print errors
 error_reporting(E_ALL);
 ini_set("display_errors", 1);

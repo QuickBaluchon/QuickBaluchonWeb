@@ -11,11 +11,22 @@ abstract class Api {
   private static $_jwtKey = 'key';
 
   private function setDb() {
-    $host = 'localhost';
-    $dbn = 'hedwige';
-    $port = 8889;
-    $usr = 'root';
-    $pwd = 'root';
+    if( strpos(WEB_ROOT, 'heroku') !== false ){ // HEROKY VAR ENV
+      $url = getenv('JAWSDB_URL');
+      $dbparts = parse_url($url);
+      $host = $dbparts['host'];
+      $dbn = 'hedwige';
+      $port = 3306;
+      $usr = $dbparts['user'];
+      $pwd = $dbparts['pass'];
+    } else {
+      $host = 'localhost';
+      $dbn = 'hedwige';
+      $port = 8889;
+      $usr = 'root';
+      $pwd = 'root';
+    }
+
     self::$_Db = $pdo = new PDO("mysql:host=$host;dbname=$dbn;port=$port", $usr, $pwd);
     self::$_Db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
   }

@@ -31,14 +31,20 @@ class ApiClient extends Api {
   }
 
   public function getListClients (): array  {
+    $columns = ['id', 'name', 'website', 'paymentMethod'];
     $clients = [];
     if($this->_method != 'GET') $this->catError(405);
 
     //$this->authentication(['admin']);
 
-    self::$_columns = ['id', 'name', 'website', 'paymentMethod'];
     self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
     self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
+
+    if( isset($_GET['fields']) ) {
+      $fields = explode(',', $_GET['fields']);
+      self::$_columns = array_intersect($columns, $fields);
+    } else
+      self::$_columns = $columns;
 
     if(isset($_GET['name'])) {
       self::$_where[] = 'name LIKE ?';
@@ -49,7 +55,7 @@ class ApiClient extends Api {
 
     if( $list != null ){
       foreach ($list as $client) {
-        $client['url'] = API_ROOT . 'client/' . $client['id'];
+        //$client['url'] = API_ROOT . 'client/' . $client['id'];
         $clients[] = $client;
       }
     }

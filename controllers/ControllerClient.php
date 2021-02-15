@@ -9,11 +9,12 @@ Class ControllerClient {
 
   public function __construct($url) {
     $_SESSION['id'] = 1;
-    $this->_id = $_SESSION['id'];
     if( !isset($_SESSION['id']) ){
       header('location:'.WEB_ROOT);
       exit();
     }
+    $this->_id = $_SESSION['id'];
+
     if( !isset($url[1]) )
       header('location:'.WEB_ROOT.'client/profile');
 
@@ -35,17 +36,12 @@ Class ControllerClient {
   private function profile($id) {
     $this->_view = new View('Back');
 
-    $ch = curl_init();
+    //  APPELLER LE MODÈLE CLIENT QUI POSSÈDE LES DONNÉES
 
-    curl_setopt($ch, CURLOPT_URL, API_ROOT.'client/'. $this->_id);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    $client = json_decode(curl_exec($ch), true);
-    curl_close($ch);
 
-    //$client = ['name' => 'Theo', 'website' => 'theo.fr'];
+
+
     $profile = $this->_view->generateTemplate('client_profile', $client);
-
     $this->_view->generateView(['content' => $profile, 'name' => $client['website']  ]);
   }
 

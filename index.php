@@ -1,10 +1,8 @@
 <?php
-
-define('WEB_ROOT', str_replace('index.php', '', !empty($_SERVER['HTTPS']) ? "https": "http" . "://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]"));
+$protocol = strpos($_SERVER['HTTP_HOST'], 'heroku') === false ? 'http' : 'https';
+define('WEB_ROOT', str_replace('index.php', '', $protocol . "://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]"));
 define('ROOT', str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']));
 define('API_ROOT', WEB_ROOT . 'api/');
-
-var_dump($_SERVER);die();
 
 // print errors
 error_reporting(E_ALL);

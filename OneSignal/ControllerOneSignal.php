@@ -1,21 +1,15 @@
 <?PHP
-
-class ControllerOneSignal
-{
-    function __construct($url) {
-        if (!isset($url[1])) {
-          header('location:' . WEB_ROOT . 'admin/clients');
-          exit();
-    }
-
     if(isset($_POST["send"]) && isset($_POST["app_id"])){
-        $this->_view = new View('Back');
         $response = sendMessage();
         $return["allresponses"] = $response;
         $return = json_encode( $return);
+
+        print("\n\nJSON received:\n");
+        print($return);
+        print("\n");
     }
 
-    private function sendMessage($value=''){
+    function sendMessage(){
         $content = array(
             "en" => 'Hello World'
             );
@@ -45,6 +39,3 @@ class ControllerOneSignal
 
         return $response;
     }
-
-
-}

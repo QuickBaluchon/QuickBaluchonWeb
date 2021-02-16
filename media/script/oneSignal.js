@@ -1,13 +1,13 @@
 let userid = document.getElementById('user')
 
 OneSignal.push(function() {
-isEnabled = 1;
+
   /* These examples are all valid */
   var isPushSupported = OneSignal.isPushNotificationsSupported();
 
   if (isPushSupported) {
     console.log("supported");
- OneSignal.isPushNotificationsEnabled(function(isEnabled) {
+        OneSignal.isPushNotificationsEnabled(function(isEnabled) {
         if (isEnabled){
 
           console.log("Push notifications are enabled!");
@@ -23,7 +23,7 @@ isEnabled = 1;
               OneSignal.showSlidedownPrompt();
 
         }
-    )};
+    });
 
 
   } else {

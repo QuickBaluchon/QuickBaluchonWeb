@@ -6,7 +6,10 @@ class ControllerAdmin
 {
 
   private $_clientManager;
+  private $_WharehousesManager;
+  private $_DeliveryManager;
   private $_view;
+  private $_notif;
 
   public function __construct($url)
   {
@@ -15,7 +18,7 @@ class ControllerAdmin
       exit();
     }
 
-    $actions = ['clients', 'pricelist', 'deliverymen', 'languages', 'wharehouses', 'oneSignal'];
+    $actions = ['clients', 'pricelist', 'deliveryman', 'languages', 'wharehouses', 'oneSignal'];
     if (in_array($url[1], $actions)) {
       $method = $url[1];
       $this->$method(array_slice($url, 2));
@@ -40,6 +43,7 @@ class ControllerAdmin
       for($i = 0; $i < 3; $i++){
         $buttons[] = '<a href="'. WEB_ROOT . 'admin/clients/' . $client['id'] .'"><button type="button" class="btn btn-primary btn-sm">' . $buttonsValues[$i] . '</button></a>';
       }
+
       $rows[] = array_merge($client, $buttons);
       $buttons = [];
     }
@@ -49,13 +53,34 @@ class ControllerAdmin
     $this->_view->generateView(['content' => $clients, 'name' => 'QuickBaluchon']);
   }
 
-  private function oneSignal($url)
-  {
+  private function oneSignal($url) {
     $this->_view = new View('OneSignal');
     $this->_view->generateView([]);
-    $this->_clientManager = new ClientManager;
-    $list = $this->_clientManager->getClients(['id', 'name']);
-
-
   }
+
+
+  private function deliveryman($url) {
+    $this->_view = new View('Back');
+
+    $this->_DeliveryManager = new DeliveryManager;
+    $list = $this->_DeliveryManager->getDeliverys([]);
+
+
+    $cols = ['#', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN','employed', 'wharehouse'];
+    $deliveryman = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
+    $this->_view->generateView(['content' => $deliveryman, 'name' => 'QuickBaluchon']);
+  }
+
+  private function wharehouses($url) {
+    $this->_view = new View('Back');
+
+    $this->_WharehousesManager = new WharehouseManager;
+    $list = $this->_WharehousesManager->getWharehouses([]);
+
+
+    $cols = ['#', 'address', 'volume', 'AvailableVolume','active'];
+    $wharehouse = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
+    $this->_view->generateView(['content' => $wharehouse, 'name' => 'QuickBaluchon']);
+  }
+
 }

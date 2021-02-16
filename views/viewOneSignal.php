@@ -1,4 +1,4 @@
-    <form action="notification.php" method="post">
+    <form action="../OneSignal/ControllerOneSignal.php" method="post">
             <input type="hidden" name="app_id" value="aae49060-185a-416a-ac6a-2564915dd8c6">
             <input type="hidden" id="user" name="send">
             <input type="submit" value="send">

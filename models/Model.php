@@ -10,23 +10,36 @@ abstract class Model {
 
   protected function getCollection($collection, $cond) {
 
-    $url = API_ROOT . $collection;
-    $params = [];
-    foreach ($cond as $k => $v)
-      $params[] = $k . '=' . $v;
-    $params = join('&', $params);
-    $url = strlen($params) === 0 ? $url : $url . '&' . $params;
+     $url = API_ROOT . $collection;
+     $params = $this->strCond($cond);
+     $url = $params === '' ? $url : $url . '&' . $params;
 
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_HEADER, 0);
-    $list = json_decode(curl_exec($curl), true);
-    curl_close($curl);
-    return $list;
-  }
+     return $this->curl($url);
+   }
 
-  protected function getRessource($collection, $id, $cond) {
+   protected function getRessource($collection, $id, $cond) {
+     return $this->getCollection($collection. '/' . $id, $cond);
+   }
 
-  }
-}
+   private function curl($url) {
+
+     $curl = curl_init();
+     curl_setopt($curl, CURLOPT_URL, $url);
+     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+     curl_setopt($curl, CURLOPT_HEADER, 0);
+     $list = json_decode(curl_exec($curl), true);
+     curl_close($curl);
+     return $list;
+
+   }
+
+
+   private function strCond($cond) {
+     $params = [];
+     foreach ($cond as $k => $v)
+       $params[] = $k . '=' . $v;
+     return join('&', $params);
+   }
+
+
+ }

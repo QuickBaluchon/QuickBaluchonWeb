@@ -1,0 +1,10 @@
+#heroBanner-signup img{
+  display: none;
+  width: inherit;
+}
+
+#heroBanner-signup input{
+  background-color: #efefef;
+  border-radius: 15px;
+  border: none;
+}

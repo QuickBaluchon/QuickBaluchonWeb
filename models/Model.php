@@ -11,11 +11,17 @@ abstract class Model {
   protected function getCollection($collection, $cond) {
 
     $url = API_ROOT . $collection;
-    $params = [];
-    foreach ($cond as $k => $v)
-      $params[] = $k . '=' . $v;
-    $params = join('&', $params);
-    $url = strlen($params) === 0 ? $url : $url . '&' . $params;
+    $params = $this->strCond($cond);
+    $url = $params === '' ? $url : $url . '&' . $params;
+
+    return $this->curl($url);
+  }
+
+  protected function getRessource($collection, $id, $cond) {
+    return $this->getCollection($collection. '/' . $id, $cond);
+  }
+
+  private function curl($url) {
 
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $url);
@@ -24,9 +30,16 @@ abstract class Model {
     $list = json_decode(curl_exec($curl), true);
     curl_close($curl);
     return $list;
-  }
-
-  protected function getRessource($collection, $id, $cond) {
 
   }
+
+
+  private function strCond($cond) {
+    $params = [];
+    foreach ($cond as $k => $v)
+      $params[] = $k . '=' . $v;
+    return join('&', $params);
+  }
+
+
 }

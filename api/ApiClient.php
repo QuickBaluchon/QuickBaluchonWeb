@@ -31,7 +31,6 @@ class ApiClient extends Api {
   }
 
   public function getListClients (): array  {
-    $columns = ['id', 'name', 'website', 'paymentMethod'];
     $clients = [];
     if($this->_method != 'GET') $this->catError(405);
 
@@ -40,18 +39,13 @@ class ApiClient extends Api {
     self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
     self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-    if( isset($_GET['fields']) ) {
-      $fields = explode(',', $_GET['fields']);
-      self::$_columns = array_intersect($columns, $fields);
-    } else
-      self::$_columns = $columns;
-
     if(isset($_GET['name'])) {
       self::$_where[] = 'name LIKE ?';
       self::$_params[] = "%". $_GET['name']."%";
     }
 
-    $list = $this->get('CLIENT');
+    $columns = ['id', 'name', 'website', 'paymentMethod'];
+    $list = $this->get('CLIENT', $columns);
 
     if( $list != null ){
       foreach ($list as $client) {
@@ -66,10 +60,11 @@ class ApiClient extends Api {
 
     if($this->_method != 'GET') $this->catError(405);
     //$this->authentication(['admin'], [$id]);
-    self::$_columns = ['id', 'name', 'website', 'paymentMethod'];
+
+    $columns = ['id', 'name', 'website', 'paymentMethod'];
     self::$_where[] = 'id = ?';
     self::$_params[] = $id;
-    $client = $this->get('CLIENT');
+    $client = $this->get('CLIENT', $columns);
     if( count($client) == 1 )
       return $client[0];
     else

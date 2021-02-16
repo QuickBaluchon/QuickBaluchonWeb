@@ -38,7 +38,7 @@ class Router {
     catch( Exception $e) {
       $msg = $e->getMessage();
       $this->_view = new View('Error');
-      $this->_view->generate(['msg' => $msg]);
+      $this->_view->generateView(['msg' => $msg]);
     }
   }
 }

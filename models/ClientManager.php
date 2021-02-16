@@ -2,7 +2,8 @@
 
 class ClientManager extends Model{
 
-  public function getClients() {
-    return $this->getAll('CLIENT', 'Client');
+  public function getClients($fields) {
+    return $this->getCollection('client', ["fields" => join(',',$fields)]);
+
   }
 }

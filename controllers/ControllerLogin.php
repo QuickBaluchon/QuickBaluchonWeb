@@ -10,7 +10,7 @@ class ControllerLogin {
     }
     else{
       $this->_view = new View('Login');
-      $this->_view->generate([]);
+      $this->_view->generateView([]);
     }
   }
 

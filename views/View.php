@@ -10,7 +10,7 @@ class View {
     $this->_file = 'views/view'. $action . '.php';
   }
 
-  public function generate($data) {
+  public function generateView($data) {
     $content = $this->generateFile($this->_file, $data);
     $view = $this->generateFile('views/template.php',
       [ 'header' => $this->_header,
@@ -18,6 +18,10 @@ class View {
       ]);
 
     echo $view;
+  }
+
+  public function generateTemplate($file, $data) {
+    return $this->generateFile('templates/'.$file.'.php', $data);
   }
 
   private function generateFile( $file, $data ) {

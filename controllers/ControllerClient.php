@@ -19,15 +19,11 @@ Class ControllerClient {
     if( !isset($url[1]) )
       header('location:'.WEB_ROOT.'client/profile');
 
-    switch ($url[1]) {
-      case 'profile': $this->profile();
-        break;
-
-      case 'bills': $this->bills();
-        break;
-
-      default :
-        echo 'default';
+    if ( method_exists( $this ,$url[1]) ) {
+      $method = $url[1];
+      $this->$method(array_slice($url, 2));
+    } else {
+      http_response_code(404);
     }
     //$this->signout();
   }
@@ -35,6 +31,11 @@ Class ControllerClient {
   private function signout() {
     unset($_SESSION['id']);
     header('location:'.WEB_ROOT);
+  }
+
+  private function signup () {
+    $this->_view = new View('SignupClient');
+    $this->_view->generateView([]);
   }
 
   private function profile() {

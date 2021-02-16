@@ -19,7 +19,7 @@ class ControllerAdmin
     }
 
     $actions = ['clients', 'pricelist', 'deliveryman', 'languages', 'wharehouses', 'oneSignal'];
-    if (in_array($url[1], $actions)) {
+    if ( method_exists( $this ,$url[1]) ) {
       $method = $url[1];
       $this->$method(array_slice($url, 2));
 

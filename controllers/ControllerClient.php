@@ -5,8 +5,9 @@ Class ControllerClient {
 
   private $_clientManager;
   private $_billManager;
+  private $_packageManager;
   private $_view;
-  private $_id;
+  private $_id = 1;
 
   public function __construct($url) {
     $_SESSION['id'] = 1;
@@ -61,6 +62,21 @@ Class ControllerClient {
     $rows = [['janv 2021', '1', '30 €', 'O', 'Payé']];
     $bills = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $billsList]);
     $this->_view->generateView(['content' => $bills, 'name' => $client['website'] ]);
+  }
+
+  private function history() {
+    $this->_view = new View('Back');
+
+    $this->_packageManager = new HistoryManager();
+    $this->_clientManager = new ClientManager();
+
+    $package = $this->_packageManager->getPackages($this->_id, []);
+    $client = $this->_clientManager->getClient($this->_id, ['website']);
+
+    $cols = ['id', 'client', 'ordernb', 'weight', 'volume', 'address',	'email', 'delay', 'dateDelivery', 'status', 'excelPath', 'dateDeposit'];
+
+    $package = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $package]);
+    $this->_view->generateView(['content' => $package, 'name' => $client['website']  ]);
   }
 
 }

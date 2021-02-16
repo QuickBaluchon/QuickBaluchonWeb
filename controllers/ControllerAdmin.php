@@ -7,7 +7,7 @@ class ControllerAdmin
 
   private $_clientManager;
   private $_WharehousesManager;
-  private $_DeliveryManager;
+  private $_deliveryManager;
   private $_view;
   private $_notif;
 

@@ -6,13 +6,17 @@ class ControllerDeliveryman
 {
 
     private $_PayslipManager;
-
+    private $_id;
 
     public function __construct($url)
     {
+    $_SESSION["id"] = 4;
+    $this->_id = $_SESSION["id"];
     if (!isset($url[1])) {
       header('location:' . WEB_ROOT . 'deliveryman/payslip');
       exit();
+
+
     }
 
     $actions = ['payslip'];
@@ -29,10 +33,10 @@ class ControllerDeliveryman
     {
       $this->_view = new View('Back');
       $this->_PayslipManager = new PayslipManager;
-      $list = $this->_PayslipManager->getPayslip([]);
+      $list = $this->_PayslipManager->getPayslip($this->_id, []);
 
 
-      $cols = ["id", "grossAmount", "bonus", "netAmount", "datePay", "pdfPath",	"paid",	"deliveryman"];
+      $cols = ["id", "grossAmount", "bonus", "netAmount", "datePay", "pdfPath",	"paid"];
       $paySlip = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
       $this->_view->generateView(['content' => $paySlip, 'name' => 'QuickBaluchon']);
     }

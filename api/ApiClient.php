@@ -14,8 +14,13 @@ class ApiClient extends Api {
     if (count($url) == 0)
       $this->_data = $this->getListClients();     // list of clients - /api/client
 
-    elseif ( ($id = intval($url[0])) !== 0 )      // details one client - /api/client/{id}
-      $this->_data = $this->getClient($id);
+    elseif ( ($id = intval($url[0])) !== 0 ) { // details one client - /api/client/{id}
+      switch ($method) {
+        case 'GET' : $this->_data = $this->getClient($id); break;
+        case 'PATCH' : $this->updateClient($id); break;
+      }
+
+    }
 
     elseif ( strtolower($url[0]) === 'login'  )
       $this->login();
@@ -104,7 +109,7 @@ class ApiClient extends Api {
   public function signup() {
     $data = $this->getPostArray();
     if( isset($data['name'], $data['website'], $data['paymentMethod'],$data['password']) ){
-
+      // check if a user
       self::$_columns = ['id'];
       self::$_where = ['name = ?'];
       self::$_params = [$data['name']];
@@ -115,7 +120,7 @@ class ApiClient extends Api {
         self::$_params = [$name, $website, $paymentMethod, hash('sha256', $password)];
         $this->add('CLIENT');
       } else {
-        // Name already exists
+        // check if a user already has this name
         echo 'Name already exists';
       }
     }else {
@@ -149,5 +154,23 @@ class ApiClient extends Api {
       var_dump($_FILES);
       echo "url[0]: $url[0] | url[1]: $url[1] ";
     }
+  }
+
+  private function updateClient($id) {
+    $data = $client = $this->getPostArray();
+    $allowed = ['name', 'website', 'password'];
+    if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
+      http_response_code(400);
+      exit(0);
+    }
+
+    if( isset($data['password']) ) $data['password'] = hash('sha256', $data['password'] );
+    foreach ($data as $key => $value) {
+      self::$_set[] = "$key = ?";
+      self::$_params[] = $value;
+    }
+
+    $this->patch('CLIENT', $id);
+
   }
 }

@@ -22,19 +22,26 @@ class ApiPackage extends Api {
   }
 
   public function getListPackages (): array  {
-    $packages = [];
     if($this->_method != 'GET') $this->catError(405);
 
     //$this->authentication(['admin']);
 
-    self::$_columns = ['id', 'weight', 'volume', 'address',	'email', 'delay', 'dateDelivery', 'status', 'excelPath', 'dateDeposit'];
-    self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
-    self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
+    if(isset($_GET['client'])) {
+      self::$_where[] = 'client = ?';
+      self::$_params[] = intval($_GET['client']);
+    }
 
-    $list = $this->get('PACKAGE');
+    if(isset($_GET['ordernb'])) {
+      self::$_where[] = 'ordernb = ?';
+      self::$_params[] = intval($_GET['ordernb']);
+    }
+
+    $columns = ['id', 'client', 'ordernb', 'weight', 'volume', 'address',	'email', 'delay', 'dateDelivery', 'status', 'excelPath', 'dateDeposit'];
+    $list = $this->get('PACKAGE', $columns);
+    $packages = [];
     if( $list != null ){
       foreach ($list as $package) {
-        $package['url'] = API_ROOT . 'package/' . $package['id'];
+        //$package['url'] = API_ROOT . 'package/' . $package['id'];
         $packages[] = $package;
       }
     }
@@ -42,7 +49,6 @@ class ApiPackage extends Api {
   }
 
   public function getPackage($id): array {
-
     if($this->_method != 'GET') $this->catError(405);
     //$this->authentication(['admin'], [$id]);
     self::$_columns = ['id', 'weight', 'volume', 'address',	'email', 'delay', 'dateDelivery', 'status', 'excelPath', 'dateDeposit'];

@@ -41,8 +41,25 @@ abstract class Api {
     return self::$_Db;
   }
 
+  private function getColumns($columns) {
+    if( $columns === null ) return [];
+    if( isset($_GET['fields']) && !empty($_GET['fields']) ) {
+      $fields = explode(',', $_GET['fields']);
+      self::$_columns = array_intersect($columns, $fields);
+      if( count(self::$_columns) === 0 ){
+        http_response_code(400);
+        return [];
+      }
+    } else
+      self::$_columns = $columns;
+  }
+
   // SELECT
-  protected function get($table) {
+  protected function get($table, $columns=null): array {
+
+    // COLUMNS
+    $this->getColumns($columns);
+
     $sql = "SELECT " . join(', ', self::$_columns) . " FROM $table" ;
 
     // WHERE
@@ -52,6 +69,8 @@ abstract class Api {
     }
 
     // LIMIT
+    self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+    self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
     self::$_limit = self::$_limit > 50 ? 50 : self::$_limit;
     $sql .= " LIMIT " . self::$_offset .', '. self::$_limit;
 

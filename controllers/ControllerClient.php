@@ -19,7 +19,10 @@ Class ControllerClient {
       header('location:'.WEB_ROOT.'client/profile');
 
     switch ($url[1]) {
-      case 'profile': $this->profile($this->_id);
+      case 'profile': $this->profile();
+        break;
+
+      case 'bills': $this->bills();
         break;
 
       default :
@@ -33,16 +36,26 @@ Class ControllerClient {
     header('location:'.WEB_ROOT);
   }
 
-  private function profile($id) {
+  private function profile() {
     $this->_view = new View('Back');
 
-    //  APPELLER LE MODÈLE CLIENT QUI POSSÈDE LES DONNÉES
-
-
-
+    $this->_clientManager = new ClientManager();
+    $client = $this->_clientManager->getClient($this->_id, ['name', 'website']);
 
     $profile = $this->_view->generateTemplate('client_profile', $client);
     $this->_view->generateView(['content' => $profile, 'name' => $client['website']  ]);
+  }
+
+  private function bills() {
+    $this->_view = new View('Back');
+
+    $this->_clientManager = new ClientManager();
+    $client = $this->_clientManager->getClient($this->_id, ['name', 'website']);
+
+    $cols = ['Mois', 'Colis', 'Prix', 'Télécharger', 'Statut'];
+    $rows = [['janv 2021', '1', '30 €', 'O', 'Payé']];
+    $bills = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
+    $this->_view->generateView(['content' => $bills, 'name' => $client['website'] ]);
   }
 
 }

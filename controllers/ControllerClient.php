@@ -36,10 +36,8 @@ Class ControllerClient {
   private function profile($id) {
     $this->_view = new View('Back');
 
-    //  APPELLER LE MODÈLE CLIENT QUI POSSÈDE LES DONNÉES
-
-
-
+    $this->_clientManager = new ClientManager();
+    $client = $this->_clientManager->getClient($id, ['name', 'website']);
 
     $profile = $this->_view->generateTemplate('client_profile', $client);
     $this->_view->generateView(['content' => $profile, 'name' => $client['website']  ]);

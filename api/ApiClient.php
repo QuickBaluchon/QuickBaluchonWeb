@@ -104,14 +104,16 @@ class ApiClient extends Api {
   public function signup() {
     $data = $this->getPostArray();
     if( isset($data['name'], $data['website'], $data['paymentMethod'],$data['password']) ){
+
       self::$_columns = ['id'];
       self::$_where = ['name = ?'];
       self::$_params = [$data['name']];
-
       $clients = $this->get('CLIENT');
       if( count($clients) === 0 ) {
-        echo 'First !';
-        // -> insert
+        extract($data);
+        self::$_columns = ['name', 'website', 'paymentMethod', 'password'];
+        self::$_params = [$name, $website, $paymentMethod, hash('sha256', $password)];
+        $this->add('CLIENT');
       } else {
         // Name already exists
         echo 'Name already exists';

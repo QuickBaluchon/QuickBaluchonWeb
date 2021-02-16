@@ -52,7 +52,7 @@ class ApiBill extends Api
     self::$_where[] = 'id = ?';
     self::$_params[] = $id;
     $columns = ['id', 'client', 'grossAmount', 'dateBill', 'pdfPath', 'paid'];
-    $client = $this->get('PACKAGE', $columns );
+    $client = $this->get('MONTHLYBILL', $columns );
     if (count($client) == 1)
       return $client[0];
     else

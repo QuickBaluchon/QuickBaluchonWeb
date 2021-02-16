@@ -4,6 +4,7 @@ require_once('views/View.php');
 Class ControllerClient {
 
   private $_clientManager;
+  private $_billManager;
   private $_view;
   private $_id;
 
@@ -50,11 +51,14 @@ Class ControllerClient {
     $this->_view = new View('Back');
 
     $this->_clientManager = new ClientManager();
-    $client = $this->_clientManager->getClient($this->_id, ['name', 'website']);
+    $this->_billManager = new BillManager();
 
-    $cols = ['Mois', 'Colis', 'Prix', 'Télécharger', 'Statut'];
+    $client = $this->_clientManager->getClient($this->_id, ['name', 'website']);
+    $billsList = $this->_billManager->getBills( $this->_id ,['dateBill', 'id', 'grossAmount', 'paid']);
+
+    $cols = ['Mois', 'Nb colis', 'Prix', 'Télécharger', 'Statut'];
     $rows = [['janv 2021', '1', '30 €', 'O', 'Payé']];
-    $bills = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
+    $bills = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $billsList]);
     $this->_view->generateView(['content' => $bills, 'name' => $client['website'] ]);
   }
 

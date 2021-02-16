@@ -45,7 +45,7 @@ abstract class Api {
     if( $columns === null ) return [];
     if( isset($_GET['fields']) && !empty($_GET['fields']) ) {
       $fields = explode(',', $_GET['fields']);
-      self::$_columns = array_intersect($columns, $fields);
+      self::$_columns = array_intersect($fields, $columns);
       if( count(self::$_columns) === 0 ){
         http_response_code(400);
         return [];
@@ -90,8 +90,62 @@ abstract class Api {
 
 
   // INSERT
-  protected function add() {
+  protected function add($table) {
 
+    // INSERT INTO CLIENT (name, website) VALUES( ?, ?)
+    // [ 'n', 'n.fr' ]
+    //
+
+    $cols = '( ' . join(', ', self::$_columns) . ' )';
+    $values = [];
+    foreach (self::$_columns as $col)  $values[] = '?';
+    $values = '( ' . join(', ', $values) . ' )';
+    $sql = 'INSERT INTO ' . $table . $cols . ' VALUES' . $values ;
+
+    $stmt = $this->getDb()->prepare($sql);
+    if($stmt) {
+      $success = $stmt->execute(self::$_params);
+      if ($success) {
+        $this->resetParams();
+        http_response_code(200);
+      } else {
+        http_response_code(500) ;
+      }
+    } else {
+      http_response_code(500) ;
+    }
+  }
+
+  // UPDATE
+  protected function patch($table, $columns=null) {
+    // COLUMNS
+    $patches = [];
+    foreach (self::$_columns as $col) {
+      echo 'a remplacer';
+    }
+
+    // UPDATE `CLIENT` SET name = 'test3', website = 'test2.frr' WHERE CLIENT.id = 2
+    $sql = "UPDATE " . $table . ' SET ' . join(', ', self::$_columns) . " FROM $table" ;
+
+    // WHERE
+    if( isset(self::$_where) && count(self::$_where) > 0 ) {
+      $whereClause = join(' AND ', self::$_where);
+      $sql .= ' WHERE ' . $whereClause;
+    }
+
+    echo $sql;die();
+    $stmt = $this->getDb()->prepare($sql);
+    if($stmt) {
+      $success = $stmt->execute(self::$_params);
+      if ($success) {
+        $this->resetParams();
+        http_response_code(200);
+      } else {
+        http_response_code(500) ;
+      }
+    } else {
+      http_response_code(500) ;
+    }
   }
 
 

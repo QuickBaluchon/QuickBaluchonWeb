@@ -15,10 +15,11 @@ class ControllerAdmin
       exit();
     }
 
-    $actions = ['clients', 'pricelist', 'deliverymen', 'languages', 'wharehouses'];
+    $actions = ['clients', 'pricelist', 'deliverymen', 'languages', 'wharehouses', 'oneSignal'];
     if (in_array($url[1], $actions)) {
       $method = $url[1];
       $this->$method(array_slice($url, 2));
+
     } else {
       http_response_code(404);
     }
@@ -31,9 +32,9 @@ class ControllerAdmin
     $this->_clientManager = new ClientManager;
     $list = $this->_clientManager->getClients(['id', 'name']);
 
-    $buttonsValues = ['profile' => 'données personnelles',
-                      'history' => 'Historique',
-                      'bills' => 'Factures'];
+    $buttonsValues = ['données personnelles',
+                      'Historique',
+                      'Factures'];
 
     foreach ($list as $client) {
       for($i = 0; $i < 3; $i++){
@@ -46,5 +47,15 @@ class ControllerAdmin
     $cols = ['#', 'Nom', 'Données Personnelles', 'Historique', 'Facture'];
     $clients = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
     $this->_view->generateView(['content' => $clients, 'name' => 'QuickBaluchon']);
+  }
+
+  private function oneSignal($url)
+  {
+    $this->_view = new View('OneSignal');
+    $this->_view->generateView([]);
+    $this->_clientManager = new ClientManager;
+    $list = $this->_clientManager->getClients(['id', 'name']);
+
+
   }
 }

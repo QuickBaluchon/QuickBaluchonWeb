@@ -45,7 +45,7 @@ abstract class Api {
     if( $columns === null ) return [];
     if( isset($_GET['fields']) && !empty($_GET['fields']) ) {
       $fields = explode(',', $_GET['fields']);
-      self::$_columns = array_intersect($columns, $fields);
+      self::$_columns = array_intersect($fields, $columns);
       if( count(self::$_columns) === 0 ){
         http_response_code(400);
         return [];

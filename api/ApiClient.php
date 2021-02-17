@@ -31,6 +31,9 @@ class ApiClient extends Api {
     elseif ( strtolower($url[0]) === 'excel' )
       $this->saveExcel($url);
 
+    elseif ( strtolower($url[0]) === 'signout' )
+      $this->signout();
+
     echo json_encode( $this->_data, JSON_PRETTY_PRINT );
 
   }
@@ -106,7 +109,7 @@ class ApiClient extends Api {
     }
   }
 
-  private function signout () {
+  public function signout () {
     if (isset($_SESSION['id']))
         unset($_SESSION['id']);
 
@@ -116,7 +119,7 @@ class ApiClient extends Api {
         unset($this->_data['access_token']) ;
     }
 
-    header('location:'.WEB_ROOT);
+    $this->_data = WEB_ROOT ;
   }
 
   public function signup() {

@@ -61,7 +61,7 @@ abstract class Api {
 
   // SELECT
   protected function get($table, $columns=null): array {
-
+      
     // COLUMNS
     $this->getColumns($columns);
 

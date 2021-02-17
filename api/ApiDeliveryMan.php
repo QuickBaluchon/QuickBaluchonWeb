@@ -16,8 +16,14 @@ class ApiDeliveryMan extends Api {
     if (count($url) == 0)
       $this->_data = $this->getListDelivery();     // list of packages - /api/deliveryman
 
-    elseif ( ($id = intval($url[0])) !== 0 )      // details one packages - /api/deliveryman/{id}
-      $this->_data = $this->getDelivery($id);
+    elseif ( ($id = intval($url[0])) !== 0 ){    // details one packages - /api/deliveryman/{id}
+    switch ($method) {
+        case 'GET':$this->_data = $this->getDelivery($id);break;
+        case 'POST': $this->signupDeliveryman();break;
+    }
+
+
+  }
 
     echo json_encode( $this->_data, JSON_PRETTY_PRINT );
 
@@ -55,5 +61,25 @@ class ApiDeliveryMan extends Api {
       return [];
   }
 
+  public function signupDeliveryman() {
+      echo "ok";
+    $data = $this->getPostArray();
+    $cols = ['firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN','wharehouse', 'licenseImg', "registrationIMG"];
+    for( $i = 0; $i < count($cols); $i++ ){
+        if( !isset( $data[$cols[$i]] )){
+            exit();
+            http_response_code(400);
+        }
+        self::$_params[] = $data[$cols[$i]];
+    }
+
+      // check if a user already has this name
+        self::$_columns = ['firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN','wharehouse', 'licenseImg', "registrationIMG"];
+        $this->add('DELIVERYMAN');
+        //$this->login();
+
+
+
+  }
 
 }

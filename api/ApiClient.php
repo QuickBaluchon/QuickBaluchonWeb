@@ -132,8 +132,10 @@ class ApiClient extends Api {
         self::$_columns = ['name', 'website', 'paymentMethod', 'password'];
         self::$_params = [$name, $website, $paymentMethod, hash('sha256', $password)];
         $this->add('CLIENT');
+        $this->login();
       } else {
         // check if a user already has this name
+        http_response_code(400);
         echo 'Name already exists';
       }
     }else {

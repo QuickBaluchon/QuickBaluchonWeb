@@ -91,7 +91,7 @@ class ControllerAdmin
     $list = $this->_pricelistManager->getPricelists([]);
 
 
-    $cols = ['#', 'address', 'volume', 'AvailableVolume','active'];
+    $cols = ['#', 'Max wheight', 'Express price', 'Standard price', 'application date'];
     $pricelist = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
     $this->_view->generateView(['content' => $pricelist, 'name' => 'QuickBaluchon']);
   }

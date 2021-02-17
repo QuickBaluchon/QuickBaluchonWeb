@@ -18,6 +18,7 @@ class ApiWharehouse extends Api {
     switch ($method) {
         case 'GET': $this->_data = $this->getWharehouse($id);break;
         case 'DELETE': $this->deleteWharehouse($id);break;
+        case 'PATCH': $this->patchWharehouse($id);break;
         default:
             // code...
             break;
@@ -79,5 +80,22 @@ class ApiWharehouse extends Api {
   }
 
 
+private function patchWharehouse($id){
+    if($this->_method != 'PATCH') $this->catError(405);
 
+    $data = $this->getPostArray();
+    $allowed = ['AvailableVolume'];
+    if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
+      http_response_code(400);
+      exit(0);
+    }
+
+    foreach ($data as $key => $value) {
+      self::$_set[] = "$key = ?";
+      self::$_params[] = $value;
+    }
+
+
+    $this->patch("WHAREHOUSE", $id);
+}
 }

@@ -12,6 +12,7 @@ abstract class Model {
 
     $url = API_ROOT . $collection;
     $params = $this->strCond($cond);
+
     $url = $params === '' ? $url : $url . '&' . $params;
 
     return $this->curl($url);
@@ -29,6 +30,7 @@ abstract class Model {
     curl_setopt($curl, CURLOPT_HEADER, 0);
     $list = json_decode(curl_exec($curl), true);
     curl_close($curl);
+
     return $list;
 
   }

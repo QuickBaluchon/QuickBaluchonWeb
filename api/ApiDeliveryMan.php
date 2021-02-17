@@ -31,13 +31,13 @@ class ApiDeliveryMan extends Api {
       self::$_where[] = 'deliveryman = ?';
       self::$_params[] = intval($_GET['deliveryman']);
     }
-    //$this->authentication(['admin']);
 
-    self::$_columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN','employed', 'wharehouse'];
+
+    $columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN','employed', 'wharehouse', 'licenseImg', "registrationIMG"];
     self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
     self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-    $list = $this->get('DELIVERYMAN');
+    $list = $this->get('DELIVERYMAN', $columns);
 
     return $list;
   }
@@ -45,11 +45,10 @@ class ApiDeliveryMan extends Api {
   public function getDelivery($id): array {
 
     if($this->_method != 'GET') $this->catError(405);
-    //$this->authentication(['admin'], [$id]);
-    self::$_columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN','employed', 'wharehouse'];
+    $columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN','employed', 'wharehouse', 'licenseImg', "registrationIMG"];
     self::$_where[] = 'id = ?';
     self::$_params[] = $id;
-    $delivery = $this->get('DELIVERYMAN');
+    $delivery = $this->get('DELIVERYMAN', $columns);
     if( count($delivery) == 1 )
       return $delivery[0];
     else

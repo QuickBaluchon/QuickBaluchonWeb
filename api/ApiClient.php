@@ -147,7 +147,7 @@ class ApiClient extends Api {
       exec($exec, $outputs, $rescode) ;
       //echo $exec;
       //echo '  rescode: ' . $rescode ;
-      print_r($outputs) ;
+
     }else{
       echo 'Error with the Excel file';
       echo '$_FILES:';

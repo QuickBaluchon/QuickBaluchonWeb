@@ -12,9 +12,9 @@ class ApiWharehouse extends Api {
     $this->_method = $method;
 
     if (count($url) == 0)
-      $this->_data = $this->getListWharehouse();     // list of packages - /api/package
+      $this->_data = $this->getListWharehouse();     // list of packages - /api/wharehouse
 
-    elseif ( ($id = intval($url[0])) !== 0 )      // details one packages - /api/package/{id}
+    elseif ( ($id = intval($url[0])) !== 0 )      // details one packages - /api/wharehouse/{id}
       $this->_data = $this->getWharehouse($id);
 
     echo json_encode( $this->_data, JSON_PRETTY_PRINT );

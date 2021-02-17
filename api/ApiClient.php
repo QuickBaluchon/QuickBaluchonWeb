@@ -106,6 +106,19 @@ class ApiClient extends Api {
     }
   }
 
+  private function signout () {
+    if (isset($_SESSION['id']))
+        unset($_SESSION['id']);
+
+    if (isset($this->_data)) {
+        unset($this->_data['id']) ;
+        unset($this->_data['role']) ;
+        unset($this->_data['access_token']) ;
+    }
+
+    header('location:'.WEB_ROOT);
+  }
+
   public function signup() {
     $data = $this->getPostArray();
     if( isset($data['name'], $data['website'], $data['paymentMethod'],$data['password']) ){

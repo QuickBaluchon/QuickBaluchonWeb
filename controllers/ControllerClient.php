@@ -26,12 +26,6 @@ Class ControllerClient {
     } else {
       http_response_code(404);
     }
-    //$this->signout();
-  }
-
-  private function signout() {
-    unset($_SESSION['id']);
-    header('location:'.WEB_ROOT);
   }
 
   private function signup () {

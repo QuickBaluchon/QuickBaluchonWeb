@@ -149,6 +149,29 @@ abstract class Api {
   }
 }
 
+    protected function delete($table, $id) {
+        $sql = "DELETE FROM $table WHERE id = ?";
+        self::$_params[] = $id;
+        
+        $stmt = $this->getDb()->prepare($sql);
+        if ($stmt) {
+          $success = $stmt->execute(self::$_params);
+          if ($success) {
+            // OK
+            $this->resetParams();
+            http_response_code(200);
+          } else {
+            http_response_code(500);
+          }
+        } else {
+          http_response_code(500);
+        }
+
+
+
+
+    }
+
 
 
   private function resetParams() {

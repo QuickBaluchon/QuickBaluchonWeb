@@ -14,8 +14,17 @@ class ApiWharehouse extends Api {
     if (count($url) == 0)
       $this->_data = $this->getListWharehouse();     // list of packages - /api/wharehouse
 
-    elseif ( ($id = intval($url[0])) !== 0 )      // details one packages - /api/wharehouse/{id}
-      $this->_data = $this->getWharehouse($id);
+    elseif ( ($id = intval($url[0])) !== 0 ){// details one packages - /api/wharehouse/{id}
+    switch ($method) {
+        case 'GET': $this->_data = $this->getWharehouse($id);break;
+        case 'DELETE': $this->deleteWharehouse($id);break;
+        default:
+            // code...
+            break;
+    }
+
+
+  }
 
     echo json_encode( $this->_data, JSON_PRETTY_PRINT );
 
@@ -49,6 +58,13 @@ class ApiWharehouse extends Api {
     else
       return [];
   }
+
+  private function deleteWharehouse($id)
+  {
+      if($this->_method != 'DELETE') $this->catError(405);
+      $this->delete("WHAREHOUSE", $id);
+  }
+
 
 
 }

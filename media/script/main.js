@@ -70,16 +70,22 @@ function getCookie(cname) {
 
 function getIdClient() {
     let jwt = getCookie('access_token');
-    console.log(jwtDecode(jwt));
+    let decode = jwtDecode(jwt);
+    if ( decode )
+        return decode.playload.sub;
+    else
+        return false;
 }
 
 function jwtDecode(jwt) {
     if( jwt ){
         jwt = jwt.split('.');
-        let jwtParts = ['header', 'playload', 'signature'];
+        let jwtParts = ['header', 'playload'];
         let decode = {};
-        for(let i = 0; i < jwt.length; i++)
-            decode[jwtParts[i]] = JSON.parse(atob(jwt[0]));
+        for(let i = 0; i < 2; i++) {
+            try { decode[jwtParts[i]] = JSON.parse(atob(jwt[i])); }
+            catch (e) { return false }
+        }
         return decode;
     }
     return false;

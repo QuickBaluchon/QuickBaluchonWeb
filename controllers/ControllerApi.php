@@ -54,8 +54,6 @@ class ControllerApi {
       echo '<img src="https://http.cat/404.jpg" alt="404">';
     }
 
-
-
   }
 
 }

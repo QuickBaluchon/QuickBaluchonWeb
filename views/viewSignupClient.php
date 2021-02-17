@@ -1,6 +1,7 @@
 <?php
 $this->_header = ROOT . '/templates/Front/header.php';
 $this->_css = ['header', 'signup_client'];
+$this->_js = ['main', 'client/signup'];
 ?>
 
 <!-- HERO BANNER LOGIN -->
@@ -13,10 +14,10 @@ $this->_css = ['header', 'signup_client'];
         <div class="jumbotron bg-white">
           <h1 class="display-4">Inscription</h1>
 
-          <form>
+          <form onsubmit="return false">
             <div class="form-group row">
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputEmail" placeholder="nom d'utilisateur">
+                <input type="text" class="form-control" id="inputName" placeholder="nom d'utilisateur">
               </div>
             </div>
             <div class="form-group row">
@@ -41,7 +42,7 @@ $this->_css = ['header', 'signup_client'];
             </div>
             <div class="form-group row">
               <div class="col-sm-10">
-                <button type="submit" class="btn btn-round btn-primary">S'inscrire</button>
+                <button onclick="trySignup()" type="submit" class="btn btn-round btn-primary">S'inscrire</button>
               </div>
             </div>
             <div class="form-group row">

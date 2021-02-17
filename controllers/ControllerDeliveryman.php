@@ -20,7 +20,7 @@ class ControllerDeliveryman
 
     }
 
-    $actions = ['payslip', 'profile'];
+    $actions = ['payslip', 'profile', "signup"];
     if (in_array($url[1], $actions)) {
       $method = $url[1];
       $this->$method(array_slice($url, 2));
@@ -49,6 +49,15 @@ class ControllerDeliveryman
         $this->_DeliverymanManager = new DeliveryManager();
         $delivery = $this->_DeliverymanManager->getDelivery($this->_id, ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
         $profile = $this->_view->generateTemplate('deliveryman_profile', $delivery);
+        $this->_view->generateView(['content' => $profile, 'name' => $delivery['lastname']  ]);
+    }
+    private function signup($url)
+    {
+        $this->_view = new View('Back');
+
+        $this->_DeliverymanManager = new DeliveryManager();
+        $delivery = $this->_DeliverymanManager->getDelivery($this->_id, ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
+        $profile = $this->_view->generateTemplate('signup_deliveryman', $delivery);
         $this->_view->generateView(['content' => $profile, 'name' => $delivery['lastname']  ]);
     }
 

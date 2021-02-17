@@ -1,0 +1,16 @@
+#signup img{
+  display: none;
+  width: inherit;
+}
+
+#signup input, #signup select{
+  background-color: #efefef;
+  border-radius: 15px;
+  border: none;
+}
+
+#signup input[type=file]{
+  background-color: #efefef;
+  border-radius: 0px;
+  border: none;
+}

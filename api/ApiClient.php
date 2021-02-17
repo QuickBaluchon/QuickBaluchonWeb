@@ -218,4 +218,8 @@ class ApiClient extends Api
         $this->patch('CLIENT', $id);
 
     }
+
+    private function isPwdCorrect( $idClient, $pwd ) {
+
+    }
 }

@@ -13,7 +13,8 @@ function updateProfile() {
         }
 
     json = JSON.stringify(changes);
-    ajax('../api/client/1', json, 'PATCH', updated);
+    let idClient = getIdClient();
+    //ajax('../api/client/1', json, 'PATCH', updated);
 }
 
 function updated(response) {
@@ -23,5 +24,19 @@ function updated(response) {
 function updatePwd() {
     let ids = ['inputOldPassword', 'inputPassword'];
     let values = getInputsValue(ids, true);
+    if( values < 0 ) // error codes
+        return false;
+    if( values['inputOldPassword'] && values['inputPassword'] ) {
+        json = JSON.stringify( {
+            oldpassword : values['inputOldPassword'],
+            password : values['inputPassword']
+        } );
+        //ajax('../api/client/1', json, 'PATCH', updated);
+
+    } else {
+        console.log('Error params');
+        return false;
+    }
+
 
 }

@@ -59,10 +59,23 @@ class ApiWharehouse extends Api {
       return [];
   }
 
-  private function deleteWharehouse($id)
-  {
+  private function deleteWharehouse($id){
       if($this->_method != 'DELETE') $this->catError(405);
-      $this->delete("WHAREHOUSE", $id);
+
+      $data = $this->getPostArray();
+      $allowed = ['active'];
+      if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
+        http_response_code(400);
+        exit(0);
+      }
+
+      foreach ($data as $key => $value) {
+        self::$_set[] = "$key = ?";
+        self::$_params[] = $value;
+      }
+
+
+      $this->patch("WHAREHOUSE", $id);
   }
 
 

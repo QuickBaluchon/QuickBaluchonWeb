@@ -22,7 +22,7 @@ function updateProfile() {
     else return false;
 }
 
-function updated(response) {
+function updated() {
     document.location.reload();
 }
 
@@ -36,7 +36,13 @@ function updatePwd() {
             oldpassword : values['inputOldPassword'],
             password : values['inputPassword']
         } );
-        //ajax('../api/client/1', json, 'PATCH', updated);
+        if( json.length > 2 ) {
+            let idClient = getIdClient();
+            if( idClient )
+                ajax('../api/client/' + idClient, json, 'PATCH', updated)
+            else return false;
+        }
+
 
     } else {
         console.log('Error params');

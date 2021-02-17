@@ -6,6 +6,7 @@ class ControllerPackage {
 
   private $_id;
   private $_view ;
+  private $_packageManager ;
 
   public function __construct($url) {
 
@@ -25,8 +26,13 @@ class ControllerPackage {
               }
 
               elseif (strtolower($url[0]) == 'sign') {
-                  if (isset($url[1])) {
-                      $this->_id = intval($url[1]) ;
+                  if (isset($url[1]) && !empty($url[1])) {
+                      $this->_packageManager = new PackageManager() ;
+                      $this->_id = $this->_packageManager->getPackage(intval($url[1]), ['id']) ;
+
+                      if (isset($this->_id) && count($this->_id) == 0)
+                        http_response_code(404) ;
+
                       $this->_view = new View('Sign') ;
                       $this->_view->generateView([]) ;
                   }

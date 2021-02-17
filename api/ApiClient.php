@@ -203,11 +203,14 @@ class ApiClient extends Api
             exit();
         }
 
-        // check if a user already has this name
-        if (isset($data['name']) && $this->clientNameExists($data['name'])) {
+        // check if a user already has this name or if the old password is not correct
+        if ( isset($data['name']) && $this->clientNameExists($data['name']) ||
+            isset( $data['oldpassword'] ) && !$this->isPwdCorrect($id, $data['oldpassword'])) {
             http_response_code(401);
             exit();
         }
+
+        if( isset($data['oldpassword']) ) unset($data['oldpassword']);
 
         if (isset($data['password'])) $data['password'] = hash('sha256', $data['password']);
         foreach ($data as $key => $value) {
@@ -220,6 +223,14 @@ class ApiClient extends Api
     }
 
     private function isPwdCorrect( $idClient, $pwd ) {
-
+        if ($idClient != null) {
+            self::$_columns = ['id'];
+            self::$_where = [ 'id = ?','password = ?'];
+            self::$_params = [$idClient, hash('sha256', $pwd)];
+            $clients = $this->get('CLIENT');
+            return count($clients) > 0;
+        } else {
+            return -1;
+        }
     }
 }

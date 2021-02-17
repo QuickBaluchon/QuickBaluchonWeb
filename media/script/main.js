@@ -70,5 +70,17 @@ function getCookie(cname) {
 
 function getIdClient() {
     let jwt = getCookie('access_token');
-    console.log(jwt);
+    console.log(jwtDecode(jwt));
+}
+
+function jwtDecode(jwt) {
+    if( jwt ){
+        jwt = jwt.split('.');
+        let jwtParts = ['header', 'playload', 'signature'];
+        let decode = {};
+        for(let i = 0; i < jwt.length; i++)
+            decode[jwtParts[i]] = JSON.parse(atob(jwt[0]));
+        return decode;
+    }
+    return false;
 }

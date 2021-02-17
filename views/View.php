@@ -31,7 +31,7 @@ class View {
       ob_start();
       require $file;
       return ob_get_clean();
-    }else
+    } else
       throw new Exception("File " . $file . 'not found');
 
   }

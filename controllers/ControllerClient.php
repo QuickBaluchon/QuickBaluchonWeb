@@ -64,10 +64,10 @@ Class ControllerClient {
   private function history() {
     $this->_view = new View('Back');
 
-    $this->_packageManager = new HistoryManager();
+    $this->_packageManager = new PackageManager();
     $this->_clientManager = new ClientManager();
 
-    $package = $this->_packageManager->getPackages($this->_id, []);
+    $package = $this->_packageManager->getClientPackages($this->_id, []);
     $client = $this->_clientManager->getClient($this->_id, ['website']);
 
     $cols = ['id', 'client', 'ordernb', 'weight', 'volume', 'address',	'email', 'delay', 'dateDelivery', 'status', 'excelPath', 'dateDeposit'];

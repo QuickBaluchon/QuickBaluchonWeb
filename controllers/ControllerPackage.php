@@ -31,7 +31,7 @@ class ControllerPackage {
                     $this->inWarehouse() ;
                     break ;
                   case 2:
-                    $this->signPackage() ;
+                    $this->deliverPackage() ;
                     break ;
                   case 3:
                     $this->retrieved() ;
@@ -58,8 +58,8 @@ class ControllerPackage {
       echo "En cours de traitement dans l'entrepôt" ;
   }
 
-  private function signPackage () {
-          $this->_view = new View('Sign') ;
+  private function deliverPackage () {
+          $this->_view = new View('Delivering') ;
           $this->_view->generateView([]) ;
   }
 

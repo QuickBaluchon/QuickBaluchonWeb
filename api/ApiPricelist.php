@@ -11,22 +11,35 @@ class ApiPricelist extends Api {
     $this->_method = $method;
 
     if (count($url) == 0)
-      $this->_data = $this->getListPrice();     // list of packages - /api/package
+      $this->_data = $this->getListPrice();     // list of packages - /api/pricelist
 
-    elseif ( ($id = intval($url[0])) !== 0 )      // details one packages - /api/package/{id}
-      $this->_data = $this->getPrice($id);
+      elseif ( ($id = intval($url[0])) !== 0 ) { // details one client - /api/pricelist/{id}
+        switch ($method) {
+          case 'GET' : $this->_data = $this->getPrice($id); break;
+          case 'PATCH' : $this->updatePrice($id); break;
+        }
+
+      }
+
+      elseif ( ($ExpressPrice = intval($url[1])) !== 0 )      // details one packages - /api/pricelist/ExpressPrice/{int}
+        $this->_data = $this->getListPrice($ExpressPrice);
 
     echo json_encode( $this->_data, JSON_PRETTY_PRINT );
 
   }
 
-  public function getListPrice (): array  {
+  public function getListPrice ($ExpressPrice=NULL): array  {
     $packages = [];
     if($this->_method != 'GET') $this->catError(405);
 
     if(isset($_GET['pricelist'])) {
       self::$_where[] = 'pricelist = ?';
       self::$_params[] = intval($_GET['pricelist']);
+    }
+
+    if(isset($ExpressPrice)) {
+      self::$_where[] = 'ExpressPrice = ?';
+      self::$_params[] = intval($ExpressPrice);
     }
     //$this->authentication(['admin']);
 
@@ -54,5 +67,20 @@ class ApiPricelist extends Api {
       return [];
   }
 
+  public function updatePrice($id){
+      $data = $this->getPostArray();
+      $allowed = ['maxWeight', 'ExpressPrice', 'StandardPrice', "applicationDate"];
+      if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
+        http_response_code(400);
+        exit(0);
+      }
+
+      foreach ($data as $key => $value) {
+        self::$_set[] = "$key = ?";
+        self::$_params[] = $value;
+      }
+
+      $this->patch('PRICELIST', $id);
+  }
 
 }

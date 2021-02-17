@@ -172,7 +172,7 @@ class ApiClient extends Api {
   }
 
   private function updateClient($id) {
-    $data = $client = $this->getPostArray();
+    $data = $this->getPostArray();
     $allowed = ['name', 'website', 'password'];
     if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
       http_response_code(400);

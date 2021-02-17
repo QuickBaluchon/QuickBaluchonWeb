@@ -13,34 +13,65 @@ class ControllerPackage {
     if( !isset($url) )
       // API NOT FOUND : 404
       http_response_code(404) ;
-    else{
+    else {
+      $url = array_slice($url,1); // remove /api/
+      if( strlen($url[0]) == 0 ){
 
-        if (count($url) == 0)
-            echo 'All in one' ;
-        else{
-              $url = array_slice($url,1); // remove /api/
-              if( strlen($url[0]) == 0 ){
-
-                // DUCUMENTATION PACKAGES
-                echo 'DOCUMENTATION';
-              }
-
-              elseif (strtolower($url[0]) == 'sign') {
-                  if (isset($url[1]) && !empty($url[1])) {
-                      $this->_packageManager = new PackageManager() ;
-                      $this->_id = $this->_packageManager->getPackage(intval($url[1]), ['id']) ;
-
-                      if (isset($this->_id) && count($this->_id) == 0)
-                        http_response_code(404) ;
-
-                      $this->_view = new View('Sign') ;
-                      $this->_view->generateView([]) ;
-                  }
-                  else
-                    http_response_code(404) ;
-              }
-
+        // DUCUMENTATION PACKAGES
+        echo 'DOCUMENTATION';
       }
+
+      if (isset($url[0]) && !empty($url[0])) {
+          if ($this->getPackage($url[0]) != 0) {
+              switch ($this->_data['status']) {
+                  case 0:
+                    $this->recievePackage() ;
+                    break ;
+                  case 1:
+                    $this->inWarehouse() ;
+                    break ;
+                  case 2:
+                    $this->signPackage() ;
+                    break ;
+                  case 3:
+                    $this->retrieved() ;
+                    break ;
+                  case 4:
+                    $this->sentBack() ;
+                    break ;
+              }
+          } else
+            http_response_code(404) ;
+      } else
+        http_response_code(404) ;
     }
+  }
+
+  private function getPackage ($id) {
+      $this->_packageManager = new PackageManager() ;
+      $this->_data = $this->_packageManager->getPackage(intval($id), ['id', 'status', 'dateDeposit']) ;
+
+      return count($this->_data) ;
+  }
+
+  private function inWarehouse () {
+      echo "En cours de traitement dans l'entrepôt" ;
+  }
+
+  private function signPackage () {
+          $this->_view = new View('Sign') ;
+          $this->_view->generateView([]) ;
+  }
+
+  private function recievePackage () {
+      echo "Interface de dépôt de paquet here" ;
+  }
+
+  private function sentBack () {
+      echo "Retour à l'expéditeur" ;
+  }
+
+  private function retrieved () {
+      echo "Livré" ;
   }
 }

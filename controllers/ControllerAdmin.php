@@ -8,6 +8,7 @@ class ControllerAdmin
   private $_clientManager;
   private $_WharehousesManager;
   private $_deliveryManager;
+  private $_pricelistManager;
   private $_view;
   private $_notif;
 
@@ -81,6 +82,18 @@ class ControllerAdmin
     $cols = ['#', 'address', 'volume', 'AvailableVolume','active'];
     $wharehouse = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
     $this->_view->generateView(['content' => $wharehouse, 'name' => 'QuickBaluchon']);
+  }
+
+  private function pricelist($url) {
+    $this->_view = new View('Back');
+
+    $this->_pricelistManager = new PricelistManager;
+    $list = $this->_pricelistManager->getPricelists([]);
+
+
+    $cols = ['#', 'address', 'volume', 'AvailableVolume','active'];
+    $pricelist = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
+    $this->_view->generateView(['content' => $pricelist, 'name' => 'QuickBaluchon']);
   }
 
 }

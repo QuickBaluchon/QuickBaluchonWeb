@@ -1,7 +1,10 @@
 <?php
 
 $this->_css = ['sidebar'];
-
+if( isset($_GET['url']) && strlen($_GET['url']) > 0) {
+  $url = explode( '/', filter_var($_GET['url'],
+  FILTER_SANITIZE_URL) );
+}
 ?>
 
 <div class="wrapper">
@@ -35,7 +38,7 @@ $this->_css = ['sidebar'];
     <!-- Menu-->
     <ul class="list-unstyled components">
       <li>
-        <a href="#">
+        <a href="<?= WEB_ROOT . 'client/profile' ?>">
           <svg width="55" height="55" viewBox="0 0 55 55" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="27.5" cy="27.5" r="27.5" fill="#81B29A"/>
             <path d="M28.0001 27.6938C31.1132 27.6938 33.6372 24.6284 33.6372 20.847C33.6372 17.0654 32.8085 14 28.0001 14C23.1917 14 22.3629 17.0654 22.3629 20.847C22.3629 24.6284 24.8868 27.6938 28.0001 27.6938Z" fill="#EDF1F3"/>
@@ -48,7 +51,7 @@ $this->_css = ['sidebar'];
       </li>
 
       <li>
-        <a href="#">
+        <a href="<?= WEB_ROOT . 'client/bills' ?>">
           <svg width="55" height="55" viewBox="0 0 55 55" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="27.5" cy="27.5" r="27.5" fill="#81B29A"/>
             <g clip-path="url(#clip0)">
@@ -63,7 +66,7 @@ $this->_css = ['sidebar'];
       </li>
 
       <li>
-        <a href="#">
+        <a href="<?= WEB_ROOT . 'client/history' ?>">
           <svg width="55" height="55" viewBox="0 0 55 55" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="27.5" cy="27.5" r="27.5" fill="#81B29A"/>
             <path d="M18.8243 17.9502C18.8236 17.9502 18.8229 17.9502 18.8222 17.9502C18.5858 17.9502 18.3634 18.0424 18.1954 18.2099C18.0256 18.3792 17.9321 18.6047 17.9321 18.8448V32.2594C17.9321 32.7513 18.3339 33.1525 18.8278 33.1538C20.9102 33.1587 24.3989 33.5928 26.8057 36.1114V22.0726C26.8057 21.9058 26.7631 21.7492 26.6827 21.6196C24.7073 18.4384 20.9114 17.9551 18.8243 17.9502Z" fill="#EDF1F3"/>

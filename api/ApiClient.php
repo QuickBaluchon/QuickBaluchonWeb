@@ -122,7 +122,7 @@ class ApiClient extends Api {
   public function signup() {
     $data = $this->getPostArray();
     if( isset($data['name'], $data['website'], $data['paymentMethod'],$data['password']) ){
-      // check if a user
+      // check if a user already has this name
       self::$_columns = ['id'];
       self::$_where = ['name = ?'];
       self::$_params = [$data['name']];
@@ -134,7 +134,6 @@ class ApiClient extends Api {
         $this->add('CLIENT');
         $this->login();
       } else {
-        // check if a user already has this name
         http_response_code(400);
         echo 'Name already exists';
       }
@@ -177,6 +176,18 @@ class ApiClient extends Api {
     if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
       http_response_code(400);
       exit(0);
+    }
+
+    if( isset( $data['name'] ) ) {
+      // check if a user already has this name
+      self::$_columns = ['id'];
+      self::$_where = ['name = ?'];
+      self::$_params = [$data['name']];
+      $clients = $this->get('CLIENT');
+      if( count($clients) > 0 ) {
+        http_response_code(401);
+        exit(0);
+      }
     }
 
     if( isset($data['password']) ) $data['password'] = hash('sha256', $data['password'] );

@@ -4,6 +4,8 @@ $this->_css = ['sidebar'];
 if( isset($_GET['url']) && strlen($_GET['url']) > 0) {
   $url = explode( '/', filter_var($_GET['url'],
   FILTER_SANITIZE_URL) );
+
+  $this->_js = ['main'];
 }
 ?>
 

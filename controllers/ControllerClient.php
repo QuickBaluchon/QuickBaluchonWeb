@@ -17,9 +17,12 @@ Class ControllerClient {
     }
     $this->_id = $_SESSION['id'];
 
-    if( !isset($url[1]) )
+    if( !isset($url[1]) ){
       header('location:'.WEB_ROOT.'client/profile');
+      exit();
+    }
 
+    //$this->signout();
     if ( method_exists( $this ,$url[1]) ) {
       $method = $url[1];
       $this->$method(array_slice($url, 2));

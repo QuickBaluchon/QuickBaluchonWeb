@@ -5,7 +5,7 @@ if ( isset($_SESSION['id'])){
 
 $this->_header = ROOT . '/templates/Front/header.php';
 $this->_css = ['header', 'login'];
-$this->_js = ['login'];
+$this->_js = ['main','login'];
 
 ?>
 

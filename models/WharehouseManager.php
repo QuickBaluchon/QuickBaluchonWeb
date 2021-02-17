@@ -3,7 +3,7 @@
 class WharehouseManager extends Model{
 
   public function getWharehouses($fields) {
-    return $this->getCollection('wharehouse', []);
-
+    return $this->getCollection('wharehouse', ["fields" => $fields]);
   }
+
 }

@@ -14,9 +14,9 @@ class ApiPayslip extends Api {
     if (count($url) == 0)
       $this->_data = $this->getListPayslip();     // list of packages - /api/package
 
-    elseif ( ($id = intval($url[0])) !== 0 )      // details one packages - /api/package/{id}
+    elseif ( ($id = intval($url[0])) !== 0 ){     // details one packages - /api/package/{id}
       $this->_data = $this->getPayslip($id);
-
+}
     echo json_encode( $this->_data, JSON_PRETTY_PRINT );
 
   }

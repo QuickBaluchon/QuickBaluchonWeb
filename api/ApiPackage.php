@@ -14,8 +14,14 @@ class ApiPackage extends Api {
     if (count($url) == 0)
       $this->_data = $this->getListPackages();     // list of packages - /api/package
 
-    elseif ( ($id = intval($url[0])) !== 0 )      // details one packages - /api/package/{id}
-      $this->_data = $this->getPackage($id);
+    elseif ( ($id = intval($url[0])) !== 0 ) {     // details one packages - /api/package/{id}
+        switch ($method) {
+            case 'GET': $this->_data = $this->getPackage($id);break;
+            case 'PATCH': $this->updatePackage($id);break;
+        }
+
+
+  }
 
     echo json_encode( $this->_data, JSON_PRETTY_PRINT );
 
@@ -50,7 +56,7 @@ class ApiPackage extends Api {
 
   public function getPackage($id): array {
     if($this->_method != 'GET') $this->catError(405);
-    //$this->authentication(['admin'], [$id]);
+
     $columns = ['id', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'status', 'excelPath', 'dateDeposit'];
     self::$_where[] = 'id = ?';
     self::$_params[] = $id;
@@ -59,6 +65,21 @@ class ApiPackage extends Api {
       return $package[0];
     else
       return [];
+  }
+
+  public function updatePackage($id) {
+      $data = $this->getPostArray();
+      $allowed = ['status'];
+      if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
+        http_response_code(400);
+        exit(0);
+      }
+
+      foreach ($data as $key => $value) {
+        self::$_set[] = "$key = ?";
+        self::$_params[] = $value;
+      }
+      $this->patch('PACKAGE', $id);
   }
 
 

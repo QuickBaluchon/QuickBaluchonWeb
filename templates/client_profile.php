@@ -17,7 +17,7 @@
         <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
 
           <!-- content navpills profile -->
-          <form class="form-round col-lg">
+          <form class="form-round col-lg" onsubmit="return false">
             <div class="form-group">
               <label for="inputName">Nom d'utilisateur</label>
               <input type="text" class="form-control" id="inputName" placeholder="<?= $name ?>">
@@ -27,7 +27,7 @@
               <input type="text" class="form-control" id="inputWebsite" placeholder="<?= $website ?>">
             </div>
 
-            <button type="button" class="btn btn-success">Sauvegarder</button>
+            <button onclick="updateProfile()" type="button" class="btn btn-success">Sauvegarder</button>
           </form>
 
         </div>
@@ -58,3 +58,5 @@
     </div>
   </div>
 </div>
+
+<script src="<?= WEB_ROOT . 'media/script/client/profile.js' ?>"></script>

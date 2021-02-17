@@ -42,7 +42,7 @@ function ajax(url, json, method, callback) {
                 callback(request.response, );
             else {
                 // Error
-                console.log(request.response);
+                console.log(request.status + ' : ' + request.response);
             }
         }
     }

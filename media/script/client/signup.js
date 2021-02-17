@@ -6,7 +6,7 @@ function trySignup() {
 
     for ( const id in values )
         if(values[id].length < 1) {
-            return 'UN INPUT VIDE VIDE';
+            return 'UN INPUT VIDE';
         }
 
     if ( values['inputPassword1'] !== values['inputPassword2'] ) {

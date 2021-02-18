@@ -10,6 +10,8 @@ function signup() {
     'inputBIC',
     'inputRIB',
     'inputEntrepot',
+    'fileLicense',
+    'fileRegistration',
     'inputRadius',
     'inputVolume'];
 
@@ -17,7 +19,6 @@ function signup() {
 
     if( values < 0 ) // error codes
         return false;
-
 
     if ( values['inputPassword1'] !== values['inputPassword2'] ) {
         console.log('Mots de passe différents');
@@ -31,6 +32,8 @@ function signup() {
             volumeCar: parseInt(values['inputVolume']),
             radius: parseInt(values['inputRadius']),
             IBAN : values['inputBIC'],
+            licenseImg: values['fileLicense'],
+            registrationIMG: values['fileRegistration'],
             wharehouse : parseInt(values['inputEntrepot']),
         } );
 

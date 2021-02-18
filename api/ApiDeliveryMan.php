@@ -23,10 +23,6 @@ class ApiDeliveryMan extends Api {
         $this->signupDeliveryman();
     }
 
-
-
-
-
     echo json_encode( $this->_data, JSON_PRETTY_PRINT );
 
   }
@@ -65,7 +61,7 @@ class ApiDeliveryMan extends Api {
 
   public function signupDeliveryman() {
 
-    $data = $this->getPostArray();
+    $data = $this->getJsonArray();
     $cols = ['firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN','wharehouse'];
     for( $i = 0; $i < count($cols); $i++ ){
         if( !isset( $data[$cols[$i]] )){

@@ -17,11 +17,11 @@ class ApiPackage extends Api {
     elseif ( ($id = intval($url[0])) !== 0 ) {     // details one packages - /api/package/{id}
         switch ($method) {
             case 'GET': $this->_data = $this->getPackage($id);break;
-            case 'PATCH': $this->updatePackage($id);break;
+            case 'PATCH': $this->_data = $this->updatePackage($id);break;
         }
 
 
-  }
+    }
 
     echo json_encode( $this->_data, JSON_PRETTY_PRINT );
 
@@ -68,8 +68,8 @@ class ApiPackage extends Api {
   }
 
   public function updatePackage($id) {
-      $data = $this->getPostArray();
-      $allowed = ['status'];
+      $data = $this->getJsonArray();
+      $allowed = ['weight', 'volume', 'address', 'email', 'delay', 'status', 'dateDeposit', 'dateDelivery'];
       if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
         http_response_code(400);
         exit(0);
@@ -78,6 +78,11 @@ class ApiPackage extends Api {
       foreach ($data as $key => $value) {
         self::$_set[] = "$key = ?";
         self::$_params[] = $value;
+      }
+      if ($data['status'] == 1) {
+          self::$_set[] = "dateDeposit = now()" ;
+          self::$_set[] = "dateDelivery = DATE_ADD(now(), INTERVAL ? DAY)" ;
+          self::$_params[] = $data['delay'] ;
       }
       $this->patch('PACKAGE', $id);
   }

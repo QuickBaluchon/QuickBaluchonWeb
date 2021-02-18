@@ -49,7 +49,8 @@ class ControllerPackage {
 
   private function getPackage ($id) {
       $this->_packageManager = new PackageManager() ;
-      $this->_data = $this->_packageManager->getPackage(intval($id), ['id', 'status', 'dateDeposit']) ;
+      $this->_id = intval($id) ;
+      $this->_data = $this->_packageManager->getPackage($this->_id, ['id', 'status', 'dateDeposit']) ;
 
       return count($this->_data) ;
   }
@@ -59,12 +60,18 @@ class ControllerPackage {
   }
 
   private function deliverPackage () {
-          $this->_view = new View('Delivering') ;
-          $this->_view->generateView([]) ;
+      $this->_view = new View('Delivering') ;
+      $this->_view->generateView([]) ;
   }
 
   private function recievePackage () {
-      echo "Interface de dépôt de paquet here" ;
+      $package = $this->_packageManager->getPackage($this->_id, ['id', 'weight', 'volume', 'address', 'email', 'delay']) ;
+      $this->_view = new View('Reception') ;
+      $this->_view->generateView($package);
+  }
+
+  private function updatePackage () {
+      $package = $this->_packageManager->updatePackage($this->_id, ['id', 'weight', 'volume', 'address', 'email', 'delay', 'dateDeposit', 'dateDelivery']) ;
   }
 
   private function sentBack () {

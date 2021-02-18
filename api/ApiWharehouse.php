@@ -83,7 +83,7 @@ class ApiWharehouse extends Api {
 private function patchWharehouse($id){
     if($this->_method != 'PATCH') $this->catError(405);
 
-    $data = $this->getPostArray();
+    $data = $this->getJsonArray();
     $allowed = ['AvailableVolume'];
     if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
       http_response_code(400);
@@ -91,7 +91,7 @@ private function patchWharehouse($id){
     }
 
     foreach ($data as $key => $value) {
-      self::$_set[] = "$key = ?";
+      self::$_set[] = "$key = $key + ?";
       self::$_params[] = $value;
     }
 

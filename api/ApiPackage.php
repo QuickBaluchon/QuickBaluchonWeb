@@ -57,7 +57,7 @@ class ApiPackage extends Api {
   public function getPackage($id): array {
     if($this->_method != 'GET') $this->catError(405);
 
-    $columns = ['id', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'status', 'excelPath', 'dateDeposit'];
+    $columns = ['id', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'status', 'excelPath', 'dateDeposit', 'warehouse'];
     self::$_where[] = 'id = ?';
     self::$_params[] = $id;
     $package = $this->get('PACKAGE', $columns);

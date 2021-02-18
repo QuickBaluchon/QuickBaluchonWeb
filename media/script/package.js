@@ -24,3 +24,19 @@ function delivered (text) {
     let jb = document.getElementById('jumbotron') ;
     jb.innerHTML = '<h1 class="display-4">Colis livré</h1>' ;
 }
+
+function absent (id) {
+    ajax(`/api/package/${id}&fields=volume,warehouse`, '', 'GET', getVolume) ;
+}
+
+function getVolume (text) {
+    let arr = JSON.parse(text) ;
+    let json = JSON.stringify( { AvailableVolume: -arr['volume'] } ) ;
+    ajax(`/api/wharehouse/${arr['warehouse']}`, json, 'PATCH', absented) ;
+}
+
+function absented (text) {
+    let jb = document.getElementById('jumbotron') ;
+    jb.innerHTML = '<h1 class="display-4">Destinataire absent</h1>' ;
+    console.log(text) ;
+}

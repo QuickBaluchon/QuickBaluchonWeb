@@ -17,25 +17,24 @@ function getInputsValue(arrayId, trim = false) {
     return values;
 }
 
-function login(jwt, location, next) {
+function login(jwt, location) {
     try {
         jwt = JSON.parse(jwt)
     } catch (e) {
-        console.log(e);
+        console.log(jwt, e);
         return e
     }
 
-    if (!location || !next) {
+    if (!location) {
         location = 'login';
-        next = '/bills';
     }
     document.cookie = 'access_token=' + jwt.access_token;
-    let redirect = window.location.href.replace(location, jwt.role + next);
+    let redirect = window.location.href.replace(location, jwt.role);
     window.location.href = redirect;
 
 }
 
-function ajax(url, json, method, callback) {
+function ajax(url, json, method, callback, error) {
     let request = new XMLHttpRequest();
     request.onreadystatechange = function() {
         if(request.readyState === 4) {
@@ -43,7 +42,7 @@ function ajax(url, json, method, callback) {
                 callback(request.response);
             else {
                 // Error
-                console.log(request.status + ' : ' + request.response);
+                if( error ) error({ status : request.status, content: request.response  });
             }
         }
     }
@@ -95,7 +94,7 @@ function jwtDecode(jwt) {
     return false;
 }
 
-function updatePwd() {
+function updatePwd(role) {
     let ids = ['inputOldPassword', 'inputPassword'];
     let values = getInputsValue(ids, true);
     if( values < 0 ) // error codes
@@ -108,7 +107,7 @@ function updatePwd() {
         if( json.length > 2 ) {
             let idClient = getIdClient();
             if( idClient )
-                ajax('../api/client/' + idClient, json, 'PATCH', updated)
+                ajax(`../api/${role}/` + idClient, json, 'PATCH', updated)
             else return false;
         }
 

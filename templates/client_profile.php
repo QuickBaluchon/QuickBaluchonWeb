@@ -44,7 +44,7 @@
               <input type="password" class="form-control" id="inputPassword">
             </div>
 
-            <button onclick="updatePwd()" type="button" class="btn btn-success">Changer</button>
+            <button onclick="updatePwd('client')" type="button" class="btn btn-success">Changer</button>
           </form>
 
         </div>

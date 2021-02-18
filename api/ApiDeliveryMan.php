@@ -12,21 +12,21 @@ class ApiDeliveryMan extends Api {
 
         $this->_method = $method;
 
-
         if (count($url) == 0)
             $this->_data = $this->getListDelivery();     // list of packages - /api/deliveryman
 
         elseif (($id = intval($url[0])) !== 0) {    // details one packages - /api/deliveryman/{id}
             switch ($method) {
-                case 'GET' :
-                    $this->_data = $this->getDelivery($id);
-                    break;
-                case 'PATCH' :
-                    $this->updateDelivery($id);
-                    break;
+                case 'GET' : $this->_data = $this->getDelivery($id); break;
+                case 'PATCH' : $this->updateDelivery($id); break;
+                default: http_response_code(404); exit();
             }
         } elseif (count($url) == 1) {
-            $this->signupDeliveryman();
+            switch ($url[0]) {
+                case 'signup': $this->signup();break;
+                case 'login': $this->login();break;
+                default: http_response_code(404); exit();
+            }
         }
 
 
@@ -34,7 +34,7 @@ class ApiDeliveryMan extends Api {
 
     }
 
-    public function getListDelivery(): array {
+    private function getListDelivery(): array {
         $packages = [];
         if ($this->_method != 'GET') $this->catError(405);
 
@@ -53,7 +53,7 @@ class ApiDeliveryMan extends Api {
         return $list;
     }
 
-    public function getDelivery($id): array {
+    private function getDelivery($id): array {
 
         if ($this->_method != 'GET') $this->catError(405);
         $columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'wharehouse', 'licenseImg', "registrationIMG"];
@@ -66,7 +66,7 @@ class ApiDeliveryMan extends Api {
             return [];
     }
 
-    public function signupDeliveryman() {
+    private function signup() {
 
         $data = $this->getJsonArray();
         $cols = ['firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'wharehouse'];
@@ -86,7 +86,44 @@ class ApiDeliveryMan extends Api {
 
     }
 
-    public function updateDelivery($id) {
+    private function login() {
+        if ($this->_method != 'POST') {
+            http_response_code(405);
+            exit();
+        }
+        $deliveryman = $this->getJsonArray();
+        if ( !isset($deliveryman['name'], $deliveryman['password']) ) {
+            http_response_code(400);
+            exit();
+        }
+
+        self::$_columns = ['id'];
+        self::$_where = ['email = ?', 'password = ?'];
+        self::$_params = [$deliveryman['name'], hash('sha256', $deliveryman['password'])];
+
+        $deliveryman = $this->get('DELIVERYMAN');
+        if (count($deliveryman) == 1) {
+            $id = $deliveryman[0]['id'];
+            $expire = 60 * 20; // 20 min
+            $role = 'deliveryman';
+            $response = [
+                'id' => $id,
+                'role' => $role,
+                'access_token' => $this->generateJWT($id, $role, $expire)
+            ];
+
+            $_SESSION['id'] = $id;
+            $_SESSION['role'] = $role;
+            $this->_data = $response;
+        } else {
+            // email/password false
+            http_response_code(401);
+            exit();
+        }
+
+    }
+
+    private function updateDelivery($id) {
         $data = $this->getJsonArray();
         $allowed = ['email', 'phone', 'volumeCar', 'radius', 'password', 'oldpassword'];
         if (count(array_diff(array_keys($data), $allowed)) > 0) {

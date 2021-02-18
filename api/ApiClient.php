@@ -85,8 +85,7 @@ class ApiClient extends Api
             return [];
     }
 
-    public function login()
-    {
+    public function login() {
         if ($this->_method != 'POST') $this->catError(405);
         $client = $this->getJsonArray();
         if (isset($client['name'], $client['password'])) {
@@ -105,10 +104,12 @@ class ApiClient extends Api
                 ];
 
                 $_SESSION['id'] = $id;
+                $_SESSION['role'] = 'client';
                 $this->_data = $response;
             } else {
                 // login/password false
                 http_response_code(401);
+                exit();
             }
         } else {
             // not the required parameters 'name' & 'password'
@@ -135,7 +136,7 @@ class ApiClient extends Api
         $data = $this->getJsonArray();
         if (isset($data['name'], $data['website'], $data['paymentMethod'], $data['password'])) {
 
-            if ( $this->clientNameExists($data['name']) === false ) {
+            if ( $this->valueExists('CLIENT', 'name', $data['name'])  === false ) {
                 extract($data);
                 self::$_columns = ['name', 'website', 'paymentMethod', 'password'];
                 self::$_params = [$name, $website, $paymentMethod, hash('sha256', $password)];

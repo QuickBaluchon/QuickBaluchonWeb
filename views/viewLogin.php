@@ -32,7 +32,7 @@ $this->_js = ['main','login'];
             </div>
             <div class="form-group row">
               <div class="col-sm-10">
-                <button onclick="tryLogin('inputLogin', 'inputPwd')" class="btn btn-round btn-primary">Se connecter</button>
+                <button onclick="tryLogin('client', deliveryman)" class="btn btn-round btn-primary">Se connecter</button>
               </div>
             </div>
             <div class="form-group row">

@@ -16,9 +16,11 @@ function recieved (text) {
 
 function deliver (id) {
     let json = JSON.stringify( { status: 3 } );
-    ajax(`/api/stop/${id}`, json, 'PATCH', log) ;
+    ajax(`/api/stop/${id}`, '', 'PATCH', delivered) ;
+    ajax(`/api/package/${id}`, json, 'PATCH', delivered) ;
 }
 
-function log (text) {
-    console.log(text) ;
+function delivered (text) {
+    let jb = document.getElementById('jumbotron') ;
+    jb.innerHTML = '<h1 class="display-4">Colis livré</h1>' ;
 }

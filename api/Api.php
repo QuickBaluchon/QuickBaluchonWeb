@@ -61,7 +61,7 @@ abstract class Api {
 
   // SELECT
   protected function get($table, $columns=null): array {
-      
+
     // COLUMNS
     $this->getColumns($columns);
 
@@ -152,7 +152,7 @@ abstract class Api {
     protected function delete($table, $id) {
         $sql = "DELETE FROM $table WHERE id = ?";
         self::$_params[] = $id;
-        
+
         $stmt = $this->getDb()->prepare($sql);
         if ($stmt) {
           $success = $stmt->execute(self::$_params);

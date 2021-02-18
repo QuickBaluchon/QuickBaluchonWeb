@@ -7,16 +7,14 @@ function signup() {
     'inputPhone',
     'inputPassword1',
     'inputPassword2',
-    'inputEntrepot',
     'inputBIC',
     'inputRIB',
+    'inputEntrepot',
     'inputRadius',
-    'inputVolume',
-    'fileLicense',
-    'fileRegistration'];
+    'inputVolume'];
 
     let values = getInputsValue(ids, true);
-console.log(values);
+
     if( values < 0 ) // error codes
         return false;
 
@@ -26,20 +24,20 @@ console.log(values);
     } else {
         let json = JSON.stringify( {
             lastname: values['inputLastName'],
-            FirstName : values['inputFirstName'],
+            firstname : values['inputFirstName'],
             phone : values['inputPhone'],
             email: values['inputEmail'],
             password: values['inputPassword2'],
-            licenseImg : values['fileLicense'],
-            registrationIMG : values['fileRegistration'],
-            volumeCar: values['inputVolume'],
-            radius: values['inputRadius'],
+            volumeCar: parseInt(values['inputVolume']),
+            radius: parseInt(values['inputRadius']),
             IBAN : values['inputBIC'],
-            wharehouse : values['inputEntrepot'],
+            wharehouse : parseInt(values['inputEntrepot']),
         } );
-        ajax('../api/deliveryman/signup', json, 'POST', signup);
+
+        ajax('../api/deliveryman/signup', json, 'POST', hello);
     }
+}
 
-
-
+function hello(reponse) {
+    console.log("hello", reponse);
 }

@@ -9,6 +9,7 @@ abstract class Api {
   protected static $_params;
   protected static $_offset = 0;
   protected static $_limit = 1;
+  protected static $_order ;
   private static $_jwtKey = 'key';
 
   private function setDb() {
@@ -71,6 +72,11 @@ abstract class Api {
     if( isset(self::$_where) && count(self::$_where) > 0 ) {
       $whereClause = join(' AND ', self::$_where);
       $sql .= ' WHERE ' . $whereClause;
+    }
+
+    // ORDER BY
+    if (isset(self::$_order)) {
+        $sql .= ' ORDER BY ' . self::$_order ;
     }
 
     // LIMIT
@@ -167,19 +173,17 @@ abstract class Api {
           http_response_code(500);
         }
 
-
-
-
     }
 
 
 
-  private function resetParams() {
+  protected function resetParams() {
     self::$_columns = [];
     self::$_where = [];
     self::$_params = [];
     self::$_offset = 0;
     self::$_limit = 1;
+    self::$_order = NULL ;
   }
 
   // RECOVER POST DATA

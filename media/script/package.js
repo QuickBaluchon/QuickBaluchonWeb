@@ -16,5 +16,9 @@ function recieved (text) {
 
 function deliver (id) {
     let json = JSON.stringify( { status: 3 } );
-    ajax(`/api/package/${id}`, json, 'PATCH', recieved) ;
+    ajax(`/api/stop/${id}`, json, 'PATCH', log) ;
+}
+
+function log (text) {
+    console.log(text) ;
 }

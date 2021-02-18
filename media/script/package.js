@@ -6,11 +6,15 @@ function recieve (id) {
     let delay = document.getElementById('delay').value ;
     let json = JSON.stringify( { weight: weight, volume: volume, address: address, email: email, delay: delay, status: 1 } );
 
-    ajax(`/api/package/${id}`, json, 'PATCH', success) ;
+    ajax(`/api/package/${id}`, json, 'PATCH', recieved) ;
 }
 
-function success (text) {
+function recieved (text) {
     let jb = document.getElementById('jumbotron') ;
-    jb.innerHTML = '<h1 class="display-4">Colis enregistré</h1>'
-    console.log(text)
+    jb.innerHTML = '<h1 class="display-4">Colis enregistré</h1>' ;
+}
+
+function deliver (id) {
+    let json = JSON.stringify( { status: 3 } );
+    ajax(`/api/package/${id}`, json, 'PATCH', recieved) ;
 }

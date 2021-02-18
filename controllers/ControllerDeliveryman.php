@@ -11,7 +11,7 @@ class ControllerDeliveryman
 
     public function __construct($url)
     {
-    $_SESSION["id"] = 4;
+    $_SESSION["id"] = 1;
     $this->_id = $_SESSION["id"];
     if (!isset($url[1])) {
       header('location:' . WEB_ROOT . 'deliveryman/payslip');
@@ -51,6 +51,7 @@ class ControllerDeliveryman
         $profile = $this->_view->generateTemplate('deliveryman_profile', $delivery);
         $this->_view->generateView(['content' => $profile, 'name' => $delivery['lastname']  ]);
     }
+
     private function signup($url)
     {
         $this->_view = new View('Back');

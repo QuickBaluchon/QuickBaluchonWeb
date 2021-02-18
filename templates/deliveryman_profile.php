@@ -20,7 +20,7 @@
         <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
 
           <!-- content navpills profile -->
-          <form class="form-round col-lg">
+          <form onsubmit="return false" class="form-round col-lg">
             <div class="form-group">
               <label for="inputName">Prénom</label>
               <input type="text" class="form-control" id="inputName" value="<?= $firstname ?>" disabled="true">
@@ -31,21 +31,20 @@
             </div>
             <div class="form-group">
               <label for="inputWebsite">Email</label>
-              <input type="text" class="form-control" id="inputWebsite" placeholder="<?= $email ?>">
+              <input type="text" class="form-control" id="inputEmail" placeholder="<?= $email ?>">
             </div>
             <div class="form-group">
               <label for="inputWebsite">numéro de téléphone</label>
-              <input type="text" class="form-control" id="inputWebsite" placeholder="<?= $phone ?>">
+              <input type="text" class="form-control" id="inputPhone" placeholder="<?= $phone ?>">
             </div>
 
-
-            <button type="button" class="btn btn-success">Sauvegarder</button>
+            <button onclick="updateProfile()" type="button" class="btn btn-success">Sauvegarder</button>
           </form>
         </div>
 
         <!-- content navpills password -->
         <div class="tab-pane fade" id="pills-password" role="tabpanel" aria-labelledby="pills-password-tab">
-          <form class="form-round col-lg">
+          <form onsubmit="return false" class="form-round col-lg">
             <div class="form-group">
               <label for="inputOldPassword">Ancien mot de passe</label>
               <input type="password" class="form-control" id="inputOldPassword">
@@ -55,13 +54,13 @@
               <input type="password" class="form-control" id="inputPassword">
             </div>
 
-            <button type="button" class="btn btn-success">Changer</button>
+            <button onclick="updatePwd()"  type="button" class="btn btn-success">Changer</button>
           </form>
 
         </div>
 
         <div class="tab-pane fade" id="pills-car" role="tabpanel" aria-labelledby="pills-password-tab">
-          <form class="form-round col-lg">
+          <form onsubmit="return false" class="form-round col-lg">
             <div class="form-group">
               <label for="inputOldPassword">License</label>
               <input type="text" class="form-control" id="inputOldPassword" value="license: <?= $licenseImg ?>" disabled="true">
@@ -79,7 +78,7 @@
               <input type="number" min="1" class="form-control" id="inputOldPassword" value="<?= $radius ?>">
             </div>
 
-            <button type="button" class="btn btn-success">Changer</button>
+            <button onclick="updateCar()" type="button" class="btn btn-success">Changer</button>
           </form>
 
         </div>
@@ -93,3 +92,5 @@
     </div>
   </div>
 </div>
+
+<script src="<?= WEB_ROOT . 'media/script/deliveryman/profile.js' ?>"></script>

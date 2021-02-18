@@ -179,23 +179,7 @@ class ApiClient extends Api
         }
     }
 
-    private function clientNameExists($name = null)
-    {
-        if ($name != null) {
-            // check if a user already has this name
-            self::$_columns = ['id'];
-            self::$_where = ['name = ?'];
-            self::$_params = [$name];
-            $clients = $this->get('CLIENT');
-            return count($clients) > 0;
-
-        } else {
-            return -1;
-        }
-    }
-
-    private function updateClient($id)
-    {
+    private function updateClient($id) {
         $data = $this->getPostArray();
         $allowed = ['name', 'website', 'password', 'oldpassword'];
         if (count(array_diff(array_keys($data), $allowed)) > 0) {
@@ -204,7 +188,7 @@ class ApiClient extends Api
         }
 
         // check if a user already has this name or if the old password is not correct
-        if ( isset($data['name']) && $this->clientNameExists($data['name']) ||
+        if ( isset($data['name']) && $this->valueExists( 'CLIENT', 'name', $data['name']) ||
             isset( $data['oldpassword'] ) && !$this->isPwdCorrect($id, $data['oldpassword'])) {
             http_response_code(401);
             exit();

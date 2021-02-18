@@ -22,13 +22,7 @@ class ControllerPackage {
       }
 
       if (isset($url[0]) && !empty($url[0])) {
-
-          if ($url[0] === 'recieve') {
-              $this->_data = 'Ok' ;
-              echo json_encode( $this->_data, JSON_PRETTY_PRINT );
-          }
-
-          elseif ($this->getPackage($url[0]) != 0) {
+          if ($this->getPackage($url[0]) != 0) {
               switch ($this->_data['status']) {
                   case 0:
                     $this->recievePackage() ;
@@ -74,6 +68,10 @@ class ControllerPackage {
       $package = $this->_packageManager->getPackage($this->_id, ['id', 'weight', 'volume', 'address', 'email', 'delay']) ;
       $this->_view = new View('Reception') ;
       $this->_view->generateView($package);
+  }
+
+  private function updatePackage () {
+      $package = $this->_packageManager->updatePackage($this->_id, ['id', 'weight', 'volume', 'address', 'email', 'delay', 'dateDeposit', 'dateDelivery']) ;
   }
 
   private function sentBack () {

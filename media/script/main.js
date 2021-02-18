@@ -39,7 +39,7 @@ function ajax(url, json, method, callback) {
     request.onreadystatechange = function() {
         if(request.readyState === 4) {
             if(request.status === 200)
-                callback(request.responseText);
+                callback(request.response);
             else {
                 // Error
                 console.log(request.status + ' : ' + request.response);

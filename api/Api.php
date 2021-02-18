@@ -275,4 +275,23 @@ abstract class Api {
     exit(0);
   }
 
+  protected function valueExists( $table, $column, $value ) {
+      if( isset($table, $column) ){
+          self::$_columns = ['id'];
+          self::$_where = ["$column = ?"];
+          self::$_params = [$value];
+          $clients = $this->get($table);
+          return count($clients) > 0;
+      }else return -1;
+  }
+
+    protected function isValueCorrect( $id, $table, $column, $value ) {
+        if( isset($id, $table, $column, $value) ) {
+            self::$_columns = ['id'];
+            self::$_where = [ 'id = ?',"$column = ?"];
+            self::$_params = [$id, $value];
+            $clients = $this->get($table);
+            return count($clients) > 0;
+        } else return -1;
+    }
 }

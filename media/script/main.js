@@ -17,25 +17,24 @@ function getInputsValue(arrayId, trim = false) {
     return values;
 }
 
-function login(jwt, location, next) {
+function login(jwt, location) {
     try {
         jwt = JSON.parse(jwt)
     } catch (e) {
-        console.log(e);
+        console.log(jwt, e);
         return e
     }
 
-    if (!location || !next) {
+    if (!location) {
         location = 'login';
-        next = '/bills';
     }
     document.cookie = 'access_token=' + jwt.access_token;
-    let redirect = window.location.href.replace(location, jwt.role + next);
+    let redirect = window.location.href.replace(location, jwt.role);
     window.location.href = redirect;
 
 }
 
-function ajax(url, json, method, callback) {
+function ajax(url, json, method, callback, error) {
     let request = new XMLHttpRequest();
     request.onreadystatechange = function() {
         if(request.readyState === 4) {
@@ -43,12 +42,79 @@ function ajax(url, json, method, callback) {
                 callback(request.response);
             else {
                 // Error
-                console.log(request.status + ' : ' + request.response);
+                if( error ) error({ status : request.status, content: request.response  });
             }
         }
     }
     request.open(method, url, true);
     request.setRequestHeader("Content-Type", "application/json; charset=utf-8");
     request.send(json);
+
+}
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function getIdClient() {
+    let jwt = getCookie('access_token');
+    let decode = jwtDecode(jwt);
+    if (decode)
+        return decode.playload.sub;
+    else
+        return false;
+}
+
+function jwtDecode(jwt) {
+    if (jwt) {
+        jwt = jwt.split('.');
+        let jwtParts = ['header', 'playload'];
+        let decode = {};
+        for (let i = 0; i < 2; i++) {
+            try {
+                decode[jwtParts[i]] = JSON.parse(atob(jwt[i]));
+            } catch (e) {
+                return false
+            }
+        }
+        return decode;
+    }
+    return false;
+}
+
+function updatePwd(role) {
+    let ids = ['inputOldPassword', 'inputPassword'];
+    let values = getInputsValue(ids, true);
+    if( values < 0 ) // error codes
+        return false;
+    if( values['inputOldPassword'] && values['inputPassword'] ) {
+        json = JSON.stringify( {
+            oldpassword : values['inputOldPassword'],
+            password : values['inputPassword']
+        } );
+        if( json.length > 2 ) {
+            let idClient = getIdClient();
+            if( idClient )
+                ajax(`../api/${role}/` + idClient, json, 'PATCH', updated)
+            else return false;
+        }
+
+
+    } else {
+        console.log('Error params');
+        return false;
+    }
 
 }

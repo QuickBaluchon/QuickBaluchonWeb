@@ -1,16 +1,22 @@
-function tryLogin (idLogin, idPwd) {
-    let inputLogin = document.getElementById(idLogin);
-    let inputPwd = document.getElementById(idPwd);
+function tryLogin (collection, callbackError) {
+    let inputLogin = document.getElementById('inputLogin');
+    let inputPwd = document.getElementById('inputPwd');
     if( inputLogin && inputPwd ) {
         let valueLogin = inputLogin.value.trim();
         let valuePwd = inputPwd.value.trim();
         if( valueLogin.length > 0 && valuePwd.length > 0 ) {
             let json = JSON.stringify( { name: valueLogin, password: valuePwd } );
-            ajax('api/client/login', json, 'POST', login);
+            ajax(`api/${collection}/login`, json, 'POST', login, callbackError);
         }else {
             // input empty
-
+            console.log('Please enter your login details');
         }
     }
 }
 
+function deliveryman(response) {
+    if( response.status === 401 ) {
+        tryLogin ('deliveryman');
+    }
+    else return false;
+}

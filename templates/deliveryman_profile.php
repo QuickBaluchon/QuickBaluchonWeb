@@ -20,7 +20,7 @@
         <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
 
           <!-- content navpills profile -->
-          <form class="form-round col-lg">
+          <form onsubmit="return false" class="form-round col-lg">
             <div class="form-group">
               <label for="inputName">Prénom</label>
               <input type="text" class="form-control" id="inputName" value="<?= $firstname ?>" disabled="true">
@@ -30,22 +30,21 @@
               <input type="text" class="form-control" id="inputName" value="<?= $lastname ?>" disabled="true">
             </div>
             <div class="form-group">
-              <label for="inputWebsite">Email</label>
-              <input type="text" class="form-control" id="inputWebsite" placeholder="<?= $email ?>">
+              <label for="inputEmail">Email</label>
+              <input type="text" class="form-control" id="inputEmail" placeholder="<?= $email ?>">
             </div>
             <div class="form-group">
-              <label for="inputWebsite">numéro de téléphone</label>
-              <input type="text" class="form-control" id="inputWebsite" placeholder="<?= $phone ?>">
+              <label for="inputPhone">numéro de téléphone</label>
+              <input type="text" class="form-control" id="inputPhone" placeholder="<?= $phone ?>">
             </div>
 
-
-            <button type="button" class="btn btn-success">Sauvegarder</button>
+            <button onclick="updateProfile()" type="button" class="btn btn-success">Sauvegarder</button>
           </form>
         </div>
 
         <!-- content navpills password -->
         <div class="tab-pane fade" id="pills-password" role="tabpanel" aria-labelledby="pills-password-tab">
-          <form class="form-round col-lg">
+          <form onsubmit="return false" class="form-round col-lg">
             <div class="form-group">
               <label for="inputOldPassword">Ancien mot de passe</label>
               <input type="password" class="form-control" id="inputOldPassword">
@@ -55,31 +54,31 @@
               <input type="password" class="form-control" id="inputPassword">
             </div>
 
-            <button type="button" class="btn btn-success">Changer</button>
+            <button onclick="updatePwd('deliveryman')"  type="button" class="btn btn-success">Changer</button>
           </form>
 
         </div>
 
         <div class="tab-pane fade" id="pills-car" role="tabpanel" aria-labelledby="pills-password-tab">
-          <form class="form-round col-lg">
+          <form onsubmit="return false" class="form-round col-lg">
             <div class="form-group">
-              <label for="inputOldPassword">License</label>
-              <input type="text" class="form-control" id="inputOldPassword" value="license: <?= $licenseImg ?>" disabled="true">
+              <label for="inputLicense">License</label>
+              <input type="text" class="form-control" id="inputLicense" value="license: <?= $licenseImg ?>" disabled="true">
             </div>
             <div class="form-group">
-              <label for="inputOldPassword">Registration</label>
-              <input type="text" class="form-control" id="inputOldPassword" value="registration: <?= $registrationIMG ?>" disabled="true">
+              <label for="inputRegistration">Registration</label>
+              <input type="text" class="form-control" id="inputRegistration" value="registration: <?= $registrationIMG ?>" disabled="true">
             </div>
             <div class="form-group">
-              <label for="inputOldPassword">Volume</label>
-              <input type="number" min="0.1" step="0.1" class="form-control" id="inputOldPassword" value="<?= $volumeCar ?>">
+              <label for="inputVolumeCar">Volume</label>
+              <input type="number" min="0.1" step="0.1" class="form-control" id="inputVolumeCar" value="<?= $volumeCar ?>">
             </div>
             <div class="form-group">
-              <label for="inputOldPassword">rayon de livraison</label>
-              <input type="number" min="1" class="form-control" id="inputOldPassword" value="<?= $radius ?>">
+              <label for="inputRadius">rayon de livraison</label>
+              <input type="number" min="1" class="form-control" id="inputRadius" value="<?= $radius ?>">
             </div>
 
-            <button type="button" class="btn btn-success">Changer</button>
+            <button onclick="updateCar()" type="button" class="btn btn-success">Changer</button>
           </form>
 
         </div>
@@ -93,3 +92,5 @@
     </div>
   </div>
 </div>
+
+<script src="<?= WEB_ROOT . 'media/script/deliveryman/profile.js' ?>"></script>

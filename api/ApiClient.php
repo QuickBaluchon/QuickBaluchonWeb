@@ -85,10 +85,9 @@ class ApiClient extends Api
             return [];
     }
 
-    public function login()
-    {
+    public function login() {
         if ($this->_method != 'POST') $this->catError(405);
-        $client = $this->getPostArray();
+        $client = $this->getJsonArray();
         if (isset($client['name'], $client['password'])) {
             self::$_columns = ['id'];
             self::$_where = ['name = ?', 'password = ?'];
@@ -105,10 +104,12 @@ class ApiClient extends Api
                 ];
 
                 $_SESSION['id'] = $id;
+                $_SESSION['role'] = 'client';
                 $this->_data = $response;
             } else {
                 // login/password false
                 http_response_code(401);
+                exit();
             }
         } else {
             // not the required parameters 'name' & 'password'
@@ -132,10 +133,10 @@ class ApiClient extends Api
 
     public function signup()
     {
-        $data = $this->getPostArray();
+        $data = $this->getJsonArray();
         if (isset($data['name'], $data['website'], $data['paymentMethod'], $data['password'])) {
 
-            if ( $this->clientNameExists($data['name']) === false ) {
+            if ( $this->valueExists('CLIENT', 'name', $data['name'])  === false ) {
                 extract($data);
                 self::$_columns = ['name', 'website', 'paymentMethod', 'password'];
                 self::$_params = [$name, $website, $paymentMethod, hash('sha256', $password)];
@@ -179,24 +180,8 @@ class ApiClient extends Api
         }
     }
 
-    private function clientNameExists($name = null)
-    {
-        if ($name != null) {
-            // check if a user already has this name
-            self::$_columns = ['id'];
-            self::$_where = ['name = ?'];
-            self::$_params = [$name];
-            $clients = $this->get('CLIENT');
-            return count($clients) > 0;
-
-        } else {
-            return -1;
-        }
-    }
-
-    private function updateClient($id)
-    {
-        $data = $this->getPostArray();
+    private function updateClient($id) {
+        $data = $this->getJsonArray();
         $allowed = ['name', 'website', 'password', 'oldpassword'];
         if (count(array_diff(array_keys($data), $allowed)) > 0) {
             http_response_code(400);
@@ -204,7 +189,7 @@ class ApiClient extends Api
         }
 
         // check if a user already has this name or if the old password is not correct
-        if ( isset($data['name']) && $this->clientNameExists($data['name']) ||
+        if ( isset($data['name']) && $this->valueExists( 'CLIENT', 'name', $data['name']) ||
             isset( $data['oldpassword'] ) && !$this->isPwdCorrect($id, $data['oldpassword'])) {
             http_response_code(401);
             exit();

@@ -102,7 +102,7 @@ abstract class Api {
     foreach (self::$_columns as $col)  $values[] = '?';
     $values = '( ' . join(', ', $values) . ' )';
     $sql = 'INSERT INTO ' . $table . $cols . ' VALUES' . $values ;
-
+    
     $stmt = $this->getDb()->prepare($sql);
     if($stmt) {
       $success = $stmt->execute(self::$_params);

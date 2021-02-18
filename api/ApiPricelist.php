@@ -68,19 +68,24 @@ class ApiPricelist extends Api {
   }
 
   public function updatePrice($id){
-      $data = $this->getPostArray();
-      $allowed = ['maxWeight', 'ExpressPrice', 'StandardPrice', "applicationDate"];
+
+      $data = $this->getJsonArray();
+      $allowed = ['ExpressPrice', 'StandardPrice'];
+
+      $columns = ['maxWeight'];
+      self::$_where[] = 'id = ?';
+      self::$_params[] = $id;
+      $maxWeight = $this->get('PRICELIST', $columns);
+
       if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
         http_response_code(400);
         exit(0);
       }
 
-      foreach ($data as $key => $value) {
-        self::$_set[] = "$key = ?";
-        self::$_params[] = $value;
-      }
+      self::$_columns = ['maxWeight', 'ExpressPrice', 'StandardPrice'];
+      self::$_params = [$maxWeight[0]['maxWeight'],$data['ExpressPrice'], $data['StandardPrice']];
 
-      $this->patch('PRICELIST', $id);
+      $this->add('PRICELIST');
   }
 
 }

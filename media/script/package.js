@@ -32,7 +32,7 @@ function absent (id) {
 function getVolume (text) {
     let arr = JSON.parse(text) ;
     let json = JSON.stringify( { AvailableVolume: -arr['volume'] } ) ;
-    ajax(`/api/wharehouse/${arr['warehouse']}`, json, 'PATCH', absented) ;
+    ajax(`/api/warehouse/${arr['warehouse']}`, json, 'PATCH', absented) ;
 }
 
 function absented (text) {

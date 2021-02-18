@@ -82,8 +82,8 @@ class ApiPricelist extends Api {
         exit(0);
       }
 
-      self::$_columns = ['maxWeight', 'ExpressPrice', 'StandardPrice'];
-      self::$_params = [$maxWeight[0]['maxWeight'],$data['ExpressPrice'], $data['StandardPrice']];
+      self::$_columns = ['maxWeight', 'ExpressPrice', 'StandardPrice', 'applicationDate'];
+      self::$_params = [$maxWeight[0]['maxWeight'],$data['ExpressPrice'], $data['StandardPrice'], date("Y-m-d")];
 
       $this->add('PRICELIST');
   }

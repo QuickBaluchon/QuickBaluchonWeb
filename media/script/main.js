@@ -9,6 +9,7 @@ function getInputsValue(arrayId, trim = false) {
     let values = [];
     for (let i = 0; i < arrayId.length; i++) {
         input = document.getElementById(arrayId[i]);
+        console.log(input);
         if( input && (input.tagName === 'INPUT' || input.tagName === 'SELECT')) {
             values[arrayId[i]] = trim === false ? input.value : input.value.trim();
         } else

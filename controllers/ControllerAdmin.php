@@ -6,7 +6,7 @@ class ControllerAdmin
 {
 
   private $_clientManager;
-  private $_WharehousesManager;
+  private $_WarehousesManager;
   private $_deliveryManager;
   private $_pricelistManager;
   private $_view;
@@ -19,7 +19,7 @@ class ControllerAdmin
       exit();
     }
 
-    $actions = ['clients', 'pricelist', 'deliveryman', 'languages', 'wharehouses', 'oneSignal'];
+    $actions = ['clients', 'pricelist', 'deliveryman', 'languages', 'wharehouses', 'oneSignal', 'updatePricelist'];
     if ( method_exists( $this ,$url[1]) ) {
       $method = $url[1];
       $this->$method(array_slice($url, 2));
@@ -67,21 +67,21 @@ class ControllerAdmin
     $list = $this->_DeliveryManager->getDeliverys([]);
 
 
-    $cols = ['#', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN','employed', 'wharehouse'];
+    $cols = ['#', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN','employed', 'warehouse'];
     $deliveryman = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
     $this->_view->generateView(['content' => $deliveryman, 'name' => 'QuickBaluchon']);
   }
 
-  private function wharehouses($url) {
+  private function warehouses($url) {
     $this->_view = new View('Back');
 
-    $this->_WharehousesManager = new WharehouseManager;
-    $list = $this->_WharehousesManager->getWharehouses([]);
+    $this->_WarehousesManager = new WarehouseManager;
+    $list = $this->_WarehousesManager->getWarehouses([]);
 
 
     $cols = ['#', 'address', 'volume', 'AvailableVolume','active'];
-    $wharehouse = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
-    $this->_view->generateView(['content' => $wharehouse, 'name' => 'QuickBaluchon']);
+    $warehouse = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
+    $this->_view->generateView(['content' => $warehouse, 'name' => 'QuickBaluchon']);
   }
 
   private function pricelist($url) {
@@ -94,6 +94,13 @@ class ControllerAdmin
     $cols = ['#', 'Max wheight', 'Express price', 'Standard price', 'application date'];
     $pricelist = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
     $this->_view->generateView(['content' => $pricelist, 'name' => 'QuickBaluchon']);
+  }
+
+  private function updatePricelist($url) {
+    $this->_view = new View('UpdatePricelist');
+
+
+    $this->_view->generateView([]);
   }
 
 }

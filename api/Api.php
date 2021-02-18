@@ -9,6 +9,7 @@ abstract class Api {
   protected static $_params;
   protected static $_offset = 0;
   protected static $_limit = 1;
+  protected static $_order ;
   private static $_jwtKey = 'key';
 
   private function setDb() {
@@ -73,6 +74,11 @@ abstract class Api {
       $sql .= ' WHERE ' . $whereClause;
     }
 
+    // ORDER BY
+    if (isset(self::$_order)) {
+        $sql .= ' ORDER BY ' . self::$_order ;
+    }
+
     // LIMIT
     self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
     self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
@@ -102,7 +108,7 @@ abstract class Api {
     foreach (self::$_columns as $col)  $values[] = '?';
     $values = '( ' . join(', ', $values) . ' )';
     $sql = 'INSERT INTO ' . $table . $cols . ' VALUES' . $values ;
-
+    
     $stmt = $this->getDb()->prepare($sql);
     if($stmt) {
       $success = $stmt->execute(self::$_params);
@@ -167,19 +173,17 @@ abstract class Api {
           http_response_code(500);
         }
 
-
-
-
     }
 
 
 
-  private function resetParams() {
+  protected function resetParams() {
     self::$_columns = [];
     self::$_where = [];
     self::$_params = [];
     self::$_offset = 0;
     self::$_limit = 1;
+    self::$_order = NULL ;
   }
 
   // RECOVER POST DATA

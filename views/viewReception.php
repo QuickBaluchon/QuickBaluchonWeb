@@ -1,13 +1,14 @@
 <?php
 $this->_header = ROOT . '/templates/Front/header.php';
-$this->_js = ['main', 'package/recieve'];
+$this->_js = ['main', 'package'];
+$this->_header = ROOT . '/templates/Front/header.php';
 
 ?>
 
 <section id="heroBanner-login">
-  <div class="container-xl">
+  <div class="container col-8 d-flex flex-column justify-content-center">
     <div class="row">
-      <div class="col-lg">
+      <div class="col">
 
           <div class="jumbotron bg-white" id="jumbotron">
             <h1 class="display-4">Réception d'un colis</h1>

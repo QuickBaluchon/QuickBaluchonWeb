@@ -96,8 +96,6 @@ $this->_js = ['main','deliveryman/signup'];
               </div>
             </div>
 
-
-
             <!-- BUTTON SIGNUP -->
             <hr class="my-4">
             <div class="form-group row">

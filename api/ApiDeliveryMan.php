@@ -44,7 +44,7 @@ class ApiDeliveryMan extends Api {
         }
 
 
-        $columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'wharehouse', 'licenseImg', "registrationIMG"];
+        $columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG"];
         self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
         self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
@@ -56,7 +56,7 @@ class ApiDeliveryMan extends Api {
     private function getDelivery($id): array {
 
         if ($this->_method != 'GET') $this->catError(405);
-        $columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'wharehouse', 'licenseImg', "registrationIMG"];
+        $columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG"];
         self::$_where[] = 'id = ?';
         self::$_params[] = $id;
         $delivery = $this->get('DELIVERYMAN', $columns);
@@ -69,18 +69,24 @@ class ApiDeliveryMan extends Api {
     private function signup() {
 
         $data = $this->getJsonArray();
-        $cols = ['firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'wharehouse'];
+        $cols = ['firstname', 'lastname','password', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'warehouse'];
         for ($i = 0; $i < count($cols); $i++) {
             if (!isset($data[$cols[$i]])) {
                 echo $cols[$i];
                 http_response_code(400);
                 exit();
             }
-            self::$_params[] = $data[$cols[$i]];
+
+            if($cols[$i] == "password")
+                self::$_params[] = hash('sha256', $data[$cols[$i]]);
+            else
+                self::$_params[] = $data[$cols[$i]];
+
+
         }
 
 
-        self::$_columns = ['firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'wharehouse'];
+        self::$_columns = ['firstname', 'lastname', 'password','phone', 'email', 'volumeCar', 'radius', 'IBAN', 'warehouse'];
         $this->add('DELIVERYMAN');
         //$this->login();
 

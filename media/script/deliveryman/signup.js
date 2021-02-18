@@ -33,7 +33,7 @@ function signup() {
             volumeCar: parseInt(values['inputVolume']),
             radius: parseInt(values['inputRadius']),
             IBAN : values['inputBIC'],
-            wharehouse : parseInt(values['inputEntrepot']),
+            warehouse : parseInt(values['inputEntrepot']),
         } );
 
         ajax('../api/deliveryman/signup', json, 'POST', hello);

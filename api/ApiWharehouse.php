@@ -2,7 +2,7 @@
 
 require_once('Api.php');
 
-class ApiWharehouse extends Api {
+class ApiWarehouse extends Api {
 
   private $_method;
   private $_data = [];
@@ -12,13 +12,13 @@ class ApiWharehouse extends Api {
     $this->_method = $method;
 
     if (count($url) == 0)
-      $this->_data = $this->getListWharehouse();     // list of packages - /api/wharehouse
+      $this->_data = $this->getListWarehouse();     // list of packages - /api/warehouse
 
-    elseif ( ($id = intval($url[0])) !== 0 ){// details one packages - /api/wharehouse/{id}
+    elseif ( ($id = intval($url[0])) !== 0 ){// details one packages - /api/warehouse/{id}
     switch ($method) {
-        case 'GET': $this->_data = $this->getWharehouse($id);break;
-        case 'DELETE': $this->deleteWharehouse($id);break;
-        case 'PATCH': $this->patchWharehouse($id);break;
+        case 'GET': $this->_data = $this->getWarehouse($id);break;
+        case 'DELETE': $this->deleteWarehouse($id);break;
+        case 'PATCH': $this->patchWarehouse($id);break;
         default:
             // code...
             break;
@@ -31,7 +31,7 @@ class ApiWharehouse extends Api {
 
   }
 
-  public function getListWharehouse (): array  {
+  public function getListWarehouse (): array  {
     $packages = [];
     if($this->_method != 'GET') $this->catError(405);
 
@@ -41,26 +41,26 @@ class ApiWharehouse extends Api {
     self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
     self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-    $list = $this->get('WHAREHOUSE');
+    $list = $this->get('WAREHOUSE');
 
     return $list;
   }
 
-  public function getWharehouse($id): array {
+  public function getWarehouse($id): array {
 
     if($this->_method != 'GET') $this->catError(405);
     //$this->authentication(['admin'], [$id]);
     self::$_columns = ['id', 'address', 'volume', 'AvailableVolume','active'];
     self::$_where[] = 'id = ?';
     self::$_params[] = $id;
-    $wharehouse = $this->get('WHAREHOUSE');
-    if( count($wharehouse) == 1 )
-      return $wharehouse[0];
+    $warehouse = $this->get('WAREHOUSE');
+    if( count($warehouse) == 1 )
+      return $warehouse[0];
     else
       return [];
   }
 
-  private function deleteWharehouse($id){
+  private function deleteWarehouse($id){
       if($this->_method != 'DELETE') $this->catError(405);
 
       $data = $this->getPostArray();
@@ -76,11 +76,11 @@ class ApiWharehouse extends Api {
       }
 
 
-      $this->patch("WHAREHOUSE", $id);
+      $this->patch("WAREHOUSE", $id);
   }
 
 
-private function patchWharehouse($id){
+private function patchWarehouse($id){
     if($this->_method != 'PATCH') $this->catError(405);
 
     $data = $this->getPostArray();
@@ -96,6 +96,6 @@ private function patchWharehouse($id){
     }
 
 
-    $this->patch("WHAREHOUSE", $id);
+    $this->patch("WAREHOUSE", $id);
 }
 }

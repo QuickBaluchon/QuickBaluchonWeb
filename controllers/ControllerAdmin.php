@@ -19,7 +19,7 @@ class ControllerAdmin
       exit();
     }
 
-    $actions = ['clients', 'pricelist', 'deliveryman', 'languages', 'warehouses', 'oneSignal'];
+    $actions = ['clients', 'pricelist', 'deliveryman', 'languages', 'wharehouses', 'oneSignal', 'updatePricelist'];
     if ( method_exists( $this ,$url[1]) ) {
       $method = $url[1];
       $this->$method(array_slice($url, 2));
@@ -94,6 +94,13 @@ class ControllerAdmin
     $cols = ['#', 'Max wheight', 'Express price', 'Standard price', 'application date'];
     $pricelist = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
     $this->_view->generateView(['content' => $pricelist, 'name' => 'QuickBaluchon']);
+  }
+
+  private function updatePricelist($url) {
+    $this->_view = new View('UpdatePricelist');
+
+
+    $this->_view->generateView([]);
   }
 
 }

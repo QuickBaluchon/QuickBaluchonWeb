@@ -1,4 +1,5 @@
 function signup() {
+
     let json = [];
 
     let ids =['inputLastName',
@@ -6,34 +7,32 @@ function signup() {
     'inputEmail',
     'inputPhone',
     'inputPassword1',
-    'inputPassword2',
+    'inputPassword',
     'inputBIC',
     'inputRIB',
     'inputEntrepot',
-    'fileLicense',
-    'fileRegistration',
     'inputRadius',
     'inputVolume'];
 
     let values = getInputsValue(ids, true);
 
+
     if( values < 0 ) // error codes
         return false;
 
-    if ( values['inputPassword1'] !== values['inputPassword2'] ) {
+    if ( values['inputPassword1'] !== values['inputPassword'] ) {
         console.log('Mots de passe différents');
+        return ;
     } else {
         let json = JSON.stringify( {
             lastname: values['inputLastName'],
             firstname : values['inputFirstName'],
             phone : values['inputPhone'],
             email: values['inputEmail'],
-            password: values['inputPassword2'],
+            password: values['inputPassword'],
             volumeCar: parseInt(values['inputVolume']),
             radius: parseInt(values['inputRadius']),
             IBAN : values['inputBIC'],
-            licenseImg: values['fileLicense'],
-            registrationIMG: values['fileRegistration'],
             wharehouse : parseInt(values['inputEntrepot']),
         } );
 

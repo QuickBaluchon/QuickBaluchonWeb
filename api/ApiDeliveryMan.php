@@ -69,18 +69,24 @@ class ApiDeliveryMan extends Api {
     private function signup() {
 
         $data = $this->getJsonArray();
-        $cols = ['firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'wharehouse'];
+        $cols = ['firstname', 'lastname','password', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'wharehouse'];
         for ($i = 0; $i < count($cols); $i++) {
             if (!isset($data[$cols[$i]])) {
                 echo $cols[$i];
                 http_response_code(400);
                 exit();
             }
-            self::$_params[] = $data[$cols[$i]];
+
+            if($cols[$i] == "password")
+                self::$_params[] = hash('sha256', $data[$cols[$i]]);
+            else
+                self::$_params[] = $data[$cols[$i]];
+
+
         }
 
 
-        self::$_columns = ['firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'wharehouse'];
+        self::$_columns = ['firstname', 'lastname', 'password','phone', 'email', 'volumeCar', 'radius', 'IBAN', 'wharehouse'];
         $this->add('DELIVERYMAN');
         //$this->login();
 

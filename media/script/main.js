@@ -52,3 +52,45 @@ function ajax(url, json, method, callback) {
     request.send(json);
 
 }
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function getIdClient() {
+    let jwt = getCookie('access_token');
+    let decode = jwtDecode(jwt);
+    if (decode)
+        return decode.playload.sub;
+    else
+        return false;
+}
+
+function jwtDecode(jwt) {
+    if (jwt) {
+        jwt = jwt.split('.');
+        let jwtParts = ['header', 'playload'];
+        let decode = {};
+        for (let i = 0; i < 2; i++) {
+            try {
+                decode[jwtParts[i]] = JSON.parse(atob(jwt[i]));
+            } catch (e) {
+                return false
+            }
+        }
+        return decode;
+    }
+    return false;
+}

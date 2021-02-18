@@ -88,7 +88,7 @@ class ApiClient extends Api
     public function login()
     {
         if ($this->_method != 'POST') $this->catError(405);
-        $client = $this->getPostArray();
+        $client = $this->getJsonArray();
         if (isset($client['name'], $client['password'])) {
             self::$_columns = ['id'];
             self::$_where = ['name = ?', 'password = ?'];
@@ -132,7 +132,7 @@ class ApiClient extends Api
 
     public function signup()
     {
-        $data = $this->getPostArray();
+        $data = $this->getJsonArray();
         if (isset($data['name'], $data['website'], $data['paymentMethod'], $data['password'])) {
 
             if ( $this->clientNameExists($data['name']) === false ) {
@@ -180,7 +180,7 @@ class ApiClient extends Api
     }
 
     private function updateClient($id) {
-        $data = $this->getPostArray();
+        $data = $this->getJsonArray();
         $allowed = ['name', 'website', 'password', 'oldpassword'];
         if (count(array_diff(array_keys($data), $allowed)) > 0) {
             http_response_code(400);

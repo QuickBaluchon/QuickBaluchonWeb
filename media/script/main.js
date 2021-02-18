@@ -94,3 +94,28 @@ function jwtDecode(jwt) {
     }
     return false;
 }
+
+function updatePwd() {
+    let ids = ['inputOldPassword', 'inputPassword'];
+    let values = getInputsValue(ids, true);
+    if( values < 0 ) // error codes
+        return false;
+    if( values['inputOldPassword'] && values['inputPassword'] ) {
+        json = JSON.stringify( {
+            oldpassword : values['inputOldPassword'],
+            password : values['inputPassword']
+        } );
+        if( json.length > 2 ) {
+            let idClient = getIdClient();
+            if( idClient )
+                ajax('../api/client/' + idClient, json, 'PATCH', updated)
+            else return false;
+        }
+
+
+    } else {
+        console.log('Error params');
+        return false;
+    }
+
+}

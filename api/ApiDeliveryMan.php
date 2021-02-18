@@ -87,7 +87,6 @@ class ApiDeliveryMan extends Api {
     }
 
     public function updateDelivery($id) {
-        echo 'id: ' . $id;die();
         $data = $this->getJsonArray();
         $allowed = ['email', 'phone', 'volumeCar', 'radius', 'password', 'oldpassword'];
         if (count(array_diff(array_keys($data), $allowed)) > 0) {

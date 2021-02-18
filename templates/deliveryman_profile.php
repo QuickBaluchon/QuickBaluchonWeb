@@ -30,11 +30,11 @@
               <input type="text" class="form-control" id="inputName" value="<?= $lastname ?>" disabled="true">
             </div>
             <div class="form-group">
-              <label for="inputWebsite">Email</label>
+              <label for="inputEmail">Email</label>
               <input type="text" class="form-control" id="inputEmail" placeholder="<?= $email ?>">
             </div>
             <div class="form-group">
-              <label for="inputWebsite">numéro de téléphone</label>
+              <label for="inputPhone">numéro de téléphone</label>
               <input type="text" class="form-control" id="inputPhone" placeholder="<?= $phone ?>">
             </div>
 
@@ -62,20 +62,20 @@
         <div class="tab-pane fade" id="pills-car" role="tabpanel" aria-labelledby="pills-password-tab">
           <form onsubmit="return false" class="form-round col-lg">
             <div class="form-group">
-              <label for="inputOldPassword">License</label>
-              <input type="text" class="form-control" id="inputOldPassword" value="license: <?= $licenseImg ?>" disabled="true">
+              <label for="inputLicense">License</label>
+              <input type="text" class="form-control" id="inputLicense" value="license: <?= $licenseImg ?>" disabled="true">
             </div>
             <div class="form-group">
-              <label for="inputOldPassword">Registration</label>
-              <input type="text" class="form-control" id="inputOldPassword" value="registration: <?= $registrationIMG ?>" disabled="true">
+              <label for="inputRegistration">Registration</label>
+              <input type="text" class="form-control" id="inputRegistration" value="registration: <?= $registrationIMG ?>" disabled="true">
             </div>
             <div class="form-group">
-              <label for="inputOldPassword">Volume</label>
-              <input type="number" min="0.1" step="0.1" class="form-control" id="inputOldPassword" value="<?= $volumeCar ?>">
+              <label for="inputVolumeCar">Volume</label>
+              <input type="number" min="0.1" step="0.1" class="form-control" id="inputVolumeCar" value="<?= $volumeCar ?>">
             </div>
             <div class="form-group">
-              <label for="inputOldPassword">rayon de livraison</label>
-              <input type="number" min="1" class="form-control" id="inputOldPassword" value="<?= $radius ?>">
+              <label for="inputRadius">rayon de livraison</label>
+              <input type="number" min="1" class="form-control" id="inputRadius" value="<?= $radius ?>">
             </div>
 
             <button onclick="updateCar()" type="button" class="btn btn-success">Changer</button>

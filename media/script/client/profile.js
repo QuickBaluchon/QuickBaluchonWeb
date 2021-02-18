@@ -6,22 +6,48 @@ function updateProfile() {
         return false;
 
     let changes = {};
-    for ( const id in values )
-        if(values[id].length > 0) {
-            let newid = id.replace('input', '').toLowerCase();
-            changes[newid] = values[id];
+    for ( const idInput in values )
+        if(values[idInput].length > 0) {
+            let apiField = idInput.replace('input', '').toLowerCase();
+            changes[apiField] = values[idInput];
         }
 
     json = JSON.stringify(changes);
-    ajax('../api/client/1', json, 'PATCH', updated);
+    if( json.length > 2 ) {
+        let idClient = getIdClient();
+        if( idClient )
+            ajax('../api/client/' + idClient, json, 'PATCH', updated)
+        else return false;
+    }
+    else return false;
 }
 
-function updated(response) {
+function updated() {
     document.location.reload();
 }
 
 function updatePwd() {
     let ids = ['inputOldPassword', 'inputPassword'];
     let values = getInputsValue(ids, true);
+    if( values < 0 ) // error codes
+        return false;
+    if( values['inputOldPassword'] && values['inputPassword'] ) {
+        json = JSON.stringify( {
+            oldpassword : values['inputOldPassword'],
+            password : values['inputPassword']
+        } );
+        if( json.length > 2 ) {
+            let idClient = getIdClient();
+            if( idClient )
+                ajax('../api/client/' + idClient, json, 'PATCH', updated)
+            else return false;
+        }
+
+
+    } else {
+        console.log('Error params');
+        return false;
+    }
+
 
 }

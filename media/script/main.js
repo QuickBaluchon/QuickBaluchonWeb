@@ -1,30 +1,31 @@
 function getInputsValue(arrayId, trim = false) {
-    if( !arrayId || !Array.isArray(arrayId) )
+    if (!arrayId || !Array.isArray(arrayId))
         return -1
 
-    if(  typeof trim !== 'boolean')
+    if (typeof trim !== 'boolean')
         return -2
 
     let input;
     let values = [];
-    for( let i = 0; i < arrayId.length; i++ ) {
+    for (let i = 0; i < arrayId.length; i++) {
         input = document.getElementById(arrayId[i]);
         if( input && (input.tagName === 'INPUT' || input.tagName === 'SELECT')) {
             values[arrayId[i]] = trim === false ? input.value : input.value.trim();
-        }else
+        } else
             return -3;
     }
     return values;
 }
 
 function login(jwt, location, next) {
-    try {jwt = JSON.parse(jwt) }
-    catch (e) {
+    try {
+        jwt = JSON.parse(jwt)
+    } catch (e) {
         console.log(e);
         return e
     }
 
-    if( !location || !next ){
+    if (!location || !next) {
         location = 'login';
         next = '/bills';
     }
@@ -39,7 +40,7 @@ function ajax(url, json, method, callback) {
     request.onreadystatechange = function() {
         if(request.readyState === 4) {
             if(request.status === 200)
-                callback(request.response, );
+                callback(request.response);
             else {
                 // Error
                 console.log(request.status + ' : ' + request.response);

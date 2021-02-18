@@ -10,6 +10,5 @@ class PackageManager extends Model{
 
     public function getClientPackages($id, $fields) {
       return $this->getCollection('package', ["fields" => join(',',$fields), "client" => $id]);
-
     }
 }

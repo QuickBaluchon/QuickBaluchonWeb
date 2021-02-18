@@ -34,7 +34,7 @@
         <div class="tab-pane fade" id="pills-password" role="tabpanel" aria-labelledby="pills-password-tab">
 
           <!-- content navpills password -->
-          <form class="form-round col-lg">
+          <form class="form-round col-lg" onsubmit="return false">
             <div class="form-group">
               <label for="inputOldPassword">Ancien mot de passe</label>
               <input type="password" class="form-control" id="inputOldPassword">
@@ -44,7 +44,7 @@
               <input type="password" class="form-control" id="inputPassword">
             </div>
 
-            <button type="button" class="btn btn-success">Changer</button>
+            <button onclick="updatePwd()" type="button" class="btn btn-success">Changer</button>
           </form>
 
         </div>

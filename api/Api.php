@@ -119,35 +119,35 @@ abstract class Api {
   // UPDATE
   protected function patch($table, $id) {
 
-  // UPDATE `CLIENT` SET name = ?, website = ? WHERE CLIENT.id = 2
-  $sql = "UPDATE " . $table;
+      // UPDATE `CLIENT` SET name = ?, website = ? WHERE CLIENT.id = 2
+      $sql = "UPDATE " . $table;
 
-  // SET
-  if( isset(self::$_set) && count(self::$_set) > 0 ) {
-    $setClause = join(', ', self::$_set);
-    $sql .= ' SET ' . $setClause;
-  } else {
-    // bad parameters
-    http_response_code(400);
-    exit();
-  }
+      // SET
+      if( isset(self::$_set) && count(self::$_set) > 0 ) {
+        $setClause = join(', ', self::$_set);
+        $sql .= ' SET ' . $setClause;
+      } else {
+        // bad parameters
+        http_response_code(400);
+        exit();
+      }
 
-  $sql .=  " WHERE id = $id";
+      $sql .=  " WHERE id = $id";
 
-  $stmt = $this->getDb()->prepare($sql);
-  if ($stmt) {
-    $success = $stmt->execute(self::$_params);
-    if ($success) {
-      // OK
-      $this->resetParams();
-      http_response_code(200);
-    } else {
-      http_response_code(500);
+      $stmt = $this->getDb()->prepare($sql);
+      if ($stmt) {
+        $success = $stmt->execute(self::$_params);
+        if ($success) {
+          // OK
+          $this->resetParams();
+          http_response_code(200);
+        } else {
+          http_response_code(500);
+        }
+      } else {
+        http_response_code(500);
+      }
     }
-  } else {
-    http_response_code(500);
-  }
-}
 
     protected function delete($table, $id) {
         $sql = "DELETE FROM $table WHERE id = ?";
@@ -187,7 +187,7 @@ abstract class Api {
     return json_encode(json_decode($content), JSON_PRETTY_PRINT);
   }
 
-  protected function getPostArray() {
+  protected function getJsonArray() {
     return json_decode(file_get_contents('php://input'), true);
   }
 

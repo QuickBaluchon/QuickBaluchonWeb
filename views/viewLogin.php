@@ -70,29 +70,33 @@ $this->_js = ['main','login'];
         <div class="jumbotron bg-transparent">
           <h1 class="display-4 text-white">Je m'inscris !</h1>
 
-          <div class="input-group input-group-lg mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Je suis un client</span>
+          <a href="<?= WEB_ROOT . 'client/signup' ?>">
+            <div class="input-group input-group-lg mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Je suis un client</span>
+              </div>
+              <div class="input-group-append">
+                <button class="btn btn-warning" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
+                  </svg>
+                </button>
+              </div>
             </div>
-            <div class="input-group-append">
-              <button class="btn btn-warning" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
-                </svg>
-              </button>
-            </div>
-          </div>
+          </a>
 
-          <div class="input-group input-group-lg mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Je suis un livreur</span>
+          <a href="<?= WEB_ROOT . 'deliveryman/signup' ?>">
+            <div class="input-group input-group-lg mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Je suis un livreur</span>
+              </div>
+              <div class="input-group-append">
+                <button class="btn btn-success" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
+                  </svg>
+                </button>
+              </div>
             </div>
-            <div class="input-group-append">
-              <button class="btn btn-success" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
-                </svg>
-              </button>
-            </div>
-          </div>
+          </a>
 
         </div>
 

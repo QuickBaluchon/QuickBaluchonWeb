@@ -10,7 +10,8 @@ class ControllerDeliveryman
     private $_id;
 
     public function __construct($url) {
-        $this->_id = $_SESSION["id"];
+        if( isset( $_SESSION['id'] ) )
+            $this->_id = $_SESSION["id"];
         if (!isset($url[1])) {
             header('location:' . WEB_ROOT . 'deliveryman/profile');
             exit();

@@ -13,7 +13,7 @@ $this->_css = ['header', 'home'];
           <h1 class="display-4">Nous Livrevrons Quoiqu'il Arrive.</h1>
           <p class="lead">Passez-nous le relais.</p>
           <p class="lead">
-            <a class="btn btn-round btn-primary btn-lg" href="#" role="button">Commencer</a>
+            <a class="btn btn-round btn-primary btn-lg" href="<?= WEB_ROOT . 'login#signup-links' ?>" role="button">Commencer</a>
           </p>
         </div>
       </div>

@@ -10,25 +10,51 @@ class ControllerClient
     private $_view;
     private $_id;
 
-    public function __construct($url)
-    {
-        if (!isset($_SESSION['id'])) {
-            header('location:' . WEB_ROOT);
-            exit();
-        }
-        $this->_id = $_SESSION['id'];
+    public function __construct($url) {
 
-        if (!isset($url[1])) {
-            header('location:' . WEB_ROOT . 'client/profile');
-            exit();
+        switch ( (int)isset($url[1]) ) {
+            case 1 :        //      /client/action
+                $this->action($url);
+                break;
+            case 0 :        //      /client
+                if( isset($_SESSION['id']) ){
+                    header('location:' . WEB_ROOT . 'client/profile');
+                    exit();
+                }else {
+                    header('location:' . WEB_ROOT . 'login');
+                    exit();
+                }
+                break;
+            default :
+                http_response_code(500);
+                exit();
         }
 
-        //$this->signout();
-        if (method_exists($this, $url[1])) {
-            $method = $url[1];
-            $this->$method(array_slice($url, 2));
+    }
+
+    private function action($url) {
+        if( isset($_SESSION['id']) ){
+            if (method_exists($this, $url[1])) {
+                $this->_id = $_SESSION['id'];
+                $method = $url[1];
+                $this->$method(array_slice($url, 2));
+            } else {
+                http_response_code(404);
+                exit();
+            }
         } else {
-            http_response_code(404);
+            if( strtolower($url[1]) === 'signup' )
+                $this->signup();
+            else {
+                if( method_exists($this, $url[1]) ) {
+                    header('location:' . WEB_ROOT . 'login');
+                    exit();
+                } else {
+                    http_response_code(404);
+                    exit();
+                }
+
+            }
         }
     }
 

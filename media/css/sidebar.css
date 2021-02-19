@@ -29,13 +29,13 @@
   height: 68px;
   text-decoration: none;
   color: white;
-  display: block;
+  display: flex;
   border-radius: 40px 0px 0px 40px;
 }
 
 #sidebar ul{ padding-left: 40px;}
 #sidebar ul li a:hover { background: #3C3E4F; }
-#sidebar ul li a span{ padding: 10px 0px 0px 10px; }
+#sidebar ul li a span{ padding: 15px 0px 0px 10px; }
 
 #sidebar icon-circle {
   background-color: #81B29A !important;
@@ -50,7 +50,28 @@
 
 #back-content { padding: 30px 50px 100px 50px}
 
+.svgcontainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+    height: 55px;
+    width: 55px;
+}
+.svgcontainer > svg{
+    fill: white;
+    width: 28px;
+    height: 28px;
+    align-self: center;
+}
 
+#signout div{
+    background-color: #e07a5f;
+}
+
+#signout svg{
+    fill: #3D405B;
+}
 
 
 

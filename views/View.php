@@ -7,9 +7,9 @@ class View
     private $_css = [];
     private $_js = [];
 
-    public function __construct($action)
-    {
-        $this->_file = 'views/view' . $action . '.php';
+    public function __construct($action = null) {
+        if( $action )
+            $this->_file = 'views/view' . $action . '.php';
     }
 
     public function generateView($data = null) {
@@ -22,13 +22,11 @@ class View
         echo $view;
     }
 
-    public function generateTemplate($file, $data)
-    {
+    public function generateTemplate($file, $data) {
         return $this->generateFile('templates/' . $file . '.php', $data);
     }
 
-    private function generateFile($file, $data=null)
-    {
+    private function generateFile($file, $data=null){
         if (file_exists($file)) {
             if( $data != null )
                 extract($data);

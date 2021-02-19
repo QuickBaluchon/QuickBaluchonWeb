@@ -36,13 +36,15 @@ class ControllerAdmin
     $this->_clientManager = new ClientManager;
     $list = $this->_clientManager->getClients(['id', 'name']);
 
-    $buttonsValues = ['données personnelles',
-                      'Historique',
-                      'Factures'];
+    $buttonsValues = [
+        'profile' => 'données personnelles',
+        'history' => 'Historique',
+        'bills' => 'Factures'
+    ];
 
     foreach ($list as $client) {
-      for($i = 0; $i < 3; $i++){
-        $buttons[] = '<a href="'. WEB_ROOT . 'admin/clients/' . $client['id'] .'"><button type="button" class="btn btn-primary btn-sm">' . $buttonsValues[$i] . '</button></a>';
+        foreach($buttonsValues as $link => $inner){
+        $buttons[] = '<a href="'. WEB_ROOT . "admin/client/$link/" . $client['id'] .'"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
       }
 
       $rows[] = array_merge($client, $buttons);

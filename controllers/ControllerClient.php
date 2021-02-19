@@ -86,24 +86,20 @@ class ControllerClient
         $billsList = $this->_billManager->getBills($this->_id, ['dateBill', 'id', 'grossAmount', 'paid']);
 
         $cols = ['Mois', 'Nb colis', 'Prix', 'Télécharger', 'Statut'];
-        $rows = [['janv 2021', '1', '30 €', 'O', 'Payé']];
         $bills = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $billsList]);
         $this->_view->generateView(['content' => $bills, 'name' => $client['website']]);
     }
 
-    private function history()
-    {
+    private function history(){
         $this->_view = new View('Back');
 
-        $this->_packageManager = new HistoryManager();
+        $this->_packageManager = new PackageManager();
         $this->_clientManager = new ClientManager();
 
-    $this->_packageManager = new PackageManager();
-    $this->_clientManager = new ClientManager();
+        $package = $this->_packageManager->getClientPackages($this->_id, ['id', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'status', 'dateDeposit']);
+        $client = $this->_clientManager->getClient($this->_id, ['website']);
 
-    $package = $this->_packageManager->getClientPackages($this->_id, []);
-    $client = $this->_clientManager->getClient($this->_id, ['website']);
-
+        $cols = ['#', 'Poids', 'Volume', 'Adresse', 'E-mail', 'Délais', 'Date de livraison', 'Status', 'Déposé le'];
         $package = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $package]);
         $this->_view->generateView(['content' => $package, 'name' => $client['website']]);
     }

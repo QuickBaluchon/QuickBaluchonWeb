@@ -2,19 +2,11 @@
 
 abstract class Model {
 
-  // $cond
-  // [
-  //  "name" => ", "nath",
-  //  "offset" => 2
-  //]
-
   protected function getCollection($collection, $cond) {
 
     $url = API_ROOT . $collection;
     $params = $this->strCond($cond);
-
     $url = $params === '' ? $url : $url . '&' . $params;
-
     return $this->curl($url);
   }
 

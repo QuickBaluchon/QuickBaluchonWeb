@@ -19,6 +19,8 @@ class ControllerAdmin
       exit();
     }
 
+    $_SESSION['role'] = 'admin';
+
     $actions = ['clients', 'pricelist', 'deliveryman', 'languages', 'wharehouses', 'oneSignal', 'updatePricelist'];
     if ( method_exists( $this ,$url[1]) ) {
       $method = $url[1];
@@ -62,7 +64,7 @@ class ControllerAdmin
   }
 
 
-  private function deliveryman($url) {
+  private function deliverymen($url) {
     $this->_view = new View('Back');
 
     $this->_DeliveryManager = new DeliveryManager;

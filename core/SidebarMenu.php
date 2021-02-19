@@ -54,5 +54,18 @@ class SidebarMenu extends View {
 
     }
 
+    private function admin() {
+        $items = ['Tarifs', 'Clients', 'Livreurs', 'Entrepôts', 'Langues'];
+        $links = ['pricelist', 'clients', 'deliverymen', 'warehouses', 'languages'];
+        $svg = ['invoice', 'user', 'truck', 'box-seam', 'open-book'];
+        $data = [];
+
+        for( $i = 0; $i < count($items); $i++ )
+            $data[] = new SidebarMenuItem($items[$i], $this->_role.'/'.$links[$i], $svg[$i]);
+
+        $this->_html = $this->build($data);
+
+    }
+
 }
 

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "libxl.h"
 #include <string.h>
-#include <mysql.h>
+#include <mysql/mysql.h>
 #include <stdint.h>
 
 uint16_t port = 3306 ;

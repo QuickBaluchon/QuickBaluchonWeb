@@ -38,5 +38,4 @@ function getVolume (text) {
 function absented (text) {
     let jb = document.getElementById('jumbotron') ;
     jb.innerHTML = '<h1 class="display-4">Destinataire absent</h1>' ;
-    console.log(text) ;
 }

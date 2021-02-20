@@ -1,4 +1,4 @@
-function update() {
+function update(id) {
 
     let json = [];
 
@@ -19,13 +19,9 @@ function update() {
             StandardPrice : values['StandardPrice'],
         } );
 
-        ajax('../api/pricelist/1', json, 'PATCH', hello);
+        ajax('../../api/pricelist/' + id, json, 'PATCH', hello);
     }
 }
-
-
-
-
 
 function hello(reponse) {
     console.log("hello", reponse);

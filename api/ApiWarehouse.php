@@ -19,9 +19,6 @@ class ApiWarehouse extends Api {
         case 'GET': $this->_data = $this->getWarehouse($id);break;
         case 'DELETE': $this->deleteWarehouse($id);break;
         case 'PATCH': $this->patchWarehouse($id);break;
-        default:
-            // code...
-            break;
     }
 
 
@@ -37,10 +34,11 @@ class ApiWarehouse extends Api {
 
     //$this->authentication(['admin']);
 
-    self::$_columns = ['id', 'address', 'volume', 'AvailableVolume','active'];
+    self::$_columns = ['id', 'address', 'volume', 'AvailableVolume'];
     self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
     self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
-
+    self::$_where[] = "active = ?";
+    self::$_params[] = "1" ;
     $list = $this->get('WAREHOUSE');
 
     return $list;
@@ -50,7 +48,7 @@ class ApiWarehouse extends Api {
 
     if($this->_method != 'GET') $this->catError(405);
     //$this->authentication(['admin'], [$id]);
-    self::$_columns = ['id', 'address', 'volume', 'AvailableVolume','active'];
+    self::$_columns = ['id', 'address', 'volume', 'AvailableVolume'];
     self::$_where[] = 'id = ?';
     self::$_params[] = $id;
     $warehouse = $this->get('WAREHOUSE');
@@ -63,7 +61,7 @@ class ApiWarehouse extends Api {
   private function deleteWarehouse($id){
       if($this->_method != 'DELETE') $this->catError(405);
 
-      $data = $this->getPostArray();
+      $data = $this->getJsonArray();
       $allowed = ['active'];
       if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
         http_response_code(400);

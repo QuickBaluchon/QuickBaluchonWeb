@@ -31,7 +31,7 @@ abstract class Model {
   private function strCond($cond) {
     $params = [];
     foreach ($cond as $k => $v)
-      $params[] = $k . '=' . $v;
+        $params[] = $k . '=' . $v;
     return join('&', $params);
   }
 

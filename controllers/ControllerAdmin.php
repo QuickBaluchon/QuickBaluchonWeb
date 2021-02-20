@@ -81,6 +81,11 @@ class ControllerAdmin
     $this->_view->_js[] = 'warehouse/updateWarehouse';
     $this->_WarehousesManager = new WarehouseManager;
     $list = $this->_WarehousesManager->getWarehouses([]);
+    if( !$list ) {
+        http_response_code(500);
+        $list = [];
+    }
+
 
     $buttonsValues = [
         'updateWarehouse' => 'update',

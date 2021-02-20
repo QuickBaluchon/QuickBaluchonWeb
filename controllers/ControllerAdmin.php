@@ -131,4 +131,9 @@ class ControllerAdmin
     $this->_view->generateView([]);
   }
 
+    private function languages($url) {
+        $this->_view = new View('Back');
+        $this->_view->generateView(['name' => 'QuickBaluchon']);
+    }
+
 }

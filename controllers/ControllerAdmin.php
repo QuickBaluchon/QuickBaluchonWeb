@@ -78,6 +78,7 @@ class ControllerAdmin
 
   private function warehouses($url) {
     $this->_view = new View('Back');
+    $this->_view->_js[] = 'warehouse/updateWarehouse';
     $this->_WarehousesManager = new WarehouseManager;
     $list = $this->_WarehousesManager->getWarehouses([]);
 

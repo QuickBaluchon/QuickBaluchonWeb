@@ -94,15 +94,26 @@ class ControllerAdmin
     $this->_pricelistManager = new PricelistManager;
     $list = $this->_pricelistManager->getPricelists([]);
 
+    $buttonsValues = [
+        'updatePricelist' => 'modifier',
+    ];
+
+    foreach ($list as $package) {
+        foreach($buttonsValues as $link => $inner){
+        $buttons[] = '<a href="'. WEB_ROOT . "admin/$link/" . $package['id'] .'"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
+      }
+
+      $rows[] = array_merge($package, $buttons);
+      $buttons = [];
+    }
 
     $cols = ['#', 'Max wheight', 'Express price', 'Standard price', 'application date'];
-    $pricelist = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
+    $pricelist = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
     $this->_view->generateView(['content' => $pricelist, 'name' => 'QuickBaluchon']);
   }
 
   private function updatePricelist($url) {
     $this->_view = new View('UpdatePricelist');
-
 
     $this->_view->generateView([]);
   }

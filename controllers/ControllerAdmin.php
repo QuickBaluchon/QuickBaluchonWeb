@@ -21,7 +21,7 @@ class ControllerAdmin
 
     $_SESSION['role'] = 'admin';
 
-    $actions = ['clients', 'pricelist', 'deliveryman', 'languages', 'wharehouses', 'oneSignal', 'updatePricelist'];
+    $actions = ['clients', 'pricelist', 'deliveryman', 'languages', 'warehouses', 'oneSignal', 'updatePricelist'];
     if ( method_exists( $this ,$url[1]) ) {
       $method = $url[1];
       $this->$method(array_slice($url, 2));
@@ -78,14 +78,28 @@ class ControllerAdmin
 
   private function warehouses($url) {
     $this->_view = new View('Back');
-
+    $this->_view->_js[] = 'warehouse/updateWarehouse';
     $this->_WarehousesManager = new WarehouseManager;
     $list = $this->_WarehousesManager->getWarehouses([]);
 
+    $buttonsValues = [
+        'updateWarehouse' => 'update',
+    ];
 
-    $cols = ['#', 'address', 'volume', 'AvailableVolume','active'];
-    $warehouse = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
+    foreach ($list as $warehouse) {
+        foreach($buttonsValues as $link => $inner){
+        $buttons[] = '<button onclick="'. $link .'('.$warehouse["id"].')" id="'.$warehouse["id"].'" type="button" class="btn btn-primary btn-sm">' . $inner . '</button>';
+      }
+
+      $rows[] = array_merge($warehouse, $buttons);
+      $buttons = [];
+    }
+
+    $cols = ['#', 'address', 'volume', 'AvailableVolume', 'update'];
+    if(!isset($rows)) $rows = [];
+    $warehouse = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
     $this->_view->generateView(['content' => $warehouse, 'name' => 'QuickBaluchon']);
+
   }
 
   private function pricelist($url) {

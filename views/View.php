@@ -5,7 +5,7 @@ class View
     private $_file;
     private $_header = '';
     private $_css = [];
-    private $_js = [];
+    public $_js = [];
 
     public function __construct($action = null) {
         if( $action )

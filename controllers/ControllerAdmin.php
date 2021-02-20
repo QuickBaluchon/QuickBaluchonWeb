@@ -19,7 +19,9 @@ class ControllerAdmin
       exit();
     }
 
-    $actions = ['clients', 'pricelist', 'deliveryman', 'languages', 'warehouses', 'oneSignal'];
+    $_SESSION['role'] = 'admin';
+
+    $actions = ['clients', 'pricelist', 'deliveryman', 'languages', 'wharehouses', 'oneSignal', 'updatePricelist'];
     if ( method_exists( $this ,$url[1]) ) {
       $method = $url[1];
       $this->$method(array_slice($url, 2));
@@ -36,13 +38,15 @@ class ControllerAdmin
     $this->_clientManager = new ClientManager;
     $list = $this->_clientManager->getClients(['id', 'name']);
 
-    $buttonsValues = ['données personnelles',
-                      'Historique',
-                      'Factures'];
+    $buttonsValues = [
+        'profile' => 'données personnelles',
+        'history' => 'Historique',
+        'bills' => 'Factures'
+    ];
 
     foreach ($list as $client) {
-      for($i = 0; $i < 3; $i++){
-        $buttons[] = '<a href="'. WEB_ROOT . 'admin/clients/' . $client['id'] .'"><button type="button" class="btn btn-primary btn-sm">' . $buttonsValues[$i] . '</button></a>';
+        foreach($buttonsValues as $link => $inner){
+        $buttons[] = '<a href="'. WEB_ROOT . "admin/client/$link/" . $client['id'] .'"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
       }
 
       $rows[] = array_merge($client, $buttons);
@@ -60,7 +64,7 @@ class ControllerAdmin
   }
 
 
-  private function deliveryman($url) {
+  private function deliverymen($url) {
     $this->_view = new View('Back');
 
     $this->_DeliveryManager = new DeliveryManager;
@@ -94,6 +98,13 @@ class ControllerAdmin
     $cols = ['#', 'Max wheight', 'Express price', 'Standard price', 'application date'];
     $pricelist = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
     $this->_view->generateView(['content' => $pricelist, 'name' => 'QuickBaluchon']);
+  }
+
+  private function updatePricelist($url) {
+    $this->_view = new View('UpdatePricelist');
+
+
+    $this->_view->generateView([]);
   }
 
 }

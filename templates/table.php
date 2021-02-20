@@ -12,7 +12,9 @@
   if (isset($rows) && count($rows) > 0)
     foreach ($rows as $row):?>
     <tr>
-      <?php foreach ($row as $data) {
+      <?php
+
+        foreach ($row as $data) {
         echo "<td>$data</td>";
       }?>
     </tr>

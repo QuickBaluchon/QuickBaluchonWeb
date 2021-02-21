@@ -21,7 +21,7 @@ class ControllerAdmin
 
     $_SESSION['role'] = 'admin';
 
-    $actions = ['clients', 'pricelist', 'deliveryman', 'languages', 'warehouses', 'oneSignal', 'updatePricelist'];
+    $actions = ['clients', 'pricelist', 'deliveryman', 'languages', 'warehouses', 'oneSignal', 'updatePricelist','employ'];
     if ( method_exists( $this ,$url[1]) ) {
       $method = $url[1];
       $this->$method(array_slice($url, 2));
@@ -131,9 +131,33 @@ class ControllerAdmin
     $this->_view->generateView(['content' => $pricelist, 'name' => 'QuickBaluchon']);
   }
 
+  private function employ($url) {
+    $this->_view = new View('Back');
+    $this->_view->_js[] = 'deliveryman/employ';
+    $this->_deliveryManager = new DeliveryManager;
+    $list = $this->_deliveryManager->getDeliveryNotEmployed([]);
+
+     $buttonsValues = [
+         'employ' => 'employer',
+     ];
+
+    foreach ($list as $delivery) {
+        foreach($buttonsValues as $link => $inner){
+        $buttons[] = '<button onclick="'. $link .'('.$delivery["id"].')" id="'.$delivery["id"].'" type="button" class="btn btn-primary btn-sm">' . $inner . '</button>';
+      }
+
+      $rows[] = array_merge($delivery, $buttons);
+      $buttons = [];
+    }
+
+    $cols = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG", 'employer'];
+    $delivery = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
+    $this->_view->generateView(['content' => $delivery, 'name' => 'QuickBaluchon']);
+  }
+
+
   private function updatePricelist($url) {
     $this->_view = new View('UpdatePricelist');
-
     $this->_view->generateView([]);
   }
 

@@ -104,4 +104,9 @@ class ControllerClient
         $this->_view->generateView(['content' => $package, 'name' => $client['website']]);
     }
 
+    public function pay(){
+        $this->_view = new View('Stripe');
+        $this->_view->generateView([]);
+    }
+
 }

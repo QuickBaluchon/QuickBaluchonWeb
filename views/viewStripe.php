@@ -1,3 +1,4 @@
+
 <main>
 
   <div class="wrapper">
@@ -113,10 +114,16 @@
                    <div class="jumbotron bg-white">
                      <h1 class="display-4">Stripe</h1>
 
-                     <form id="form" action="../media/stripe/payement.php" method="POST" onsubmit="return false">
+                     <form id="form" action="../../media/stripe/payement.php" method="POST" onsubmit="return false">
+                         <div class="form-group row">
+                           <div class="col-sm-10">
+                             <span>vous devez régler:</span>
+                             <input type="text" name="price" value="<?= $price ?>" class="form-control" id="price">
+                           </div>
+                         </div>
                        <div class="form-group row">
                          <div class="col-sm-10">
-                           <input type="text" name="name" placeholder="votre nom" class="form-control" id="inputEmail">
+                           <input type="text" name="name" placeholder="votre nom" class="form-control" id="inputName">
                          </div>
                        </div>
                        <div class="form-group row">
@@ -157,7 +164,7 @@
 
                  <div class="col-sm">
                    <!-- IMAGE -->
-                   <img class="d-lg-block mx-auto" src="../assets/paid.png" alt="delivering">
+                   <img class="d-lg-block mx-auto" src="../../assets/paid.png" alt="delivering">
                  </div>
                </div>
              </div>
@@ -173,7 +180,7 @@
 
 </main>
 <script src="https://js.stripe.com/v2/"></script>
-<script type="text/javascript" src="../media/stripe/payement.js"></script>
+<script type="text/javascript" src="../../media/stripe/payement.js"></script>
 <script type="text/javascript">
   $(document).ready(function () {
     $('#sidebarCollapse').on('click', function () {

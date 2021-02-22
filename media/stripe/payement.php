@@ -4,6 +4,7 @@ $client ;
 $token = $_POST['stripeToken'];
 $name = $_POST['name'];
 $email = $_POST['email'];
+$price = $_POST['price'] * 100;
 
 if(filter_var($email, FILTER_VALIDATE_EMAIL) && !empty($name) && !empty($token)){
 
@@ -23,7 +24,7 @@ if(filter_var($email, FILTER_VALIDATE_EMAIL) && !empty($name) && !empty($token))
 
 
     $charge = $stripe->api('charges', [
-        'amount' => 2000,
+        'amount' => $price,
         'currency'=> "eur",
         'customer' => $client->id
     ]);

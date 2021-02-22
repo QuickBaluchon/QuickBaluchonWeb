@@ -27,7 +27,6 @@
                 message.innerHTML = '' + response.error.message + ''
                 divForm.appendChild(message);
             }else {
-                console.log("ok");
                 let hiddenInput = document.createElement("input")
                 hiddenInput.setAttribute("type", "hidden");
                 hiddenInput.name = "stripeToken";

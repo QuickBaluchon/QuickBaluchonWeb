@@ -141,7 +141,7 @@ class ControllerAdmin
                 $data = $this->allLanguages() ;
                 break ;
             default:
-                $data = $this->oneLanguage($url[0]) ;
+                $data = $this->oneLanguage($url[0])  ;
                 break ;
         }
 
@@ -166,11 +166,24 @@ class ControllerAdmin
 
         $cols = ['Language', 'Shortcut', 'Emoji', 'Modify'] ;
 
-        return $languages = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]) ;
+        return $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]) ;
     }
 
     private function oneLanguage ($sh) {
-        return "Hello" ;
+        $language = $this->_languagesManager->getLanguage($sh) ;
+        if (empty($language))
+            return 0 ;
+
+        $rows[] = [
+            '<input type="text" class="form-control" id="language" placeholder="language" value="' . $language[0] . '">',
+            '<input type="text" class="form-control" id="shortcut" placeholder="SH"  value="' . $language[1] . '">',
+            '<input type="text" class="form-control" id="emoji" placeholder="alt-codes.net/flags"  value="' . $language[2] . '">',
+            '<button type="button" class="btn btn-primary btn-sm" onclick="saveLanguage()">Modifier</button>'
+        ] ;
+
+        $cols = ['Language', 'Shortcut', 'Emoji', 'Modify'] ;
+
+        return $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]) ;
     }
 
 }

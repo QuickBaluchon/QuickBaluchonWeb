@@ -1,3 +1,9 @@
+<?php
+    $url = explode("/", $_GET['url']);
+    $id = $url[2];
+    if(!isset($_SESSION["price$id"]) &&  $_SESSION["price$id"] <= 0)
+        header("Location:http://localhost:8888/QuickBaluchonWeb/client/bills");
+?>
 
 <main>
 
@@ -114,11 +120,11 @@
                    <div class="jumbotron bg-white">
                      <h1 class="display-4">Stripe</h1>
 
-                     <form id="form" action="../../media/stripe/payement.php" method="POST" onsubmit="return false">
+                     <form id="form" action="../../media/script/stripe/payement.php" method="POST" onsubmit="return false">
                          <div class="form-group row">
                            <div class="col-sm-10">
                              <span>vous devez régler:</span>
-                             <input type="text" name="price" value="<?= $price ?>" class="form-control" id="price">
+                             <input type="text" name="price" value="<?php if(isset($_SESSION["price$id"])) echo $_SESSION["price$id"] ?>" class="form-control" id="price">
                            </div>
                          </div>
                        <div class="form-group row">
@@ -153,7 +159,7 @@
                        </div>
                        <div class="form-group row">
                          <div class="col-sm-10">
-                           <button type="submit" class="btn btn-round btn-primary">Se connecter</button>
+                           <button type="submit" id="<?= $id ?>" class="btn btn-round btn-primary">Se connecter</button>
                          </div>
                        </div>
                      </form>
@@ -179,8 +185,11 @@
   </div>
 
 </main>
+<?php unset($_SESSION["price$id"]);?>
 <script src="https://js.stripe.com/v2/"></script>
-<script type="text/javascript" src="../../media/stripe/payement.js"></script>
+<script type="text/javascript" src="../../media/script/main.js"></script>
+<script type="text/javascript" src="../../media/script/stripe/payement.js"></script>
+
 <script type="text/javascript">
   $(document).ready(function () {
     $('#sidebarCollapse').on('click', function () {

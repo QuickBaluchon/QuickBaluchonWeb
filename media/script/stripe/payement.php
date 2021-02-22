@@ -18,18 +18,10 @@ if(filter_var($email, FILTER_VALIDATE_EMAIL) && !empty($name) && !empty($token))
         'email' => $email
     ]);
 
-
-    echo $client->id;
-
-
-
     $charge = $stripe->api('charges', [
         'amount' => $price,
         'currency'=> "eur",
         'customer' => $client->id
     ]);
-
-    echo "paiement réussi";
-
-    die();
+    header("Location:http://localhost:8888/QuickBaluchonWeb/client/bills");
 }

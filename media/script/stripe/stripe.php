@@ -23,7 +23,6 @@ class Stripe
         ]);
 
         $response = json_decode(curl_exec($ch));
-        var_dump($response);
         curl_close($ch);
         return $response;
     }

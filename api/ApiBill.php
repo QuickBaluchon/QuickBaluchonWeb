@@ -18,7 +18,14 @@ class ApiBill extends Api
       $this->_data = $this->getListBills();     // list of bills - /api/bill
 
     elseif (($id = intval($url[0])) !== 0)      // details one bills - /api/bill/{id}
-      $this->_data = $this->getBill($id);
+    switch ($method) {
+        case 'GET':$this->_data = $this->getBill($id);break;
+        case 'PATCH':$this->patchBill($id);break;
+        default:
+            // code...
+            break;
+    }
+
 
     echo json_encode($this->_data, JSON_PRETTY_PRINT);
 
@@ -32,6 +39,10 @@ class ApiBill extends Api
     if(isset($_GET['client'])) {
       self::$_where[] = 'client = ?';
       self::$_params[] = intval($_GET['client']);
+    }
+    if(isset($_GET['paid'])) {
+      self::$_where[] = 'paid = ?';
+      self::$_params[] = intval($_GET['paid']);
     }
 
     $columns = ['id', 'client', 'grossAmount', 'dateBill', 'pdfPath', 'paid'];
@@ -59,7 +70,17 @@ class ApiBill extends Api
       return [];
   }
 
+    public function patchBill($id){
+        $data = $this->getJsonArray();
+        $allowed = ['paid'];
+         if (count(array_diff(array_keys($data), $allowed)) > 0) {
+             http_response_code(400);
+             exit();
+         }
 
+        self::$_set[] = "paid = ?" ;
+        self::$_params[] = 1 ;
+
+        $this->patch('MONTHLYBILL', $id);
+    }
 }
-
-

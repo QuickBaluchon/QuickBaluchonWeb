@@ -77,25 +77,32 @@ class ControllerClient
 
     private function bills()
     {
+
         $this->_view = new View('Back');
 
         $this->_clientManager = new ClientManager();
         $this->_billManager = new BillManager();
 
         $client = $this->_clientManager->getClient($this->_id, ['name', 'website']);
-        $billsList = $this->_billManager->getBills($this->_id, ['dateBill', 'id', 'grossAmount','pdfPath', 'paid']);
+        $billsList = $this->_billManager->getNotPaidBills($this->_id, ['dateBill', 'id', 'grossAmount','pdfPath', 'paid']);
+
 
         $buttonsValues = [
             'pay' => 'payer',
         ];
+        if(count($billsList) > 0){
+            foreach ($billsList as $bill) {
+                foreach($buttonsValues as $link => $inner){
+                $id = $bill['id'];
+                $_SESSION["price$id"] = $bill['grossAmount'];
+                $buttons[] = '<a href="'. WEB_ROOT . "client/$link/" . $id .'"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
+              }
 
-        foreach ($billsList as $bill) {
-            foreach($buttonsValues as $link => $inner){
-            $buttons[] = '<a href="'. WEB_ROOT . "client/$link(" . $bill['grossAmount'] .')"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
-          }
-
-          $rows[] = array_merge($bill, $buttons);
-          $buttons = [];
+              $rows[] = array_merge($bill, $buttons);
+              $buttons = [];
+            }
+        }else {
+            $rows = [];
         }
 
         $cols = ['Mois', 'Nb colis', 'Prix', 'Télécharger', 'Statut'];

@@ -12,6 +12,7 @@ class LanguagesManager extends Model {
                 $str = htmlspecialchars($str) ;
             $lang[] = explode(':', $str) ;
         }
+        fclose($file) ;
         return $lang ;
     }
 
@@ -29,6 +30,7 @@ class LanguagesManager extends Model {
                 if ($lang < 3) return [] ;
             }
         }
+        fclose($file) ;
         return $lang ;
     }
 }

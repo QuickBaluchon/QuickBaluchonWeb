@@ -136,13 +136,10 @@ class ControllerAdmin
         $this->_view = new View('Back');
         $this->_languagesManager = new LanguagesManager ;
 
-        switch($url[0] != '') {
-            case 0 :
-                $data = $this->allLanguages() ;
-                break ;
-            default:
-                $data = $this->oneLanguage($url[0])  ;
-                break ;
+        if (count($url) == 0 || $url[0] == '') {
+            $data = $this->allLanguages() ;
+        } else {
+            $data = $this->oneLanguage($url[0])  ;
         }
 
         $this->_view->generateView(['content' => $data, 'name' => 'QuickBaluchon']);
@@ -153,18 +150,18 @@ class ControllerAdmin
         $list = $this->_languagesManager->getLanguages() ;
 
         foreach ($list as $lang) {
-            $button = ['<a href="'. WEB_ROOT . 'admin/languages/' . $lang['1'] . '"><button type="button" class="btn btn-primary btn-sm">Modifier</button></a>'];
+            $button = ['<button type="button" class="btn btn-danger btn-sm" onclick="dropLanguage(' . $lang['1'] . ')">Supprimer</button>'];
             $rows[] = array_merge($lang, $button);
         }
 
         $rows[] = [
             '<input type="text" class="form-control" id="language" placeholder="language">',
             '<input type="text" class="form-control" id="shortcut" placeholder="SH">',
-            '<input type="text" class="form-control" id="emoji" placeholder="alt-codes.net/flags">',
+            '<input type="text" class="form-control" id="flag" placeholder="alt-codes.net/flags">',
             '<button type="button" class="btn btn-success btn-sm" onclick="addLanguage()">Ajouter</button>'
         ] ;
 
-        $cols = ['Language', 'Shortcut', 'Emoji', 'Modify'] ;
+        $cols = ['Language', 'Shortcut', 'Flag', 'Modify'] ;
 
         return $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]) ;
     }
@@ -172,16 +169,16 @@ class ControllerAdmin
     private function oneLanguage ($sh) {
         $language = $this->_languagesManager->getLanguage($sh) ;
         if (empty($language))
-            return 0 ;
+            return '<img src="https://http.cat/404.jpg" alt="404">' ;
 
         $rows[] = [
             '<input type="text" class="form-control" id="language" placeholder="language" value="' . $language[0] . '">',
             '<input type="text" class="form-control" id="shortcut" placeholder="SH"  value="' . $language[1] . '">',
-            '<input type="text" class="form-control" id="emoji" placeholder="alt-codes.net/flags"  value="' . $language[2] . '">',
-            '<button type="button" class="btn btn-primary btn-sm" onclick="saveLanguage()">Modifier</button>'
+            '<input type="text" class="form-control" id="flag" placeholder="alt-codes.net/flags"  value="' . $language[2] . '">',
+            '<button type="button" class="btn btn-primary btn-sm" onclick="updateLanguage()">Modifier</button>'
         ] ;
 
-        $cols = ['Language', 'Shortcut', 'Emoji', 'Modify'] ;
+        $cols = ['Language', 'Shortcut', 'Flag', 'Modify'] ;
 
         return $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]) ;
     }

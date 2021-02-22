@@ -9,6 +9,7 @@ class ControllerAdmin
   private $_WarehousesManager;
   private $_deliveryManager;
   private $_pricelistManager;
+  private $_languagesManager ;
   private $_view;
   private $_notif;
 
@@ -133,7 +134,43 @@ class ControllerAdmin
 
     private function languages($url) {
         $this->_view = new View('Back');
-        $this->_view->generateView(['name' => 'QuickBaluchon']);
+        $this->_languagesManager = new LanguagesManager ;
+
+        switch($url[0] != '') {
+            case 0 :
+                $data = $this->allLanguages() ;
+                break ;
+            default:
+                $data = $this->oneLanguage($url[0]) ;
+                break ;
+        }
+
+        $this->_view->generateView(['content' => $data, 'name' => 'QuickBaluchon']);
+
+    }
+
+    private function allLanguages () {
+        $list = $this->_languagesManager->getLanguages() ;
+
+        foreach ($list as $lang) {
+            $button = ['<a href="'. WEB_ROOT . 'admin/languages/' . $lang['1'] . '"><button type="button" class="btn btn-primary btn-sm">Modifier</button></a>'];
+            $rows[] = array_merge($lang, $button);
+        }
+
+        $rows[] = [
+            '<input type="text" class="form-control" id="language" placeholder="language">',
+            '<input type="text" class="form-control" id="shortcut" placeholder="SH">',
+            '<input type="text" class="form-control" id="emoji" placeholder="alt-codes.net/flags">',
+            '<button type="button" class="btn btn-success btn-sm" onclick="addLanguage()">Ajouter</button>'
+        ] ;
+
+        $cols = ['Language', 'Shortcut', 'Emoji', 'Modify'] ;
+
+        return $languages = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]) ;
+    }
+
+    private function oneLanguage ($sh) {
+        return "Hello" ;
     }
 
 }

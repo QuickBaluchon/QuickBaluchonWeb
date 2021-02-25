@@ -158,11 +158,16 @@ class ControllerAdmin
 
   private function updatePricelist($url) {
     $this->_view = new View('UpdatePricelist');
-    $this->_view->generateView([]);
+    $this->_pricelistManager = new PricelistManager;
+    $list = $this->_pricelistManager->getPricelist($url[0],["maxWeight", "ExpressPrice", "StandardPrice"]);
+
+    $this->_view->generateView(['values' => $list]);
   }
 
     private function languages($url) {
+
         $this->_view = new View('Back');
+
         $this->_view->generateView(['name' => 'QuickBaluchon']);
     }
 

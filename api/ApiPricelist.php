@@ -70,7 +70,8 @@ class ApiPricelist extends Api {
   public function updatePrice($id){
 
       $data = $this->getJsonArray();
-      $allowed = ['ExpressPrice', 'StandardPrice'];
+      print_r($data);
+      $allowed = ['ExpressPrice', 'StandardPrice', 'inputDate'];
 
       $columns = ['maxWeight'];
       self::$_where[] = 'id = ?';
@@ -81,9 +82,12 @@ class ApiPricelist extends Api {
         http_response_code(400);
         exit(0);
       }
+      $date = explode("/",$data['inputDate']);
+      $date = array_reverse($date, true);
+      $date = join("-", $date);
 
       self::$_columns = ['maxWeight', 'ExpressPrice', 'StandardPrice', 'applicationDate'];
-      self::$_params = [$maxWeight[0]['maxWeight'],$data['ExpressPrice'], $data['StandardPrice'], date("Y-m-d")];
+      self::$_params = [$maxWeight[0]['maxWeight'],$data['ExpressPrice'], $data['StandardPrice'], $date];
 
       $this->add('PRICELIST');
   }

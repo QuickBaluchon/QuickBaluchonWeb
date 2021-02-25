@@ -2,7 +2,7 @@
     $url = explode("/", $_GET['url']);
     $id = $url[2];
     if(!isset($_SESSION["price$id"]) &&  $_SESSION["price$id"] <= 0)
-        header("Location:http://localhost:8888/QuickBaluchonWeb/client/bills");
+        header("Location:http://localhost:8888/QuickBaluchonWeb/client/bills"); 
 ?>
 
 <main>

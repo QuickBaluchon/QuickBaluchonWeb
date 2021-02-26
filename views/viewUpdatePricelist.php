@@ -167,7 +167,7 @@ $id = intval($url[2]);
                <p class="mb-0">La suppression d'un tarif est définitive. Soyez certain.</p>
              </div>
              <div>
-               <button type="button" class="btn btn-outline-danger">Supprimer ce tarif</button>
+               <button type="button" onclick="deletePrice(<?php echo $id ?>)" class="btn btn-outline-danger">Supprimer ce tarif</button>
              </div>
            </div>
          </section>

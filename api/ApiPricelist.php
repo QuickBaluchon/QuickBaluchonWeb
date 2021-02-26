@@ -17,6 +17,7 @@ class ApiPricelist extends Api {
         switch ($method) {
           case 'GET' : $this->_data = $this->getPrice($id); break;
           case 'PATCH' : $this->updatePrice($id); break;
+          case 'DELETE': $this->deletePricelist($id);
         }
 
       }
@@ -42,6 +43,7 @@ class ApiPricelist extends Api {
       self::$_params[] = intval($ExpressPrice);
     }
     //$this->authentication(['admin']);
+    self::$_where[] = 'status = 1';
 
 
     $_columns = ["id", "maxWeight", "ExpressPrice", "StandardPrice", "applicationDate"];
@@ -90,6 +92,22 @@ class ApiPricelist extends Api {
       self::$_params = [$maxWeight[0]['maxWeight'],$data['ExpressPrice'], $data['StandardPrice'], $date];
 
       $this->add('PRICELIST');
+  }
+
+  public function deletePricelist($id) {
+      $data = $this->getJsonArray();
+      $allowed = ['status'];
+      if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
+        http_response_code(400);
+        exit(0);
+      }
+
+      foreach ($data as $key => $value) {
+        self::$_set[] = "$key = ?";
+        self::$_params[] = $value;
+      }
+
+      $this->patch('PRICELIST', $id);
   }
 
 }

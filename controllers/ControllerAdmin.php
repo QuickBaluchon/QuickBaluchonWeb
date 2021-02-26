@@ -46,7 +46,7 @@ class ControllerAdmin
 
     foreach ($list as $client) {
         foreach($buttonsValues as $link => $inner){
-        $buttons[] = '<a href="'. WEB_ROOT . "admin/client/$link/" . $client['id'] .'"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
+        $buttons[] = '<a href="'. WEB_ROOT . "client/$link/" . $client['id'] .'"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
       }
 
       $rows[] = array_merge($client, $buttons);
@@ -88,7 +88,7 @@ class ControllerAdmin
 
 
     $buttonsValues = [
-        'updateWarehouse' => 'update',
+        'updateWarehouse' => 'delete',
     ];
 
     foreach ($list as $warehouse) {
@@ -100,7 +100,7 @@ class ControllerAdmin
       $buttons = [];
     }
 
-    $cols = ['#', 'address', 'volume', 'AvailableVolume', 'update'];
+    $cols = ['#', 'address', 'volume', 'AvailableVolume', 'delete'];
     if(!isset($rows)) $rows = [];
     $warehouse = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
     $this->_view->generateView(['content' => $warehouse, 'name' => 'QuickBaluchon']);

@@ -1,12 +1,10 @@
 function updateWarehouse(id) {
-    let warehouse = document.getElementById(id);
-    warehouse.remove();
     let json = JSON.stringify({
         active: 0,
     });
-    ajax('../api/warehouse/' + id, json, 'DELETE', hello);
+    ajax('../../api/warehouse/' + id, json, 'DELETE', redirect);
 }
 
-function hello(reponse) {
-    console.log("hello", reponse);
+function redirect(reponse) {
+    document.location.href="http://localhost:8888/QuickBaluchonWeb/admin/warehouses";
 }

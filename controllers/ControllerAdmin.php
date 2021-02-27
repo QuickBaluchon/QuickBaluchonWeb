@@ -21,7 +21,7 @@ class ControllerAdmin
 
     $_SESSION['role'] = 'admin';
 
-    $actions = ['clients', 'pricelist', 'deliveryman', 'languages', 'warehouses', 'oneSignal', 'updatePricelist','employ'];
+    $actions = ['clients', 'pricelist', 'deliveryman', 'languages', 'warehouses', 'oneSignal', 'updatePricelist','employ', 'warehouseDetails'];
     if ( method_exists( $this ,$url[1]) ) {
       $method = $url[1];
       $this->$method(array_slice($url, 2));
@@ -88,12 +88,12 @@ class ControllerAdmin
 
 
     $buttonsValues = [
-        'updateWarehouse' => 'delete',
+        'warehouseDetails' => 'Détails',
     ];
 
     foreach ($list as $warehouse) {
         foreach($buttonsValues as $link => $inner){
-        $buttons[] = '<button onclick="'. $link .'('.$warehouse["id"].')" id="'.$warehouse["id"].'" type="button" class="btn btn-primary btn-sm">' . $inner . '</button>';
+        $buttons[] = '<a href="'. WEB_ROOT . "admin/$link/" . $warehouse['id'] .'"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
       }
 
       $rows[] = array_merge($warehouse, $buttons);
@@ -169,6 +169,14 @@ class ControllerAdmin
         $this->_view = new View('Back');
 
         $this->_view->generateView(['name' => 'QuickBaluchon']);
+    }
+
+    public function warehouseDetails($url){
+        $this->_view = new View('warehouse');
+        $this->_WarehousesManager = new WarehouseManager;
+        $details = $this->_WarehousesManager->getWarehouse($url[0],["address", "volume", 'AvailableVolume']);
+
+        $this->_view->generateView(["details" => $details, "id" => $url[0]]);
     }
 
 }

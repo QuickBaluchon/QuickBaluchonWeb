@@ -44,6 +44,11 @@ class ApiDeliveryMan extends Api {
             self::$_params[] = intval($_GET['employed']);
         }
 
+        if (isset($_GET['warehouse'])) {
+            self::$_where[] = 'warehouse = ?';
+            self::$_params[] = intval($_GET['warehouse']);
+        }
+
 
         $columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG"];
         self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;

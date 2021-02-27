@@ -68,7 +68,7 @@ class ControllerAdmin
     $this->_view = new View('Back');
 
     $this->_DeliveryManager = new DeliveryManager;
-    $list = $this->_DeliveryManager->getDeliverys([]);
+    $list = $this->_DeliveryManager->getDeliverys([], NULL);
 
 
     $cols = ['#', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN','employed', 'warehouse'];
@@ -175,8 +175,10 @@ class ControllerAdmin
         $this->_view = new View('warehouse');
         $this->_WarehousesManager = new WarehouseManager;
         $details = $this->_WarehousesManager->getWarehouse($url[0],["address", "volume", 'AvailableVolume']);
+        $this->_DeliveryManager = new DeliveryManager;
+        $deliveryman = $this->_DeliveryManager->getDeliverys(["id"], $url[0]);
 
-        $this->_view->generateView(["details" => $details, "id" => $url[0]]);
+        $this->_view->generateView(["details" => $details, "id" => $url[0], "deliveryman" => count($deliveryman)]);
     }
 
 }

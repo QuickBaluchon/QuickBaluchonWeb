@@ -110,7 +110,7 @@ $this->_js = ['main','warehouse/updateWarehouse'];
                <h1>Entrepôt</h1>
                <p>adresse: <?= $details["address"]?></p>
                <p><?= $details["AvailableVolume"]?> m3 / <?= $details["volume"]?> dispo </p>
-               <p>34 liveurs associés</p>
+               <p><?= $deliveryman ?> liveurs associés</p>
              </section>
 
              <section class="mt-5">

@@ -139,11 +139,13 @@ class ControllerAdmin
 
      $buttonsValues = [
          'employ' => 'employer',
+         'refuse' => 'refuser',
      ];
 
     foreach ($list as $delivery) {
         foreach($buttonsValues as $link => $inner){
         $buttons[] = '<button onclick="'. $link .'('.$delivery["id"].')" id="'.$delivery["id"].'" type="button" class="btn btn-primary btn-sm">' . $inner . '</button>';
+
       }
 
       $rows[] = array_merge($delivery, $buttons);
@@ -151,7 +153,7 @@ class ControllerAdmin
     }
     if(!isset($rows)) $rows = [];
 
-    $cols = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG", 'employer'];
+    $cols = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG", 'employer', 'refuser'];
     $delivery = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
     $this->_view->generateView(['content' => $delivery, 'name' => 'QuickBaluchon']);
   }

@@ -8,9 +8,22 @@ function employ(idDeliveryman) {
         employed: 1
     });
 
-    ajax('../api/deliveryman/employ', json, 'POST', hello);
+    ajax('../api/deliveryman/employ', json, 'POST', redirect);
 }
 
-function hello(reponse) {
-    console.log("hello", reponse);
+function refuse(idDeliveryman) {
+
+    let delivery = document.getElementById(idDeliveryman);
+    delivery.remove();
+
+    let json = JSON.stringify({
+        id: idDeliveryman,
+        employed: null
+    });
+
+    ajax('../api/deliveryman/employ', json, 'POST', redirect);
+}
+
+function redirect(reponse) {
+    document.location.href="http://localhost:8888/QuickBaluchonWeb/admin/employ";
 }

@@ -1,7 +1,7 @@
 function addLanguage () {
-    let language = document.getElementById('language').value ;
-    let shortcut = document.getElementById('shortcut').value.toUpperCase() ;
-    let flag = document.getElementById('flag').value ;
+    let language = document.getElementById('language').value.trim() ;
+    let shortcut = document.getElementById('shortcut').value.trim().toUpperCase() ;
+    let flag = document.getElementById('flag').value.trim() ;
 
     if (checkValues(language, shortcut, flag) == true) {
 

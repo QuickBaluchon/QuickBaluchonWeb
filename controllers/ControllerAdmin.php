@@ -135,23 +135,16 @@ class ControllerAdmin
     private function languages($url) {
         $this->_view = new View('Back');
         $this->_languagesManager = new LanguagesManager ;
-
-        if (count($url) == 0 || $url[0] == '') {
-            $data = $this->allLanguages() ;
-        } else {
-            $data = $this->oneLanguage($url[0])  ;
-        }
-
+        $data = $this->allLanguages() ;
         $this->_view->generateView(['content' => $data, 'name' => 'QuickBaluchon']);
 
     }
 
     private function allLanguages () {
         $list = $this->_languagesManager->getLanguages() ;
-
-        foreach ($list as $lang) {
-            $button = ['<button type="button" class="btn btn-danger btn-sm" onclick="dropLanguage(' . $lang['1'] . ')">Supprimer</button>'];
-            $rows[] = array_merge($lang, $button);
+        foreach ($list as $lang => $data) {
+            $button = '<button type="button" class="btn btn-danger btn-sm" onclick="dropLanguage(' . $lang . ')">Supprimer</button>';
+            $rows[] = array_merge([$lang], $data, [$button]);
         }
 
         $rows[] = [
@@ -159,23 +152,6 @@ class ControllerAdmin
             '<input type="text" class="form-control" id="shortcut" placeholder="SH">',
             '<input type="text" class="form-control" id="flag" placeholder="alt-codes.net/flags">',
             '<button type="button" class="btn btn-success btn-sm" onclick="addLanguage()">Ajouter</button>'
-        ] ;
-
-        $cols = ['Language', 'Shortcut', 'Flag', 'Modify'] ;
-
-        return $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]) ;
-    }
-
-    private function oneLanguage ($sh) {
-        $language = $this->_languagesManager->getLanguage($sh) ;
-        if (empty($language))
-            return '<img src="https://http.cat/404.jpg" alt="404">' ;
-
-        $rows[] = [
-            '<input type="text" class="form-control" id="language" placeholder="language" value="' . $language[0] . '">',
-            '<input type="text" class="form-control" id="shortcut" placeholder="SH"  value="' . $language[1] . '">',
-            '<input type="text" class="form-control" id="flag" placeholder="alt-codes.net/flags"  value="' . $language[2] . '">',
-            '<button type="button" class="btn btn-primary btn-sm" onclick="updateLanguage()">Modifier</button>'
         ] ;
 
         $cols = ['Language', 'Shortcut', 'Flag', 'Modify'] ;

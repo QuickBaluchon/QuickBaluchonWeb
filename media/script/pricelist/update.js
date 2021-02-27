@@ -10,7 +10,8 @@ function update(id) {
         let json = JSON.stringify( {
             ExpressPrice: values['ExpressPrice'],
             StandardPrice : values['StandardPrice'],
-            inputDate: values['inputDate']
+            inputDate: values['inputDate'],
+            status: 1
         } );
 
         ajax('../../api/pricelist/' + id, json, 'PATCH', hello);

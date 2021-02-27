@@ -149,6 +149,7 @@ class ControllerAdmin
       $rows[] = array_merge($delivery, $buttons);
       $buttons = [];
     }
+    if(!isset($rows)) $rows = [];
 
     $cols = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG", 'employer'];
     $delivery = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);

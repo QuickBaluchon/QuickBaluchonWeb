@@ -75,7 +75,7 @@ class ApiDeliveryMan extends Api {
     private function signup() {
 
         $data = $this->getJsonArray();
-        $cols = ['firstname', 'lastname','password', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'warehouse'];
+        $cols = ['firstname', 'lastname','password', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'warehouse', 'employed'];
         for ($i = 0; $i < count($cols); $i++) {
             if (!isset($data[$cols[$i]])) {
                 echo $cols[$i];
@@ -92,7 +92,7 @@ class ApiDeliveryMan extends Api {
         }
 
 
-        self::$_columns = ['firstname', 'lastname', 'password','phone', 'email', 'volumeCar', 'radius', 'IBAN', 'warehouse'];
+        self::$_columns = ['firstname', 'lastname', 'password','phone', 'email', 'volumeCar', 'radius', 'IBAN', 'warehouse', 'employed'];
         $this->add('DELIVERYMAN');
         //$this->login();
 

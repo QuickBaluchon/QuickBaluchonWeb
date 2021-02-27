@@ -148,8 +148,9 @@ class ControllerAdmin
         }
 
         $rows[] = [
-            '<input type="text" class="form-control" id="language" placeholder="language">',
+
             '<input type="text" class="form-control" id="shortcut" placeholder="SH">',
+            '<input type="text" class="form-control" id="language" placeholder="language">',
             '<input type="text" class="form-control" id="flag" placeholder="alt-codes.net/flags">',
             '<button type="button" class="btn btn-success btn-sm" onclick="addLanguage()">Ajouter</button>'
         ] ;

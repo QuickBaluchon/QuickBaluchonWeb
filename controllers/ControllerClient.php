@@ -67,8 +67,8 @@ class ControllerClient
     private function profile($id){
         $this->_view = new View('Back');
         $this->_clientManager = new ClientManager();
-        
-        if(isset($_id))
+
+        if(isset($this->_id))
             $client = $this->_clientManager->getClient($this->_id, ['name', 'website']);
         else
             $client = $this->_clientManager->getClient($id[0], ['name', 'website']);

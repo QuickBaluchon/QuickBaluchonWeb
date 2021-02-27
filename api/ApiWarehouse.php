@@ -28,7 +28,7 @@ class ApiWarehouse extends Api {
 
   }
 
-  public function getListWarehouse (): array  {
+  public function getListWarehouse(): array  {
     $packages = [];
     if($this->_method != 'GET') $this->catError(405);
 
@@ -78,7 +78,7 @@ class ApiWarehouse extends Api {
   }
 
 
-private function patchWarehouse($id){
+  private function patchWarehouse($id){
     if($this->_method != 'PATCH') $this->catError(405);
 
     $data = $this->getJsonArray();
@@ -95,5 +95,5 @@ private function patchWarehouse($id){
 
 
     $this->patch("WAREHOUSE", $id);
-}
+   }
 }

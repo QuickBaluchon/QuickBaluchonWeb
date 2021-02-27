@@ -13,9 +13,9 @@ class ApiDeliveryMan extends Api {
         $this->_method = $method;
 
         if (count($url) == 0)
-            $this->_data = $this->getListDelivery();     // list of packages - /api/deliveryman
+            $this->_data = $this->getListDelivery();     // list of deliveryman - /api/deliveryman
 
-        elseif (($id = intval($url[0])) !== 0) {    // details one packages - /api/deliveryman/{id}
+        elseif (($id = intval($url[0])) !== 0) {    // details one deliveryman - /api/deliveryman/{id}
             switch ($method) {
                 case 'GET' : $this->_data = $this->getDelivery($id); break;
                 case 'PATCH' : $this->updateDelivery($id); break;
@@ -25,6 +25,7 @@ class ApiDeliveryMan extends Api {
             switch ($url[0]) {
                 case 'signup': $this->signup();break;
                 case 'login': $this->login();break;
+                case 'employ': $this->employ();break;
                 default: http_response_code(404); exit();
             }
         }
@@ -38,9 +39,14 @@ class ApiDeliveryMan extends Api {
         $packages = [];
         if ($this->_method != 'GET') $this->catError(405);
 
-        if (isset($_GET['deliveryman'])) {
-            self::$_where[] = 'deliveryman = ?';
-            self::$_params[] = intval($_GET['deliveryman']);
+        if (isset($_GET['employed'])) {
+            self::$_where[] = 'employed = ?';
+            self::$_params[] = intval($_GET['employed']);
+        }
+
+        if (isset($_GET['warehouse'])) {
+            self::$_where[] = 'warehouse = ?';
+            self::$_params[] = intval($_GET['warehouse']);
         }
 
 
@@ -69,7 +75,7 @@ class ApiDeliveryMan extends Api {
     private function signup() {
 
         $data = $this->getJsonArray();
-        $cols = ['firstname', 'lastname','password', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'warehouse'];
+        $cols = ['firstname', 'lastname','password', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'warehouse', 'employed'];
         for ($i = 0; $i < count($cols); $i++) {
             if (!isset($data[$cols[$i]])) {
                 echo $cols[$i];
@@ -86,7 +92,7 @@ class ApiDeliveryMan extends Api {
         }
 
 
-        self::$_columns = ['firstname', 'lastname', 'password','phone', 'email', 'volumeCar', 'radius', 'IBAN', 'warehouse'];
+        self::$_columns = ['firstname', 'lastname', 'password','phone', 'email', 'volumeCar', 'radius', 'IBAN', 'warehouse', 'employed'];
         $this->add('DELIVERYMAN');
         //$this->login();
 
@@ -157,6 +163,27 @@ class ApiDeliveryMan extends Api {
         foreach ($data as $key => $value) {
             self::$_set[] = "$key = ?";
             self::$_params[] = $value;
+        }
+
+        $this->patch('DELIVERYMAN', $id);
+    }
+
+    public function employ(){
+        $data = $this->getJsonArray();
+        $allowed = ['id', 'employed'];
+
+        if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
+          http_response_code(400);
+          exit(0);
+        }
+
+        foreach ($data as $key => $value) {
+            if($key == "id")
+                $id = $value;
+            else{
+                self::$_set[] = "$key = ?";
+                self::$_params[] = $value;
+            }
         }
 
         $this->patch('DELIVERYMAN', $id);

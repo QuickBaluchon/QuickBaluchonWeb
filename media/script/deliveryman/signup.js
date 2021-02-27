@@ -34,6 +34,7 @@ function signup() {
             radius: parseInt(values['inputRadius']),
             IBAN : values['inputBIC'],
             warehouse : parseInt(values['inputEntrepot']),
+            employed: 0
         } );
 
         ajax('../api/deliveryman/signup', json, 'POST', hello);

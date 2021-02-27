@@ -44,7 +44,7 @@ $this->_js = ['main','deliveryman/signup'];
                 <input type="password" class="form-control" id="inputPassword1" placeholder="Mot de passe">
               </div>
               <div class="form-group col-md-6">
-                <input type="password" class="form-control" id="inputPassword2" placeholder="Mot de passe">
+                <input type="password" class="form-control" id="inputPassword" placeholder="Mot de passe">
               </div>
             </div>
 

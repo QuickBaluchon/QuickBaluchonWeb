@@ -64,12 +64,14 @@ class ControllerClient
         $this->_view->generateView([]);
     }
 
-    private function profile()
-    {
+    private function profile($id){
         $this->_view = new View('Back');
-
         $this->_clientManager = new ClientManager();
-        $client = $this->_clientManager->getClient($this->_id, ['name', 'website']);
+
+        if(isset($this->_id))
+            $client = $this->_clientManager->getClient($this->_id, ['name', 'website']);
+        else
+            $client = $this->_clientManager->getClient($id[0], ['name', 'website']);
 
         $profile = $this->_view->generateTemplate('client_profile', $client);
         $this->_view->generateView(['content' => $profile, 'name' => $client['website']]);
@@ -77,16 +79,36 @@ class ControllerClient
 
     private function bills()
     {
+
         $this->_view = new View('Back');
 
         $this->_clientManager = new ClientManager();
         $this->_billManager = new BillManager();
 
         $client = $this->_clientManager->getClient($this->_id, ['name', 'website']);
-        $billsList = $this->_billManager->getBills($this->_id, ['dateBill', 'id', 'grossAmount', 'paid']);
+        $billsList = $this->_billManager->getNotPaidBills($this->_id, ['dateBill', 'id', 'grossAmount','pdfPath', 'paid']);
+
+
+        $buttonsValues = [
+            'pay' => 'payer',
+        ];
+        if(count($billsList) > 0){
+            foreach ($billsList as $bill) {
+                foreach($buttonsValues as $link => $inner){
+                $id = $bill['id'];
+                $_SESSION["price$id"] = $bill['grossAmount'];
+                $buttons[] = '<a href="'. WEB_ROOT . "client/$link/" . $id .'"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
+              }
+
+              $rows[] = array_merge($bill, $buttons);
+              $buttons = [];
+            }
+        }else {
+            $rows = [];
+        }
 
         $cols = ['Mois', 'Nb colis', 'Prix', 'Télécharger', 'Statut'];
-        $bills = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $billsList]);
+        $bills = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->generateView(['content' => $bills, 'name' => $client['website']]);
     }
 
@@ -102,6 +124,12 @@ class ControllerClient
         $cols = ['#', 'Poids', 'Volume', 'Adresse', 'E-mail', 'Délais', 'Date de livraison', 'Status', 'Déposé le'];
         $package = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $package]);
         $this->_view->generateView(['content' => $package, 'name' => $client['website']]);
+    }
+
+    public function pay($grossAmount){
+        $price = $grossAmount[0];
+        $this->_view = new View('Stripe');
+        $this->_view->generateView(["price" => $price]);
     }
 
 }

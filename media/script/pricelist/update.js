@@ -1,8 +1,5 @@
 function update(id) {
-
-    let json = [];
-
-    let ids =['ExpressPrice', 'StandardPrice'];
+    let ids =['ExpressPrice', 'StandardPrice', 'inputDate'];
 
     let values = getInputsValue(ids, true);
 
@@ -10,17 +7,27 @@ function update(id) {
     if( values < 0 ) // error codes
         return false;
 
-    if ( values['inputPassword1'] !== values['inputPassword'] ) {
-        console.log('Mots de passe différents');
-        return ;
-    } else {
         let json = JSON.stringify( {
             ExpressPrice: values['ExpressPrice'],
             StandardPrice : values['StandardPrice'],
+            inputDate: values['inputDate'],
+            status: 1
         } );
 
         ajax('../../api/pricelist/' + id, json, 'PATCH', hello);
-    }
+
+}
+
+function deletePrice(id) {
+    let json = JSON.stringify( {
+        status: 0,
+    } );
+    ajax('../../api/pricelist/' + id, json, 'DELETE', redirect);
+}
+
+
+function redirect(response){
+    document.location.href="http://localhost:8888/QuickBaluchonWeb/admin/pricelist";
 }
 
 function hello(reponse) {

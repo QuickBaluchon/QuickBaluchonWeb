@@ -64,12 +64,14 @@ class ControllerClient
         $this->_view->generateView([]);
     }
 
-    private function profile()
-    {
+    private function profile($id){
         $this->_view = new View('Back');
-
         $this->_clientManager = new ClientManager();
-        $client = $this->_clientManager->getClient($this->_id, ['name', 'website']);
+        
+        if(isset($_id))
+            $client = $this->_clientManager->getClient($this->_id, ['name', 'website']);
+        else
+            $client = $this->_clientManager->getClient($id[0], ['name', 'website']);
 
         $profile = $this->_view->generateTemplate('client_profile', $client);
         $this->_view->generateView(['content' => $profile, 'name' => $client['website']]);

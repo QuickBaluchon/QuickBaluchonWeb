@@ -10,7 +10,7 @@ function addLanguage () {
             flag = flag.substring(0, 8) + tmp ;
         }
 
-        json = JSON.stringify( {
+        let json = JSON.stringify( {
             language : language,
             shortcut : shortcut,
             flag : flag
@@ -21,8 +21,13 @@ function addLanguage () {
     }
 }
 
+function deleteLanguage (sh) {
+    let json = JSON.stringify({ shortcut: sh.toUpperCase() }) ;
+    ajax('/api/languages/', json, 'DELETE', success, error) ;
+}
+
 function checkValues (language, shortcut, flag) {
-    if (language.length < 4 || shortcut.length != 2 || flag.length < 16 || flag.length > 17)
+    if (language.length < 4 ||shortcut.length != 2 ||flag.length < 16 ||flag.length > 17)
         return false ;
 
     return true ;

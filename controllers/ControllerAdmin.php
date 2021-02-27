@@ -143,19 +143,19 @@ class ControllerAdmin
     private function allLanguages () {
         $list = $this->_languagesManager->getLanguages() ;
         foreach ($list as $lang => $data) {
-            $button = '<button type="button" class="btn btn-danger btn-sm" onclick="dropLanguage(' . $lang . ')">Supprimer</button>';
+            $onclick = 'onclick="deleteLanguage(\'' . $lang . '\')"' ;
+            $button = '<button type="button" class="btn btn-danger btn-sm"' . $onclick . '>Supprimer</button>';
             $rows[] = array_merge([$lang], $data, [$button]);
         }
 
         $rows[] = [
-
             '<input type="text" class="form-control" id="shortcut" placeholder="SH">',
             '<input type="text" class="form-control" id="language" placeholder="language">',
             '<input type="text" class="form-control" id="flag" placeholder="alt-codes.net/flags">',
             '<button type="button" class="btn btn-success btn-sm" onclick="addLanguage()">Ajouter</button>'
         ] ;
 
-        $cols = ['Language', 'Shortcut', 'Flag', 'Modify'] ;
+        $cols = ['Shortcut', 'Language', 'Flag', 'Modify'] ;
 
         return $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]) ;
     }

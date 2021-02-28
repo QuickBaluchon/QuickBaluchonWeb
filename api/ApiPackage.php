@@ -30,17 +30,14 @@ class ApiPackage extends Api {
   public function getListPackages (): array  {
     if($this->_method != 'GET') $this->catError(405);
 
-    $columns = ['id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'status', 'excelPath', 'dateDeposit'];
+    $columns = ['PACKAGE.id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'excelPath', 'dateDeposit'];
 
     if(isset($_GET['inner'])) {
         $colums[] = ['PRICELIST.ExpressPrice', 'PRICELIST.ExpressPrice'];
         self::$_inner = explode(',',$_GET['inner']);
     }
 
-    if(isset($_GET['date'])) {
-        self::$_where[] = 'DATE_FORMAT(dateDeposit, "%m" = ?)';
-        self::$_params[] = intval($_GET['date'])
-    }
+
 
     if(isset($_GET['client'])) {
       self::$_where[] = 'client = ?';
@@ -50,6 +47,11 @@ class ApiPackage extends Api {
     if(isset($_GET['ordernb'])) {
       self::$_where[] = 'ordernb = ?';
       self::$_params[] = intval($_GET['ordernb']);
+    }
+    if(isset($_GET['date'])) {
+        $date = explode('-', $_GET['date']);
+        self::$_where[] = 'DATE_FORMAT(dateDeposit, "%m") = ?';
+        self::$_params[] = $date[1];
     }
 
     $list = $this->get('PACKAGE', $columns);
@@ -66,7 +68,7 @@ class ApiPackage extends Api {
   public function getPackage($id): array {
     if($this->_method != 'GET') $this->catError(405);
 
-    $columns = ['id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'status', 'excelPath', 'dateDeposit'];
+    $columns = ['PACKAGE.id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'excelPath', 'dateDeposit'];
     if(isset($_GET['inner'])) {
         $colums[] = ['PRICELIST.ExpressPrice', 'PRICELIST.ExpressPrice'];
         self::$_inner = explode(',',$_GET['inner']);

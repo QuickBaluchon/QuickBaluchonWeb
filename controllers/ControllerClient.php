@@ -133,4 +133,10 @@ class ControllerClient
         $this->_view->generateView(["price" => $price]);
     }
 
+    public function createBillPdf($id){
+        $this->_packageManager = new PackageManager();
+        $package = $this->_packageManager->getPackage($id[0], ["PRICELIST.ExpressPrice"], ["PRICELIST,PACKAGE.pricelist,PRICELIST.id"]);
+        print_r($package);
+    }
+
 }

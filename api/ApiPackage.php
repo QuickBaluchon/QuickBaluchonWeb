@@ -30,7 +30,10 @@ class ApiPackage extends Api {
   public function getListPackages (): array  {
     if($this->_method != 'GET') $this->catError(405);
 
-    //$this->authentication(['admin']);
+
+    if(isset($_GET['inner'])) {
+        self::$_inner = explode(',',$_GET['inner']);
+    }
 
     if(isset($_GET['client'])) {
       self::$_where[] = 'client = ?';
@@ -42,7 +45,7 @@ class ApiPackage extends Api {
       self::$_params[] = intval($_GET['ordernb']);
     }
 
-    $columns = ['id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'status', 'excelPath', 'dateDeposit'];
+    $columns = ['id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'status', 'excelPath', 'dateDeposit', 'PRICELIST.ExpressPrice', 'PRICELIST.ExpressPrice'];
     $list = $this->get('PACKAGE', $columns);
     $packages = [];
     if( $list != null ){
@@ -57,11 +60,16 @@ class ApiPackage extends Api {
   public function getPackage($id): array {
     if($this->_method != 'GET') $this->catError(405);
 
-    $columns = ['id', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'status', 'excelPath', 'dateDeposit', 'warehouse'];
-    self::$_where[] = 'id = ?';
+    if(isset($_GET['inner'])) {
+        self::$_inner = explode(',',$_GET['inner']);
+    }
+
+    $columns = ['PACKAGE.id', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'excelPath', 'dateDeposit', 'warehouse', 'PRICELIST.ExpressPrice', 'PRICELIST.ExpressPrice'];
+    self::$_where[] = 'PACKAGE.id = ?';
     self::$_params[] = $id;
     $package = $this->get('PACKAGE', $columns);
-    if( count($package) == 1 )
+
+    if( count($package) >= 1 )
       return $package[0];
     else
       return [];

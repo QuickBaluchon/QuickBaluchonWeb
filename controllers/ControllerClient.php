@@ -134,13 +134,48 @@ class ControllerClient
     }
 
     public function createBillPdf($id){
+        require_once __DIR__ . "/../media/fpdf/fpdf.php";
         $this->_billManager = new BillManager();
         $this->_packageManager = new PackageManager();
 
         $dateBill = $this->_billManager->getBill($this->_id, ['dateBill']);
-        $package = $this->_packageManager->getPackages([], ["PRICELIST","PACKAGE.pricelist","PRICELIST.id"], $dateBill["dateBill"]);
+        $packages = $this->_packageManager->getPackages(["weight", "volume", "delay", "PRICELIST.ExpressPrice", "PRICELIST.StandardPrice"], ["PRICELIST","PACKAGE.pricelist","PRICELIST.id"], $dateBill["dateBill"]);
+        $totalPackage = $this->calculTotal($packages);
+        $cols = ["weight", 'volume', 'delay','Price'];
+        $pdf = new FPDF();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial','',12);
+        foreach ($cols as $key) {
+            $pdf->Cell(40,20,"$key");
+        }
+        $pdf->Ln(10);
+        foreach ($totalPackage as $package) {
+            foreach ($package as $key => $value) {
+                $pdf->Cell(40,20,"$value");
+            }
+            $pdf->Ln(10);
+        }
 
-        print_r($package);
+        $pdf->Output();
+    }
+
+    public function calculTotal($packages){
+
+        $total = 0;
+        $i = 0;
+        foreach($packages as $pakage){
+            if($pakage["delay"] == 2){
+                $total += $pakage["ExpressPrice"];
+                unset($packages[$i]["StandardPrice"]);
+            }
+            else{
+                $total += $pakage["StandardPrice"];
+                unset($packages[$i]["ExpressPrice"]);
+            }
+            $i++;
+        }
+        $packages[] = ["total" => $total];
+        return $packages;
     }
 
 }

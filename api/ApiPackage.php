@@ -30,13 +30,13 @@ class ApiPackage extends Api {
   public function getListPackages (): array  {
     if($this->_method != 'GET') $this->catError(405);
 
-    $columns = ['PACKAGE.id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'excelPath', 'dateDeposit'];
 
+    $columns = ['PACKAGE.id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'excelPath', 'dateDeposit'];
     if(isset($_GET['inner'])) {
-        $colums[] = ['PRICELIST.ExpressPrice', 'PRICELIST.ExpressPrice'];
+        $columns[] = 'PRICELIST.ExpressPrice';
+         $columns[] = 'PRICELIST.StandardPrice';
         self::$_inner = explode(',',$_GET['inner']);
     }
-
 
 
     if(isset($_GET['client'])) {
@@ -68,11 +68,12 @@ class ApiPackage extends Api {
   public function getPackage($id): array {
     if($this->_method != 'GET') $this->catError(405);
 
-    $columns = ['PACKAGE.id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'excelPath', 'dateDeposit'];
+
     if(isset($_GET['inner'])) {
-        $colums[] = ['PRICELIST.ExpressPrice', 'PRICELIST.ExpressPrice'];
+        $columns[] = 'PRICELIST.ExpressPrice, ' . 'PRICELIST.StandardPrice';
         self::$_inner = explode(',',$_GET['inner']);
     }
+    $columns = ['PACKAGE.id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'excelPath', 'dateDeposit'];
 
     self::$_where[] = 'PACKAGE.id = ?';
     self::$_params[] = $id;

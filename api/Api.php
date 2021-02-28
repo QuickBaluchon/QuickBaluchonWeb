@@ -10,7 +10,7 @@ abstract class Api {
   protected static $_offset = 0;
   protected static $_limit = 1;
   protected static $_order ;
-  protected static $_inner ;
+  protected static $_join ;
   private static $_jwtKey = 'key';
 
   private function setDb() {
@@ -67,14 +67,22 @@ abstract class Api {
     // COLUMNS
     $this->getColumns($columns);
     $sql = "SELECT " . join(', ', self::$_columns) . " FROM $table" ;
-    // INNER
-    if( isset(self::$_inner) && count(self::$_inner) == 1 ) {
-        $innerClause = join(",", self::$_inner);
-        $sql .= " INNER JOIN " . $innerClause;
-    }else if(isset(self::$_inner) && count(self::$_inner) == 3){
-        $innerClause = join(",", self::$_inner);
-        $sql .= " INNER JOIN " . self::$_inner[0] . " ON " . self::$_inner[1] . " = " . self::$_inner[2];
+
+    /// INNER
+      /* $_join = [[
+       *    'type' => inner, left ou right
+       *    'table' => TABLE2
+       *    'onT1' => TABLE1.col
+       *    'onT2' => TABLE2.col
+       * ]]
+      */
+    if (isset(self::$_join) && !empty(self::$_join)) {
+        foreach (self::$_join as $join) {
+            $joinClause = ' ' . strtoupper($join['type']) . ' JOIN ' . $join['table'] . ' ON ' . $join['onT1'] . ' = ' . $join['onT2'] ;
+            $sql .= $joinClause ;
+        }
     }
+
     // WHERE
     if( isset(self::$_where) && count(self::$_where) > 0 ) {
       $whereClause = join(' AND ', self::$_where);
@@ -191,6 +199,7 @@ abstract class Api {
     self::$_offset = 0;
     self::$_limit = 1;
     self::$_order = NULL ;
+    self::$_join = [] ;
   }
 
   // RECOVER POST DATA

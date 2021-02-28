@@ -34,12 +34,18 @@ class ApiPackage extends Api {
 
     if(isset($_GET['inner'])) {
         $colums[] = ['PRICELIST.ExpressPrice', 'PRICELIST.ExpressPrice'];
-        self::$_inner = explode(',',$_GET['inner']);
+        $inner = explode(',',$_GET['inner']);
+        self::$_join[] = [
+            'type' => 'inner',
+            'table' => $inner[0],
+            'onT1' => $inner[1],
+            'onT2' => $inner[2]
+        ] ;
     }
 
     if(isset($_GET['date'])) {
         self::$_where[] = 'DATE_FORMAT(dateDeposit, "%m" = ?)';
-        self::$_params[] = intval($_GET['date'])
+        self::$_params[] = intval($_GET['date']) ;
     }
 
     if(isset($_GET['client'])) {

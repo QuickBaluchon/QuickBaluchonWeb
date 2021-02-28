@@ -16,6 +16,16 @@
             </ul>
             <div class="tab-content mt-3" id="myTabContent">
                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                    <script>
+                        window.onload = function () {
+                            let json = JSON.stringify({
+                                kikou: 32
+                            })
+                            ajax('/api/deliverymanStats/', json, 'GET', console.log, console.log) ;
+                        }
+
+                    </script>
                     <script>
                         window.onload = function() {
 

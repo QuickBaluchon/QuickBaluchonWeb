@@ -31,9 +31,15 @@ class ApiPackage extends Api {
     if($this->_method != 'GET') $this->catError(405);
 
     $columns = ['id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'status', 'excelPath', 'dateDeposit'];
+
     if(isset($_GET['inner'])) {
         $colums[] = ['PRICELIST.ExpressPrice', 'PRICELIST.ExpressPrice'];
         self::$_inner = explode(',',$_GET['inner']);
+    }
+
+    if(isset($_GET['date'])) {
+        self::$_where[] = 'DATE_FORMAT(dateDeposit, "%m" = ?)';
+        self::$_params[] = intval($_GET['date'])
     }
 
     if(isset($_GET['client'])) {

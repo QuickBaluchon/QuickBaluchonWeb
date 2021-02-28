@@ -1,9 +1,9 @@
 <?php
 
 class PackageManager extends Model{
-    public function getPackages($fields, $inner = NULL) {
+    public function getPackages($fields, $inner = NULL, $date = NULL) {
         if($inner != NULL)
-            return $this->getCollection('package', ["fields" => join(',',$fields), "inner" => join(',',$inner)]);
+            return $this->getCollection('package', ["fields" => join(',',$fields), "inner" => join(',',$inner), "date" => $date]);
         else
             return $this->getCollection('package', ["fields" => join(',',$fields)]);
     }

@@ -45,7 +45,7 @@ class ApiBill extends Api
       self::$_params[] = intval($_GET['paid']);
     }
 
-    $columns = ['id', 'client', 'grossAmount', 'dateBill', 'pdfPath', 'paid'];
+    $columns = ['id', 'client', 'grossAmount', 'netAmount', 'dateBill', 'pdfPath', 'paid'];
     $list = $this->get('MONTHLYBILL', $columns);
     $bills = [];
     if( $list != null ){
@@ -62,7 +62,7 @@ class ApiBill extends Api
     //$this->authentication(['admin'], [$id]);
     self::$_where[] = 'id = ?';
     self::$_params[] = $id;
-    $columns = ['id', 'client', 'grossAmount', 'dateBill', 'pdfPath', 'paid'];
+    $columns = ['id', 'client', 'grossAmount', 'netAmount', 'dateBill', 'pdfPath', 'paid'];
     $client = $this->get('MONTHLYBILL', $columns );
     if (count($client) == 1)
       return $client[0];

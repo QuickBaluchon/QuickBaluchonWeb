@@ -86,18 +86,19 @@ class ControllerClient
         $this->_billManager = new BillManager();
 
         $client = $this->_clientManager->getClient($this->_id, ['name', 'website']);
-        $billsList = $this->_billManager->getNotPaidBills($this->_id, ['dateBill', 'id', 'grossAmount','pdfPath', 'paid']);
-
-
+        $billsList = $this->_billManager->getNotPaidBills($this->_id, ['id', 'grossAmount', 'netAmount','dateBill']);
         $buttonsValues = [
             'pay' => 'payer',
+            'createBillPdf' => "visualiser"
         ];
+
         if(count($billsList) > 0){
             foreach ($billsList as $bill) {
                 foreach($buttonsValues as $link => $inner){
                 $id = $bill['id'];
-                $_SESSION["price$id"] = $bill['grossAmount'];
+                $_SESSION["price$id"] = $bill['netAmount'];
                 $buttons[] = '<a href="'. WEB_ROOT . "client/$link/" . $id .'"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
+
               }
 
               $rows[] = array_merge($bill, $buttons);
@@ -107,7 +108,7 @@ class ControllerClient
             $rows = [];
         }
 
-        $cols = ['Mois', 'Nb colis', 'Prix', 'Télécharger', 'Statut'];
+        $cols = ["#", "Montant brut","Montant net", "date", "payer", "visualiser"];
         $bills = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->generateView(['content' => $bills, 'name' => $client['website']]);
     }

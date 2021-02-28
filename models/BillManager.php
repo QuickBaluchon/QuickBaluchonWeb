@@ -11,7 +11,7 @@ class BillManager extends Model{
     return $this->getRessource('bill', $id , ["fields" => join(',',$fields)]);
   }
 
-  public function getNotPaidBills($client) {
-    return $this->getCollection('bill', [ "paid" => 0,"client" => $client]);
+  public function getNotPaidBills($id, $fields) {
+    return $this->getCollection('bill', [ "paid" => 0,"fields" => join(',',$fields), "client" => $id]);
   }
 }

@@ -92,7 +92,7 @@ class ControllerClient
             'createBillPdf' => "visualiser"
         ];
 
-        if(count($billsList) > 0){
+        if($billsList != null){
             foreach ($billsList as $bill) {
                 foreach($buttonsValues as $link => $inner){
                 $id = $bill['id'];
@@ -139,37 +139,42 @@ class ControllerClient
         $this->_packageManager = new PackageManager();
 
         $dateBill = $this->_billManager->getBill($id[0], ['dateBill']);
-        $packages = $this->_packageManager->getPackages(["weight", "volume", "delay", "PRICELIST.ExpressPrice", "PRICELIST.StandardPrice"], ["PRICELIST","PACKAGE.pricelist","PRICELIST.id"], $dateBill["dateBill"]);
-        $totalPackage = $this->calculTotal($packages);
-        $cols = ["weight", 'volume', 'delay','Price'];
-        $pdf = new FPDF();
-        $pdf->AddPage();
-        $pdf->SetFont('Arial','',12);
-        foreach ($cols as $key) {
-            $pdf->Cell(40,20,"$key");
-        }
-        $pdf->Ln(10);
-        foreach ($totalPackage as $package) {
-            foreach ($package as $key => $value) {
-                $pdf->Cell(40,20,"$value");
+        $packages = $this->_packageManager->getPackages(
+            ["weight", "volume", "delay", "PRICELIST.ExpressPrice", "PRICELIST.StandardPrice"],
+            ["PRICELIST","PACKAGE.pricelist","PRICELIST.id"],
+            $dateBill["dateBill"],
+            $this->_id);
+        if ($packages != null) {
+            $totalPackage = $this->calculTotal($packages);
+            $cols = ["weight", 'volume', 'delay', 'Price'];
+            $pdf = new FPDF();
+            $pdf->AddPage();
+            $pdf->SetFont('Arial', '', 12);
+            foreach ($cols as $key) {
+                $pdf->Cell(40, 20, "$key");
             }
             $pdf->Ln(10);
-        }
+            foreach ($totalPackage as $package) {
+                foreach ($package as $key => $value) {
+                    $pdf->Cell(40, 20, "$value");
+                }
+                $pdf->Ln(10);
+            }
 
-        $pdf->Output();
+            $pdf->Output();
+        }
     }
 
     public function calculTotal($packages){
-
         $total = 0;
         $i = 0;
-        foreach($packages as $pakage){
-            if($pakage["delay"] == 2){
-                $total += $pakage["ExpressPrice"];
+        foreach($packages as $package) {
+            if($package["delay"] == 2){
+                $total += $package["ExpressPrice"];
                 unset($packages[$i]["StandardPrice"]);
             }
             else{
-                $total += $pakage["StandardPrice"];
+                $total += $package["StandardPrice"];
                 unset($packages[$i]["ExpressPrice"]);
             }
             $i++;

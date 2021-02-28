@@ -33,8 +33,8 @@ class ApiPackage extends Api {
 
     $columns = ['PACKAGE.id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'excelPath', 'dateDeposit'];
     if(isset($_GET['inner'])) {
-<<<<<<< HEAD
-        $colums[] = ['PRICELIST.ExpressPrice', 'PRICELIST.ExpressPrice'];
+        $columns[] = 'PRICELIST.ExpressPrice';
+        $columns[] = 'PRICELIST.StandardPrice';
         $inner = explode(',',$_GET['inner']);
         self::$_join[] = [
             'type' => 'inner',
@@ -43,18 +43,6 @@ class ApiPackage extends Api {
             'onT2' => $inner[2]
         ] ;
     }
-
-    if(isset($_GET['date'])) {
-        self::$_where[] = 'DATE_FORMAT(dateDeposit, "%m" = ?)';
-        self::$_params[] = intval($_GET['date']) ;
-    }
-=======
-        $columns[] = 'PRICELIST.ExpressPrice';
-         $columns[] = 'PRICELIST.StandardPrice';
-        self::$_inner = explode(',',$_GET['inner']);
-    }
-
->>>>>>> d26d0ecb35b107d535afb19824ffb29c9fb1d04c
 
     if(isset($_GET['client'])) {
       self::$_where[] = 'client = ?';
@@ -67,7 +55,7 @@ class ApiPackage extends Api {
     }
     if(isset($_GET['date'])) {
         $date = explode('-', $_GET['date']);
-        self::$_where[] = 'DATE_FORMAT(dateDeposit, "%m") = ?';
+        self::$_where[] = 'MONTH(dateDeposit) = ?';
         self::$_params[] = $date[1];
     }
 

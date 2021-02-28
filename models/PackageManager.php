@@ -1,12 +1,13 @@
 <?php
 
 class PackageManager extends Model{
-    public function getPackages($fields, $inner = NULL, $date = NULL) {
+    public function getPackages($fields, $inner = NULL, $date = NULL, $client = NULL) {
         if($inner != NULL)
-            return $this->getCollection('package', ["fields" => join(',',$fields), "inner" => join(',',$inner), "date" => $date]);
+            return $this->getCollection('package', ["fields" => join(',',$fields), "inner" => join(',',$inner), "date" => $date, "client" => $client]);
         else
             return $this->getCollection('package', ["fields" => join(',',$fields)]);
     }
+
     public function getPackage($id ,$fields, $inner = NULL) {
         if($inner != NULL)
             return $this->getRessource('package', $id , ["fields" => join(',',$fields), "inner" => join(',',$inner)]);

@@ -48,10 +48,10 @@ class ApiDeliveryManStats extends Api
             switch($data['stats']) {
                 case 'package':
                     for ($i = 0 ; $i < $nb ; ++$i)
-                        $data[] = $this->getPackagesMonth($data, $i) ;
+                        $res[] = $this->getPackagesMonth($data, $i) ;
                     break ;
             }
-            return $data ;
+            return $res ;
         } else
             http_response_code(400);
     }

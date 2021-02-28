@@ -138,7 +138,7 @@ class ControllerClient
         $this->_billManager = new BillManager();
         $this->_packageManager = new PackageManager();
 
-        $dateBill = $this->_billManager->getBill($this->_id, ['dateBill']);
+        $dateBill = $this->_billManager->getBill($id[0], ['dateBill']);
         $packages = $this->_packageManager->getPackages(["weight", "volume", "delay", "PRICELIST.ExpressPrice", "PRICELIST.StandardPrice"], ["PRICELIST","PACKAGE.pricelist","PRICELIST.id"], $dateBill["dateBill"]);
         $totalPackage = $this->calculTotal($packages);
         $cols = ["weight", 'volume', 'delay','Price'];

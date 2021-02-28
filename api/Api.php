@@ -10,6 +10,7 @@ abstract class Api {
   protected static $_offset = 0;
   protected static $_limit = 1;
   protected static $_order ;
+  protected static $_inner ;
   private static $_jwtKey = 'key';
 
   private function setDb() {
@@ -65,9 +66,15 @@ abstract class Api {
 
     // COLUMNS
     $this->getColumns($columns);
-
     $sql = "SELECT " . join(', ', self::$_columns) . " FROM $table" ;
-
+    // INNER
+    if( isset(self::$_inner) && count(self::$_inner) == 1 ) {
+        $innerClause = join(",", self::$_inner);
+        $sql .= " INNER JOIN " . $innerClause;
+    }else if(isset(self::$_inner) && count(self::$_inner) == 3){
+        $innerClause = join(",", self::$_inner);
+        $sql .= " INNER JOIN " . self::$_inner[0] . " ON " . self::$_inner[1] . " = " . self::$_inner[2];
+    }
     // WHERE
     if( isset(self::$_where) && count(self::$_where) > 0 ) {
       $whereClause = join(' AND ', self::$_where);

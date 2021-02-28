@@ -4,9 +4,9 @@ require_once('views/View.php');
 
 class ControllerDeliveryman
 {
-
     private $_PayslipManager;
     private $_DeliverymanManager;
+    private $_StatisticsManager;
     private $_id;
 
     public function __construct($url) {
@@ -17,7 +17,7 @@ class ControllerDeliveryman
             exit();
         }
 
-        $actions = ['payslip', 'profile', "signup"];
+        $actions = ['payslip', 'profile', 'statistics', "signup"];
         if (method_exists($this, $url[1])) {
             $method = $url[1];
             $this->$method(array_slice($url, 2));
@@ -43,6 +43,15 @@ class ControllerDeliveryman
         $this->_DeliverymanManager = new DeliveryManager();
         $delivery = $this->_DeliverymanManager->getDelivery($this->_id, ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
         $profile = $this->_view->generateTemplate('deliveryman_profile', $delivery);
+        $this->_view->generateView(['content' => $profile, 'name' => $delivery['lastname']]);
+    }
+
+    private function statistics($url) {
+        $this->_view = new View('Back');
+
+        $this->_DeliverymanManager = new DeliveryManager();
+        $delivery = $this->_DeliverymanManager->getDelivery($this->_id, ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
+        $profile = $this->_view->generateTemplate('deliveryman_stats', $delivery);
         $this->_view->generateView(['content' => $profile, 'name' => $delivery['lastname']]);
     }
 

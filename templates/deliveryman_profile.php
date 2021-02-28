@@ -10,7 +10,7 @@
           <a class="nav-link active" id="pills-password-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-home" aria-selected="true">Profil</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="pills-car-tab" data-toggle="pill" href="#pills-car" role="tab" aria-controls="pills-profile" aria-selected="false">Information car</a>
+          <a class="nav-link" id="pills-car-tab" data-toggle="pill" href="#pills-car" role="tab" aria-controls="pills-profile" aria-selected="false">Véhicule</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-password" role="tab" aria-controls="pills-profile" aria-selected="false">Mot de passe</a>
@@ -23,18 +23,18 @@
           <form onsubmit="return false" class="form-round col-lg">
             <div class="form-group">
               <label for="inputName">Prénom</label>
-              <input type="text" class="form-control" id="inputName" value="<?= $firstname ?>" disabled="true">
+              <input type="text" class="form-control" id="inputFirstName" value="<?= $firstname ?>" disabled="true">
             </div>
             <div class="form-group">
               <label for="inputName">Nom</label>
-              <input type="text" class="form-control" id="inputName" value="<?= $lastname ?>" disabled="true">
+              <input type="text" class="form-control" id="inputLastName" value="<?= $lastname ?>" disabled="true">
             </div>
             <div class="form-group">
               <label for="inputEmail">Email</label>
               <input type="text" class="form-control" id="inputEmail" placeholder="<?= $email ?>">
             </div>
             <div class="form-group">
-              <label for="inputPhone">numéro de téléphone</label>
+              <label for="inputPhone">Numéro de téléphone</label>
               <input type="text" class="form-control" id="inputPhone" placeholder="<?= $phone ?>">
             </div>
 
@@ -62,11 +62,11 @@
         <div class="tab-pane fade" id="pills-car" role="tabpanel" aria-labelledby="pills-password-tab">
           <form onsubmit="return false" class="form-round col-lg">
             <div class="form-group">
-              <label for="inputLicense">License</label>
+              <label for="inputLicense">Permis de conduire</label>
               <input type="text" class="form-control" id="inputLicense" value="license: <?= $licenseImg ?>" disabled="true">
             </div>
             <div class="form-group">
-              <label for="inputRegistration">Registration</label>
+              <label for="inputRegistration">Carte grise</label>
               <input type="text" class="form-control" id="inputRegistration" value="registration: <?= $registrationIMG ?>" disabled="true">
             </div>
             <div class="form-group">
@@ -74,7 +74,7 @@
               <input type="number" min="0.1" step="0.1" class="form-control" id="inputVolumeCar" value="<?= $volumeCar ?>">
             </div>
             <div class="form-group">
-              <label for="inputRadius">rayon de livraison</label>
+              <label for="inputRadius">Rayon de livraison</label>
               <input type="number" min="1" class="form-control" id="inputRadius" value="<?= $radius ?>">
             </div>
 

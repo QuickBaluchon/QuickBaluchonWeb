@@ -135,7 +135,7 @@ class ControllerClient
 
     public function createBillPdf($id){
         $this->_packageManager = new PackageManager();
-        $package = $this->_packageManager->getPackage($id[0], ["PRICELIST.ExpressPrice"], ["PRICELIST,PACKAGE.pricelist,PRICELIST.id"]);
+        $package = $this->_packageManager->getPackages([]);
         print_r($package);
     }
 

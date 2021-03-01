@@ -25,11 +25,15 @@ class ApiPayslip extends Api {
     $packages = [];
     if($this->_method != 'GET') $this->catError(405);
 
-    if(isset($_GET['deliveryman'])) {
+    if(isset($_GET['deliveryman']) && $_GET['deliveryman'] != NULL) {
       self::$_where[] = 'deliveryman = ?';
       self::$_params[] = intval($_GET['deliveryman']);
     }
-    //$this->authentication(['admin']);
+    if(isset($_GET['id']) && $_GET['id'] != NULL) {
+      self::$_where[] = 'id = ?';
+      self::$_params[] = intval($_GET['id']);
+    }
+
 
 
     self::$_columns = ["id", "grossAmount", "bonus", "netAmount", "datePay", "pdfPath",	"paid"];

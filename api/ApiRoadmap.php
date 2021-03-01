@@ -31,13 +31,29 @@ class ApiRoadmap extends Api
     if($this->_method != 'GET') $this->catError(405);
 
     //$this->authentication(['admin']);
+    $columns = ['ROADMAP.id', 'kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'dateRoute', 'deliveryman'];
+    if(isset($_GET['inner'])) {
+        $columns[] = 'ROADMAP.kmTotal';
+        $inner = explode(',',$_GET['inner']);
+        self::$_join[] = [
+            'type' => 'inner',
+            'table' => $inner[0],
+            'onT1' => $inner[1],
+            'onT2' => $inner[2]
+        ] ;
+    }
 
     if(isset($_GET['client'])) {
-      self::$_where[] = 'client = ?';
+      self::$_where[] = 'deliveryman = ?';
       self::$_params[] = intval($_GET['client']);
     }
 
-    $columns = ['id', 'kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'dateRoute', 'deliveryman'];
+    if(isset($_GET['date'])) {
+        $date = explode('-', $_GET['date']);
+        self::$_where[] = 'MONTH(dateRoute) = ?';
+        self::$_params[] = $date[1];
+    }
+
     $list = $this->get('ROADMAP', $columns);
     $bills = [];
     if( $list != null ){

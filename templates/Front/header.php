@@ -27,9 +27,9 @@
            <li class="nav-item dropdown">
              <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Langue</a>
              <div class="dropdown-menu">
-               <a class="dropdown-item" href="#">Fr</a>
-               <a class="dropdown-item" href="#">En</a>
-               <a class="dropdown-item" href="#">Ru</a>
+                 <?php foreach ($_SESSION['langs'] as $lang => $info) { ?>
+                     <button class="dropdown-item" onclick="language('<?= $lang ?>')"><?= $info['flag'] . " " . $lang ?></button>
+                 <?php } ?>
              </div>
            </li>
         </ul>

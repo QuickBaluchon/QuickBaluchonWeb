@@ -13,7 +13,14 @@ class Router {
         require_once('models/' . $class . '.php' );
       });
 
-      $url = '';
+        $languagesManager = new LanguagesManager() ;
+        if (!isset($_SESION['langs']))
+            $_SESSION['langs'] = $languagesManager->getLanguages() ;
+        if (!isset($_SESSION['defaultLang']))
+            $_SESSION['defaultLang'] = $_SESSION['langs']['FR'] ;
+
+
+        $url = '';
 
       if( isset($_GET['url']) && strlen($_GET['url']) > 0) {
         $url = explode( '/', filter_var($_GET['url'],

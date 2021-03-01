@@ -198,11 +198,14 @@ class ControllerAdmin {
   }
 
     private function updatePricelist($url) {
-        $this->_view = new View('UpdatePricelist');
+        $this->_view = new View('back');
         $this->_pricelistManager = new PricelistManager;
-        $list = $this->_pricelistManager->getPricelist($url[0], ["maxWeight", "ExpressPrice", "StandardPrice"]);
-
-        $this->_view->generateView(['values' => $list]);
+        $details = $this->_pricelistManager->getPricelist($url[0], ["maxWeight", "ExpressPrice", "StandardPrice"]);
+        $template =  $this->_view->generateTemplate('updatePricelist', [
+            'values' => $details,
+            'id'=> $url[0]
+        ]);
+        $this->_view->generateView(['content' => $template, 'name' => 'QuickBaluchon']);
     }
 
     private function languages($url) {
@@ -235,13 +238,16 @@ class ControllerAdmin {
     }
 
     public function warehouseDetails($url) {
-        $this->_view = new View('warehouse');
+        $this->_view = new View('Back');
         $this->_WarehousesManager = new WarehouseManager;
         $details = $this->_WarehousesManager->getWarehouse($url[0], ["address", "volume", 'AvailableVolume']);
         $this->_DeliveryManager = new DeliveryManager;
         $deliveryman = $this->_DeliveryManager->getDeliverys(["id"], $url[0]);
-
-        $this->_view->generateView(["details" => $details, "id" => $url[0], "deliveryman" => count($deliveryman)]);
+        $template =  $this->_view->generateTemplate('warehouse', [
+            "details" => $details,
+            "id" => $url[0], "deliveryman" => count($deliveryman)
+        ]);
+        $this->_view->generateView(['content' => $template, 'name' => 'QuickBaluchon']);
     }
 
 }

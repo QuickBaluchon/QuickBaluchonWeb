@@ -85,10 +85,16 @@ class ControllerDeliveryman
         $this->_PayslipManager = new PayslipManager;
 
         $payslips = $this->_PayslipManager->getPayslip(["datePay"], NULL, $id[0]);
-        $roadmap = $this->_roadmapManager->getRoadmaps(["kmTotal"], NULL, $payslips[0]["datePay"], $this->_id);
+        $km = $this->_roadmapManager->getRoadmaps(["kmTotal"], NULL, $payslips[0]["datePay"], $this->_id);
+        $priceKm = $this->calculKm($km);
+    }
 
-        print_r($roadmap);
-
+    public function calculKm($kmTotal){
+        $total = 0;
+        foreach ($kmTotal as $km) {
+            $total += $km['kmTotal'];
+        }
+        return $total * 0.36;
     }
 
 }

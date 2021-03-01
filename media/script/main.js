@@ -117,5 +117,12 @@ function updatePwd(role) {
         console.log('Error params');
         return false;
     }
+}
 
+function language (l) {
+    ajax(`/api/languages/${l}`, '', 'GET', reload, console.log) ;
+}
+
+function reload (text) {
+    window.location.reload() ;
 }

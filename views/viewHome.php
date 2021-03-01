@@ -1,6 +1,7 @@
 <?php
 $this->_header = ROOT . '/templates/Front/header.php';
 $this->_css = ['header', 'home'];
+$this->_js = ['main'] ;
 
 ?>
 

@@ -100,7 +100,6 @@ abstract class Api {
     self::$_limit = self::$_limit > 50 ? 50 : self::$_limit;
     $sql .= " LIMIT " . self::$_offset .', '. self::$_limit;
 
-
     $stmt = $this->getDb()->prepare($sql);
     if($stmt) {
       $success = $stmt->execute(self::$_params);

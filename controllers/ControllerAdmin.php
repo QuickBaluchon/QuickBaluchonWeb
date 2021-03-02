@@ -14,6 +14,7 @@ class ControllerAdmin {
     private $_notif;
 
     public function __construct($url) {
+
         if (!isset($url[1])) {
             if( isset($_SESSION['id'], $_SESSION['role'] ) && $_SESSION['role'] === 'admin' ) {
                 header('location:' . WEB_ROOT . 'admin/pricelist');
@@ -22,14 +23,15 @@ class ControllerAdmin {
             $this->login();
             exit();
         }
-        if ($url[1] === 'login') {
+        else if ($url[1] === 'login') {
             $this->trylogin();
             exit();
         }
+        if( !isset($_SESSION['role']) || $_SESSION['role'] !== 'admin' ) {
+            header('location:' . WEB_ROOT . 'admin');
+            exit();
+        }
 
-        $_SESSION['role'] = 'admin';
-
-        $actions = ['clients', 'pricelist', 'deliveryman', 'languages', 'warehouses', 'oneSignal', 'updatePricelist', 'employ', 'warehouseDetails'];
         if (method_exists($this, $url[1])) {
             $method = $url[1];
             $this->$method(array_slice($url, 2));

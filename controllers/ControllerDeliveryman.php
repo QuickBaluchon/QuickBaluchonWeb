@@ -7,6 +7,7 @@ class ControllerDeliveryman
     private $_PayslipManager;
     private $_DeliverymanManager;
     private $_StatisticsManager;
+    private $_roadmapManager;
     private $_id;
 
     public function __construct($url) {
@@ -29,11 +30,27 @@ class ControllerDeliveryman
     private function payslip($url) {
         $this->_view = new View('Back');
         $this->_PayslipManager = new PayslipManager;
-        $list = $this->_PayslipManager->getPayslip($this->_id, []);
+        $payslips = $this->_PayslipManager->getPayslip(["id", "grossAmount", "bonus", "netAmount", "datePay", "paid"], $this->_id);
 
+        $buttonsValues = [
+            'visualiser' => 'visualiser',
 
-        $cols = ["id", "grossAmount", "bonus", "netAmount", "datePay", "pdfPath", "paid"];
-        $paySlip = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
+        ];
+
+        if($payslips != null){
+            foreach ($payslips as $payslip) {
+                foreach($buttonsValues as $link => $inner){
+                $buttons[] = '<a href="'. WEB_ROOT . "deliveryman/$link/" . $payslip['id'] .'"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
+              }
+              $rows[] = array_merge($payslip, $buttons);
+              $buttons = [];
+            }
+        }else {
+            $rows = [];
+        }
+
+        $cols = ["id", "grossAmount", "bonus", "netAmount", "datePay", "paid", "visualiser"];
+        $paySlip = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->generateView(['content' => $paySlip, 'name' => 'QuickBaluchon']);
     }
 
@@ -61,6 +78,17 @@ class ControllerDeliveryman
         $this->_DeliverymanManager = new DeliveryManager();
         $delivery = $this->_DeliverymanManager->getDelivery($this->_id, ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
         $this->_view->generateView();
+    }
+
+    public function visualiser($id){
+        $this->_roadmapManager = new RoadmapManager;
+        $this->_PayslipManager = new PayslipManager;
+
+        $payslips = $this->_PayslipManager->getPayslip(["datePay"], NULL, $id[0]);
+        $roadmap = $this->_roadmapManager->getRoadmaps(["kmTotal"], NULL, $payslips[0]["datePay"], $this->_id);
+
+        print_r($roadmap);
+
     }
 
 }

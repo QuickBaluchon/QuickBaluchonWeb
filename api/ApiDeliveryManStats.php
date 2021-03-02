@@ -52,11 +52,10 @@ class ApiDeliveryManStats extends Api
             switch($data['stats']) {
                 case 'package':
                     for ($i = 0 ; $i < $nb ; ++$i)
-                        $res[] = $this->getPackagesMonth($data, $i) ;
+                        $res = $this->getPackagesMonth($data, $i) ;
                     break ;
-
                 case 'heavy':
-                    $res[] = $this->getHeavyPackages($data) ;
+                    $res = $this->getHeavyPackages($data) ;
                     break ;
                 default:
                     http_response_code(404) ;

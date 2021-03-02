@@ -83,10 +83,20 @@ class ControllerDeliveryman
     public function visualiser($id){
         $this->_roadmapManager = new RoadmapManager;
         $this->_PayslipManager = new PayslipManager;
+        $this->_DeliverymanManager = new DeliveryManager;
 
         $payslips = $this->_PayslipManager->getPayslip(["datePay"], NULL, $id[0]);
         $km = $this->_roadmapManager->getRoadmaps(["kmTotal"], NULL, $payslips[0]["datePay"], $this->_id);
         $priceKm = $this->calculKm($km);
+
+        $date = explode("-", $payslips[0]["datePay"]);
+        $nbColisDelivered = $this->_DeliverymanManager->getNumberPackageDelivered($this->_id, $date[1], $date[0]);
+        $primeDelivered = $this->calculPrimeDelivered($nbColisDelivered);
+
+        $heavyPackages = $this->_DeliverymanManager->getHeavyPackage($this->_id, $date[1], $date[0]);
+        $primeHeavy = $this->calculPrimeHeavy($heavyPackages);
+
+
     }
 
     public function calculKm($kmTotal){
@@ -95,6 +105,24 @@ class ControllerDeliveryman
             $total += $km['kmTotal'];
         }
         return $total * 0.36;
+    }
+
+    public function calculPrimeDelivered($nbColisDelivered){
+        $total = 0;
+
+        foreach ($nbColisDelivered as $key => $value) {
+            $total += $value*1.90;
+        }
+        return $total;
+
+    }
+
+    public function calculPrimeHeavy($heavyPackages){
+        $total = 0;
+        foreach ($heavyPackages as $heavyPackage) {
+            $total += (intval(($heavyPackage['weight']-30)/22)+1)*3 ;
+        }
+        return $total;
     }
 
 }

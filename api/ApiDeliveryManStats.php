@@ -78,10 +78,13 @@ class ApiDeliveryManStats extends Api
         $columns = ['COUNT(PACKAGE.id) AS nb'] ;
         self::$_join = $this->_joinPackage ;
 
+        if(isset($data["delivery"]) && $data["delivery"] == 'true')
+            self::$_where[] = 'STOP.delivery IS NOT NULL' ;
+
         self::$_where[] = 'DELIVERYMAN.id = ?' ;
         self::$_params[] = $data['deliveryman'] ;
 
-        self::$_where[] = 'MONTH(STOP.delivery) = ?' ;
+        self::$_where[] = 'MONTH(ROADMAP.dateRoute) = ?' ;
         $month = (isset($data['month']) ? $data['month'] : intval(date("m"))) - $monthOffset ;
         if ($month <= 0) {
             $month = 12 + $month ;
@@ -89,7 +92,7 @@ class ApiDeliveryManStats extends Api
         }
         self::$_params[] = $month ;
 
-        self::$_where[] = 'YEAR(STOP.delivery) = ?' ;
+        self::$_where[] = 'YEAR(ROADMAP.dateRoute) = ?' ;
         $year = (isset($data['year']) ? $data['year'] : intval(date("Y"))) - $yearOffset ;
         self::$_params[] = $year ;
 

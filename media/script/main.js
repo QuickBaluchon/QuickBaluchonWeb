@@ -42,6 +42,7 @@ function ajax(url, json, method, callback, error) {
             if(request.status === 200)
                 callback(request.response);
             else {
+                console.log(request.response) ;
                 // Error
                 if( error ) error({ status : request.status, content: request.response  });
             }

@@ -30,21 +30,25 @@ class ApiDeliveryManStats extends Api
     public function __construct ($url, $method) {
 
         $this->_method = $method;
-
-        switch ($method) {
-            case 'GET':
-                $this->_data = $this->getStats($url[0]);
-                break;
-        }
+        $this->_data = $this->getStats($url[0], $method);
 
         echo json_encode($this->_data, JSON_PRETTY_PRINT);
 
     }
 
-    private function getStats ($nb) {
-        $data = $this->getJsonArray() ;
+    private function getStats ($nb, $method) {
+
+        switch ($method) {
+            case 'POST': $data = $this->getJsonArray() ; break ;
+            default: http_response_code(405) ; return ;
+        }
+
         if (isset($data['stats'])) {
             $nb = !empty($nb) ? intval($nb) : 3 ;
+            if ($nb > 12) {
+                http_response_code(416) ;
+                return ;
+            }
             switch($data['stats']) {
                 case 'package':
                     for ($i = 0 ; $i < $nb ; ++$i)
@@ -53,7 +57,7 @@ class ApiDeliveryManStats extends Api
             }
             return $res ;
         } else
-            http_response_code(400);
+            http_response_code(412);
     }
 
     private function getPackagesMonth ($data, $monthOffset, $yearOffset = 0) :array {

@@ -4,5 +4,5 @@ window.onload = function () {
         deliveryman: 4
     }) ;
     console.log(json) ;
-    ajax('/api/deliveryManStats/', json, 'POST', console.log, console.log) ;
+    ajax('../api/deliveryManStats/', json, 'POST', console.log, console.log) ;
 }

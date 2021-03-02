@@ -1,9 +1,11 @@
 {
     "FR": {
+        "shortcut": "FR",
         "language": "francais",
         "flag": "&#127467&#127479"
     },
     "EN": {
+        "shortcut": "EN",
         "language": "english",
         "flag": "&#127468&#127463"
     }

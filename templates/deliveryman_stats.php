@@ -1,3 +1,5 @@
+<?php $this->_js[] = 'deliveryman/stats' ; ?>
+
 <div class="container-xl">
     <div class="row">
         <div class="col-lg">
@@ -16,55 +18,8 @@
             </ul>
             <div class="tab-content mt-3" id="myTabContent">
                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <script type="text/javascript" src="<?= WEB_ROOT . "media/script/deliveryman/stats.js" ; ?>"></script>
 
-                    <script>
-                        window.onload = function () {
-                            let json = JSON.stringify({
-                                kikou: 32
-                            })
-                            ajax('/api/deliverymanStats/', json, 'GET', console.log, console.log) ;
-                        }
-
-                    </script>
-                    <script>
-                        window.onload = function() {
-
-                            var dataPoints = [
-                                {
-                                    x: "2021-01",
-                                    y: 32
-                                },
-                                {
-                                    x: "2021-02",
-                                    y: 36
-                                },
-                                {
-                                    x: "2021-03",
-                                    y: 32
-                                }
-                            ];
-
-                            let chart = new CanvasJS.Chart("chartContainer", {
-                                animationEnabled: true,
-                                theme: "light2",
-                                title: {
-                                    text: "Colis livrés par mois"
-                                },
-                                axisY: {
-                                    title: "Nombre",
-                                    titleFontSize: 24,
-                                    includeZero: true
-                                },
-                                data: [{
-                                    type: "column",
-                                    yValueFormatString: "#,### Units",
-                                    dataPoints: dataPoints
-                                }]
-                            });
-
-                            chart.render();
-                        }
-                    </script>
                     <div id="chartContainer" style="height: 300px; width: 100%;"></div>
                     <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
                     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>

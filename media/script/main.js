@@ -42,6 +42,7 @@ function ajax(url, json, method, callback, error) {
             if(request.status === 200)
                 callback(request.response);
             else {
+                console.log(request.response) ;
                 // Error
                 if( error ) error({ status : request.status, content: request.response  });
             }
@@ -117,7 +118,15 @@ function updatePwd(role) {
         console.log('Error params');
         return false;
     }
+}
 
+function language (l) {
+    ajax(`/api/languages/${l}`, '', 'GET', reload, console.log) ;
+}
+
+
+function reload (text) {
+    window.location.reload() ;
 }
 
 function signout () {

@@ -6,24 +6,51 @@ class View
     private $_header = '';
     private $_css = [];
     public $_js = [];
+    public $_content = [] ;
+    public $_template = [] ;
 
     public function __construct($action = null) {
-        if( $action )
+        if( $action ) {
             $this->_file = 'views/view' . $action . '.php';
+        }
+    }
+
+    private function setJSON ($path, $file, $target = 'content') {
+        $location = $path . $file . '.json' ;
+        if (file_exists($location)) {
+            $json = json_decode(file_get_contents($location), true);
+            $sh = $_SESSION['defaultLang']['shortcut'];
+            if (key_exists($sh, $json))
+                switch($target) {
+                    case 'template': $this->_template = $json[$sh]; break ;
+                    default: $this->_content = $json[$sh] ; break;
+                }
+            else
+                switch($target) {
+                    case 'template': $this->_template = $json['FR']; break ;
+                    default: $this->_content = $json['FR'] ; break;
+                }
+        }
     }
 
     public function generateView($data = null) {
-        $content = $this->generateFile($this->_file, $data);
+        $file = $this->_file ;
+        $file = str_replace('views/', '', $file) ;
+        $file = str_replace('.php', '', $file) ;
+        $this->setJSON('views/content/', $file) ;
+
+        $html = $this->generateFile($this->_file, $data);
+
         $view = $this->generateFile('views/template.php',
             [
                 'header' => $this->_header,
-                'content' => $content
+                'content' => $html
             ]);
-
         echo $view;
     }
 
     public function generateTemplate($file, $data) {
+        $this->setJSON('templates/content/', $file, 'template') ;
         return $this->generateFile('templates/' . $file . '.php', $data);
     }
 

@@ -1,19 +1,20 @@
+<?php extract($this->_template) ; ?>
 
 <div class="container-xl">
   <div class="row">
     <div class="col-lg">
 
-      <h1><?= $lastname ?> / Profil</h1>
+      <h1><?= $lastname ?> / <?= $Title ; ?></h1>
 
       <ul class="nav nav-pills mb-3 mt-4" id="pills-tab" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" id="pills-password-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-home" aria-selected="true">Profil</a>
+          <a class="nav-link active" id="pills-password-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-home" aria-selected="true"><?= $LinkProfile ; ?></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="pills-car-tab" data-toggle="pill" href="#pills-car" role="tab" aria-controls="pills-profile" aria-selected="false">Véhicule</a>
+          <a class="nav-link" id="pills-car-tab" data-toggle="pill" href="#pills-car" role="tab" aria-controls="pills-profile" aria-selected="false"><?= $LinkVehicle ; ?></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-password" role="tab" aria-controls="pills-profile" aria-selected="false">Mot de passe</a>
+          <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-password" role="tab" aria-controls="pills-profile" aria-selected="false"><?= $LinkPassword ; ?></a>
         </li>
       </ul>
       <div class="tab-content" id="pills-tabContent">
@@ -22,23 +23,23 @@
           <!-- content navpills profile -->
           <form onsubmit="return false" class="form-round col-lg">
             <div class="form-group">
-              <label for="inputName">Prénom</label>
+              <label for="inputName"><?= $LabelName ; ?></label>
               <input type="text" class="form-control" id="inputFirstName" value="<?= $firstname ?>" disabled="true">
             </div>
             <div class="form-group">
-              <label for="inputName">Nom</label>
+              <label for="inputName"><?= $LabelSurname ; ?></label>
               <input type="text" class="form-control" id="inputLastName" value="<?= $lastname ?>" disabled="true">
             </div>
             <div class="form-group">
-              <label for="inputEmail">Email</label>
+              <label for="inputEmail"><?= $LabelEmail ; ?></label>
               <input type="text" class="form-control" id="inputEmail" placeholder="<?= $email ?>">
             </div>
             <div class="form-group">
-              <label for="inputPhone">Numéro de téléphone</label>
+              <label for="inputPhone"><?= $LabelPhone ; ?></label>
               <input type="text" class="form-control" id="inputPhone" placeholder="<?= $phone ?>">
             </div>
 
-            <button onclick="updateProfile()" type="button" class="btn btn-success">Sauvegarder</button>
+            <button onclick="updateProfile()" type="button" class="btn btn-success"><?= $ButtonSave ; ?></button>
           </form>
         </div>
 
@@ -46,15 +47,15 @@
         <div class="tab-pane fade" id="pills-password" role="tabpanel" aria-labelledby="pills-password-tab">
           <form onsubmit="return false" class="form-round col-lg">
             <div class="form-group">
-              <label for="inputOldPassword">Ancien mot de passe</label>
+              <label for="inputOldPassword"><?= $LabelPreviousPassword ; ?></label>
               <input type="password" class="form-control" id="inputOldPassword">
             </div>
             <div class="form-group">
-              <label for="inputPassword">Mot de passe</label>
+              <label for="inputPassword"><?= $LabelNewPassword ; ?></label>
               <input type="password" class="form-control" id="inputPassword">
             </div>
 
-            <button onclick="updatePwd('deliveryman')"  type="button" class="btn btn-success">Changer</button>
+            <button onclick="updatePwd('deliveryman')"  type="button" class="btn btn-success"><?= $ButtonSave ; ?></button>
           </form>
 
         </div>
@@ -62,23 +63,23 @@
         <div class="tab-pane fade" id="pills-car" role="tabpanel" aria-labelledby="pills-password-tab">
           <form onsubmit="return false" class="form-round col-lg">
             <div class="form-group">
-              <label for="inputLicense">Permis de conduire</label>
+              <label for="inputLicense"><?= $LabelLicense ; ?></label>
               <input type="text" class="form-control" id="inputLicense" value="license: <?= $licenseImg ?>" disabled="true">
             </div>
             <div class="form-group">
-              <label for="inputRegistration">Carte grise</label>
+              <label for="inputRegistration"><?= $LabelRegistration ; ?></label>
               <input type="text" class="form-control" id="inputRegistration" value="registration: <?= $registrationIMG ?>" disabled="true">
             </div>
             <div class="form-group">
-              <label for="inputVolumeCar">Volume</label>
+              <label for="inputVolumeCar"><?= $LabelVolume ; ?></label>
               <input type="number" min="0.1" step="0.1" class="form-control" id="inputVolumeCar" value="<?= $volumeCar ?>">
             </div>
             <div class="form-group">
-              <label for="inputRadius">Rayon de livraison</label>
+              <label for="inputRadius"><?= $LabelRadius ; ?></label>
               <input type="number" min="1" class="form-control" id="inputRadius" value="<?= $radius ?>">
             </div>
 
-            <button onclick="updateCar()" type="button" class="btn btn-success">Changer</button>
+            <button onclick="updateCar()" type="button" class="btn btn-success"><?= $ButtonSave ; ?></button>
           </form>
 
         </div>

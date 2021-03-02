@@ -12,10 +12,24 @@ class ApiLanguages extends Api {
         $this->_method = $method;
 
         switch ($method) {
+            case 'GET' : $this->_data = $this->switchLanguage($url) ; break ;
             case 'PUT' : $this->_data = $this->addLanguage();break;
             case 'DELETE' : $this->_data = $this->deleteLanguage(); break;
             default: http_response_code(404); exit();
         }
+    }
+
+    private function switchLanguage ($url) {
+        if (empty($url[0]) || strlen($url[0]) != 2) {
+            http_response_code(401);
+            return ;
+        }
+        if (!key_exists($url[0], $_SESSION['langs'])) {
+            http_response_code(409) ;
+            return ;
+        }
+
+        $_SESSION['defaultLang'] = $_SESSION['langs'][$url[0]] ;
     }
 
     private function addLanguage () {
@@ -26,6 +40,7 @@ class ApiLanguages extends Api {
             return ;
         }
         $lang[$data['shortcut']] = [
+            "shortcut" => $data["shortcut"],
             "language" => $data['language'],
             "flag" => $data['flag']
         ];

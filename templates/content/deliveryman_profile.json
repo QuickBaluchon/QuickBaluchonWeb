@@ -1,0 +1,46 @@
+{
+  "FR": {
+    "Title": "Profil",
+
+    "LinkProfile": "Profil",
+    "LinkVehicle": "Véhicule",
+    "LinkPassword": "Mot de passe",
+
+    "LabelName": "Prénom",
+    "LabelSurname": "Nom",
+    "LabelEmail": "Email",
+    "LabelPhone": "Numéro de téléphone",
+
+    "LabelPreviousPassword": "Ancien mot de passe",
+    "LabelNewPassword": "Nouveau mot de passe",
+
+    "LabelLicense": "Permis de conduire",
+    "LabelRegistration": "Carte grise",
+    "LabelVolume": "Volume",
+    "LabelRadius": "Rayon de livraison",
+
+    "ButtonSave": "Sauvegarder"
+  },
+  "EN": {
+    "Title": "Profile",
+
+    "LinkProfile": "Profile",
+    "LinkVehicle": "Véhicle",
+    "LinkPassword": "Password",
+
+    "LabelName": "Name",
+    "LabelSurname": "Surname",
+    "LabelEmail": "Email",
+    "LabelPhone": "Phone number",
+
+    "LabelPreviousPassword": "Previous password",
+    "LabelNewPassword": "New Password",
+
+    "LabelLicense": "Driving licence",
+    "LabelRegistration": "Truck registration",
+    "LabelVolume": "Volume",
+    "LabelRadius": "Delivery radius",
+
+    "ButtonSave": "Save"
+  }
+}

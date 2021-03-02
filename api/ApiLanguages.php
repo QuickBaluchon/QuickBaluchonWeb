@@ -40,6 +40,7 @@ class ApiLanguages extends Api {
             return ;
         }
         $lang[$data['shortcut']] = [
+            "shortcut" => $data["shortcut"],
             "language" => $data['language'],
             "flag" => $data['flag']
         ];

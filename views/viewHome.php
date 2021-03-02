@@ -11,7 +11,7 @@ $this->_js = ['main'] ;
     <div class="row">
       <div class="col-lg">
         <div class="jumbotron bg-white">
-          <h1 class="display-4">Nous Livrevrons Quoiqu'il Arrive.</h1>
+          <h1 class="display-4">Nous Livrevrons Quoi Qu'il Arrive.</h1>
           <p class="lead">Passez-nous le relais.</p>
           <p class="lead">
             <a class="btn btn-round btn-primary btn-lg" href="<?= WEB_ROOT . 'login#signup-links' ?>" role="button">Commencer</a>

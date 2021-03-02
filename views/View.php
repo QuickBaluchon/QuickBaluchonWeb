@@ -6,7 +6,6 @@ class View
     private $_header = '';
     private $_css = [];
     public $_js = [];
-    private $_contentFile ;
     public $_content = [] ;
     public $_template = [] ;
 
@@ -16,14 +15,29 @@ class View
         }
     }
 
+    private function setJSON ($path, $file, $target = 'content') {
+        $location = $path . $file . '.json' ;
+        if (file_exists($location)) {
+            $json = json_decode(file_get_contents($location), true);
+            $sh = $_SESSION['defaultLang']['shortcut'];
+            if (key_exists($sh, $json))
+                switch($target) {
+                    case 'template': $this->_template = $json[$sh]; break ;
+                    default: $this->_content = $json[$sh] ; break;
+                }
+            else
+                switch($target) {
+                    case 'template': $this->_template = $json['FR']; break ;
+                    default: $this->_content = $json['FR'] ; break;
+                }
+        }
+    }
+
     public function generateView($data = null) {
-        /*$this->_contentFile = 'views/content/view' . $action . '.json' ;
-        $content = json_decode(file_get_contents($this->_contentFile), true);
-        $sh = $_SESSION['defaultLang']['shortcut'] ;
-        if (key_exists($sh, $content))
-            $this->_content = $content[$sh];
-        else
-            $this->_content = $content["FR"];*/
+        $file = $this->_file ;
+        $file = str_replace('views/', '', $file) ;
+        $file = str_replace('.php', '', $file) ;
+        $this->setJSON('views/content/', $file) ;
 
         $html = $this->generateFile($this->_file, $data);
 
@@ -36,16 +50,7 @@ class View
     }
 
     public function generateTemplate($file, $data) {
-        $templateFile = 'templates/content/' . $file . '.json' ;
-        if (file_exists($templateFile)) {
-            $template = json_decode(file_get_contents($templateFile), true);
-            $sh = $_SESSION['defaultLang']['shortcut'];
-            if (key_exists($sh, $template))
-                $this->_template = $template[$sh];
-            else
-                $this->_template = $template["FR"];
-        }
-
+        $this->setJSON('templates/content/', $file, 'template') ;
         return $this->generateFile('templates/' . $file . '.php', $data);
     }
 

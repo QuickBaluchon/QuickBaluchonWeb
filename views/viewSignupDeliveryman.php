@@ -20,7 +20,7 @@ extract($this->_content) ;
                     <form onsubmit="return false">
 
                         <!-- PERSONAL INFORMATIONS -->
-                        <h2 class="h3"><?= $TitlePersonal ?>></h1>
+                        <h2 class="h3"><?= $TitlePersonal ?></h1>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <input type="text" class="form-control" id="inputLastName" placeholder="<?= $InputSurname ?>">
@@ -68,9 +68,9 @@ extract($this->_content) ;
                                         <div class="form-group col-md-4">
                                             <select class="custom-select" id="inputEntrepot">
                                                 <option selected><?= $LabelWarehouse ?></option>
-                                                <option value="1">Paris</option>
-                                                <option value="2">Nanterre</option>
-                                                <option value="3">Saint-Pierre</option>
+                                                <?php foreach ($options as $option) {
+                                                    echo "<option>" . $option . "</option>";
+                                                } ?>
                                             </select>
                                         </div>
                                         <div class="form-group col-md-4">

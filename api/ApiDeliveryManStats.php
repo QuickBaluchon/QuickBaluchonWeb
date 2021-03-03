@@ -123,13 +123,16 @@ class ApiDeliveryManStats extends Api
         $columns = ['COUNT(PACKAGE.id) AS nb'] ;
         self::$_join = $this->_joinPackage ;
 
+        if(isset($data["delivery"]) && $data["delivery"] == 'true')
+            self::$_where[] = 'STOP.delivery IS NOT NULL' ;
+
         self::$_where[] = 'DELIVERYMAN.id = ?' ;
         self::$_params[] = $data['deliveryman'] ;
 
         if (isset($data['delivery']) && $data['delivery'] == 'true')
             self::$_where[] = 'STOP.delivery IS NOT NULL' ;
 
-        $dt = $this->setDateClause($data, 'STOP.delivery', $monthOffset, $yearOffset) ;
+        $dt = $this->setDateClause($data, 'ROADMAP.dateRoute', $monthOffset, $yearOffset) ;
 
         $packages = $this->get('PACKAGE', $columns) ;
         if( count($packages) >= 1 )
@@ -159,6 +162,7 @@ class ApiDeliveryManStats extends Api
         else
             return [];
     }
+<<<<<<< HEAD
 
     private function getKmMonth ($data, $monthOffset, $yearOffset = 0) {
         $columns = ['SUM(ROADMAP.kmTotal) AS total'] ;
@@ -243,3 +247,6 @@ class ApiDeliveryManStats extends Api
         ] ;
     }
 }
+=======
+}
+>>>>>>> 0581585bc9b240961cb9db0cf62fca3e67653224

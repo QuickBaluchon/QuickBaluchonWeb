@@ -15,4 +15,40 @@ class DeliveryManager extends Model{
   public function getDeliveryNotEmployed() {
     return $this->getCollection('deliveryman', ["employed" => 0]);
   }
+  public function getNbTotalColis($id, $month, $year) {
+      $stats = [
+          'stats' => "package",
+          'month' => $month,
+          'year' => $year,
+          'deliveryman' => $id
+      ];
+
+      return $result = $this->curl(API_ROOT . 'deliverymanstats/1', $stats);
+
+  }
+
+  public function getHeavyPackage($id, $month, $year) {
+      $stats = [
+          'stats' => "heavy",
+          'month' => $month,
+          'year' => $year,
+          'deliveryman' => $id
+      ];
+
+      return $result = $this->curl(API_ROOT . 'deliverymanstats/1', $stats);
+  }
+  
+  public function getNbTotalColisDelivered($id, $month, $year) {
+      $stats = [
+          'stats' => "package",
+          'month' => $month,
+          'year' => $year,
+          'delivery' => 'true',
+          'deliveryman' => $id
+      ];
+
+      return $result = $this->curl(API_ROOT . 'deliverymanstats/1', $stats);
+
+  }
+
 }

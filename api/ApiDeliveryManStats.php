@@ -162,7 +162,6 @@ class ApiDeliveryManStats extends Api
         else
             return [];
     }
-<<<<<<< HEAD
 
     private function getKmMonth ($data, $monthOffset, $yearOffset = 0) {
         $columns = ['SUM(ROADMAP.kmTotal) AS total'] ;
@@ -247,6 +246,3 @@ class ApiDeliveryManStats extends Api
         ] ;
     }
 }
-=======
-}
->>>>>>> 0581585bc9b240961cb9db0cf62fca3e67653224

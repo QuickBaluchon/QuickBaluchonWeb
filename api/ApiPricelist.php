@@ -10,8 +10,12 @@ class ApiPricelist extends Api {
 
     $this->_method = $method;
 
-    if (count($url) == 0)
-      $this->_data = $this->getListPrice();     // list of packages - /api/pricelist
+    if (count($url) == 0){
+        switch ($method) {                                              // list of packages - /api/pricelist
+            case 'GET':$this->_data = $this->getListPrice();break;
+            case 'POST': $this->addPrice();break;
+        }
+  }
 
       elseif ( ($id = intval($url[0])) !== 0 ) { // details one client - /api/pricelist/{id}
         switch ($method) {
@@ -42,7 +46,7 @@ class ApiPricelist extends Api {
       self::$_where[] = 'ExpressPrice = ?';
       self::$_params[] = intval($ExpressPrice);
     }
-    //$this->authentication(['admin']);
+
     self::$_where[] = 'status = 1';
 
 
@@ -58,7 +62,7 @@ class ApiPricelist extends Api {
   public function getPrice($id): array {
 
     if($this->_method != 'GET') $this->catError(405);
-    //$this->authentication(['admin'], [$id]);
+
     $columns = ["id", "maxWeight", "ExpressPrice", "StandardPrice", "applicationDate"];
     self::$_where[] = 'id = ?';
     self::$_params[] = $id;
@@ -72,7 +76,7 @@ class ApiPricelist extends Api {
   public function updatePrice($id){
 
       $data = $this->getJsonArray();
-      print_r($data);
+
       $allowed = ['ExpressPrice', 'StandardPrice', 'inputDate', 'status'];
 
       $columns = ['maxWeight'];
@@ -108,6 +112,26 @@ class ApiPricelist extends Api {
       }
 
       $this->patch('PRICELIST', $id);
+  }
+
+  public function addPrice(){
+
+      $data = $this->getJsonArray();
+      $allowed = ["maxWeight",'ExpressPrice', 'StandardPrice', 'applicationDate', 'status'];
+
+     if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
+        http_response_code(400);
+        exit(0);
+      }
+
+      $date = explode("/",$data['applicationDate']);
+      $date = array_reverse($date, true);
+      $date = join("-", $date);
+
+      self::$_columns = ['maxWeight', 'ExpressPrice', 'StandardPrice', 'applicationDate', 'status'];
+      self::$_params = [$data['maxWeight'],$data['ExpressPrice'], $data['StandardPrice'], $date, $data['status']];
+
+      $this->add('PRICELIST');
   }
 
 }

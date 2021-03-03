@@ -152,7 +152,7 @@ class ControllerAdmin {
 
     private function pricelist($url) {
         $this->_view = new View('Back');
-
+        $this->_view->_js[] = 'pricelist/addPrice';
         $this->_pricelistManager = new PricelistManager;
         $list = $this->_pricelistManager->getPricelists([]);
         if (!$list) $list = [];
@@ -170,6 +170,14 @@ class ControllerAdmin {
             $rows[] = array_merge($package, $buttons);
             $buttons = [];
         }
+        $rows[] = [
+            '<input type="text" class="form-control" id="maxWeight" placeholder="Max Weight">',
+            '<input type="number" class="form-control" id="ExpressPrice" placeholder="Express Price">',
+            '<input type="number" class="form-control" id="StandardPrice" placeholder="Standrad Price">',
+            '<input type="date" class="form-control" id="applicationDate" placeholder="application Date">',
+            '<input type="number" min="0" max="1" class="form-control" id="status" placeholder="status">',
+            '<button type="button" class="btn btn-success btn-sm" onclick="addPrice()">Ajouter</button>'
+        ] ;
 
         $cols = ['#', 'Max wheight', 'Express price', 'Standard price', 'application date'];
         $pricelist = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);

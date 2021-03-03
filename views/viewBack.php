@@ -2,7 +2,7 @@
 require_once ('core/SidebarMenu.php');
 
 $this->_css = ['sidebar'];
-$this->_js = ['main', 'warehouse/updateWarehouse', 'languages/add'];
+ array_unshift($this->_js,'main', 'languages/add');
 ?>
 
 <div class="wrapper">

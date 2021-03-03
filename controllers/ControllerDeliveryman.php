@@ -100,7 +100,7 @@ class ControllerDeliveryman
 
         $nbTotalColis = $this->_DeliverymanManager->getNbTotalColis($this->_id, $date[1], $date[0]);
         $percent = $this->calculPrimePercentDelivered($nbTotalColisDelivered, $nbTotalColis);
-
+        
         $salair = $this->calculTotal($priceKm,$primeDelivered,$primeHeavy,$percent);
         echo $salair;
     }

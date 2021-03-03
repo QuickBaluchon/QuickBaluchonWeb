@@ -11,9 +11,14 @@ class ApiWarehouse extends Api {
 
     $this->_method = $method;
 
-    if (count($url) == 0)
-      $this->_data = $this->getListWarehouse();     // list of packages - /api/warehouse
+    if (count($url) == 0){
+        switch ($method) {
+            case 'GET': $this->_data = $this->getListWarehouse();break;
+            case 'POST': $this->addWarehouse();
+        }
 
+
+  }     // list of packages - /api/warehouse
     elseif ( ($id = intval($url[0])) !== 0 ){// details one packages - /api/warehouse/{id}
     switch ($method) {
         case 'GET': $this->_data = $this->getWarehouse($id);break;
@@ -96,4 +101,19 @@ class ApiWarehouse extends Api {
 
     $this->patch("WAREHOUSE", $id);
    }
+
+   private function addWarehouse(){
+     if($this->_method != 'POST') $this->catError(405);
+
+     $data = $this->getJsonArray();
+     $allowed = ['address', 'volume'];
+     if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
+       http_response_code(400);
+       exit(0);
+     }
+     self::$_columns = $allowed;
+     self::$_params = array_values($data);
+
+     $this->add("WAREHOUSE", );
+    }
 }

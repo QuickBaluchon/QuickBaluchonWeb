@@ -5,6 +5,7 @@ require_once('views/View.php');
 class ControllerDeliveryman
 {
     private $_PayslipManager;
+    private $_warehouseManager;
     private $_DeliverymanManager;
     private $_StatisticsManager;
     private $_roadmapManager;
@@ -77,7 +78,15 @@ class ControllerDeliveryman
 
         $this->_DeliverymanManager = new DeliveryManager();
         $delivery = $this->_DeliverymanManager->getDelivery($this->_id, ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
-        $this->_view->generateView();
+
+        $this->_warehouseManager = new WarehouseManager;
+        $warehouses = $this->_warehouseManager->getWarehouses(["id", "address"]);
+
+        foreach($warehouses as $warehouse) {
+            $options[] = "<option value=" . $warehouse["id"] . ">" . $warehouse["address"] . "</option>";
+        }
+
+        $this->_view->generateView(["options" => $options]);
     }
 
     public function visualiser($id){
@@ -100,7 +109,7 @@ class ControllerDeliveryman
 
         $nbTotalColis = $this->_DeliverymanManager->getNbTotalColis($this->_id, $date[1], $date[0]);
         $percent = $this->calculPrimePercentDelivered($nbTotalColisDelivered, $nbTotalColis);
-        
+
         $salair = $this->calculTotal($priceKm,$primeDelivered,$primeHeavy,$percent);
         echo $salair;
     }

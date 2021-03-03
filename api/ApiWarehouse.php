@@ -7,6 +7,7 @@ class ApiWarehouse extends Api {
   private $_method;
   private $_data = [];
 
+
   public function __construct($url, $method) {
 
     $this->_method = $method;
@@ -37,14 +38,12 @@ class ApiWarehouse extends Api {
     $packages = [];
     if($this->_method != 'GET') $this->catError(405);
 
-    //$this->authentication(['admin']);
-
-    self::$_columns = ['id', 'address', 'volume', 'AvailableVolume'];
+    $columns = ['id', 'address', 'volume', 'AvailableVolume'];
     self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
     self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
     self::$_where[] = "active = ?";
     self::$_params[] = "1" ;
-    $list = $this->get('WAREHOUSE');
+    $list = $this->get('WAREHOUSE', $columns);
 
     return $list;
   }

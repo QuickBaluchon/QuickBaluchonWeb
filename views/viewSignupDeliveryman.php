@@ -67,10 +67,9 @@ $this->_js = ['main','deliveryman/signup'];
             <div class="form-row">
               <div class="form-group col-md-4">
                 <select class="custom-select" id="inputEntrepot">
-                  <option selected>Entrepôt</option>
-                  <option value="1">Paris</option>
-                  <option value="2">Nanterre</option>
-                  <option value="3">Saint-Pierre</option>
+                  <?php foreach ($options as $option) {
+                      echo $option;
+                  } ?>
                 </select>
               </div>
               <div class="form-group col-md-4">

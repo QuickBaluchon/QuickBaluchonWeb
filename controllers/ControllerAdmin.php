@@ -185,14 +185,11 @@ class ControllerAdmin {
     }
 
     private function employ($url) {
+
         $this->_view = new View('Back');
         $this->_view->_js[] = 'deliveryman/employ';
         $this->_deliveryManager = new DeliveryManager;
-        $list = $this->_deliveryManager->getDeliveryNotEmployed([]);
-
-        $buttonsValues = [
-            'employ' => 'employer',
-        ];
+        $list = $this->_deliveryManager->getDeliveryNotEmployed(["id","firstname","lastname","phone","email","volumeCar","radius","IBAN","employed", "warehouse"]);
 
      $buttonsValues = [
          'employ' => 'employer',
@@ -202,15 +199,14 @@ class ControllerAdmin {
     foreach ($list as $delivery) {
         foreach($buttonsValues as $link => $inner){
         $buttons[] = '<button onclick="'. $link .'('.$delivery["id"].')" id="'.$delivery["id"].'" type="button" class="btn btn-primary btn-sm">' . $inner . '</button>';
-
       }
-
-        $cols = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG", 'employer'];
-        $delivery = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
-        $this->_view->generateView(['content' => $delivery, 'name' => 'QuickBaluchon']);
+      $rows[] = array_merge($delivery, $buttons);
+      $buttons = [];
     }
+    if(!isset($rows))
+        $rows = [];
 
-    $cols = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG", 'employer', 'refuser'];
+    $cols = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'employer', 'refuser'];
     $delivery = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
     $this->_view->generateView(['content' => $delivery, 'name' => 'QuickBaluchon']);
   }

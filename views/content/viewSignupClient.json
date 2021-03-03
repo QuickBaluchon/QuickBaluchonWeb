@@ -1,0 +1,20 @@
+{
+  "FR": {
+    "Title": "Inscription",
+    "InputUsername": "Nom d'utiisateur",
+    "InputWebsite": "Site web",
+    "InputPayment": "Méthode de paiement",
+    "InputPassword": "Mot de passe",
+    "ButtonSignup": "S'inscrire",
+    "LinkAccount": "Vous avez déjà un compte ?"
+  },
+  "EN": {
+    "Title": "Signup",
+    "InputUsername": "Username",
+    "InputWebsite": "Website",
+    "InputPayment": "Payment method",
+    "InputPassword": "Password",
+    "ButtonSignup": "Signup",
+    "LinkAccount": "You already have an account?"
+  }
+}

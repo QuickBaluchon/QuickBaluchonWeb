@@ -1,28 +1,30 @@
+<?php extract($this->_template) ; ?>
+
 <div class="container-lg">
     <div class="row">
         <div class="col-lg">
 
             <div class="jumbotron bg-white mb-0">
-                <h1 class="display-4">Prix</h1>
+                <h1 class="display-4"><?= $Title ?></h1>
 
                 <form class="form-round">
                     <div class="form-group row">
                         <div class="col-sm-10">
-                            <label for="inputWeight">Poids</label>
+                            <label for="inputWeight"><?= $LabelWeight ?></label>
                             <input type="number" min="0.1" step="0.01" class="form-control" id="inputWeight"
                                    value="<?= $values['maxWeight'] ?>" disabled="true">
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-10">
-                            <label for="inputExpress">Prix Express</label>
+                            <label for="inputExpress"><?= $LabelExpress ?></label>
                             <input type="number" min="0.1" step="0.01" class="form-control" id="ExpressPrice"
                                    value="<?= $values['ExpressPrice'] ?>">
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-10">
-                            <label for="inputStandard">Prix Standard</label>
+                            <label for="inputStandard"><?= $LabelStandard ?></label>
                             <input type="number" min="0.1" step="0.01" class="form-control" id="StandardPrice"
                                    value="<?= $values['StandardPrice'] ?>">
                         </div>
@@ -30,13 +32,13 @@
                     <hr>
                     <div class="form-group row">
                         <div class="col-sm-10">
-                            <label for="inputStandard">Date d'application</label>
+                            <label for="inputStandard"><?= $LabelApplication ?></label>
                             <input type="date" class="form-control" id="inputDate">
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-10">
-                            <button type="button"  class="btn btn-round btn-primary" onclick="update(<?php echo $id ?>)">Enregistrer</button>
+                            <button type="button"  class="btn btn-round btn-primary" onclick="update(<?php echo $id ?>)"><?= $ButtonSave ?></button>
                         </div>
                     </div>
                 </form>
@@ -52,14 +54,14 @@
 </div>
 
 <section class="mt-1">
-    <h2>Danger Zone</h2>
+    <h2><?= $TitleDanger ?></h2>
     <div class="rounded border border-danger d-flex flex-wrap justify-content-between p-4">
         <div class="flex-auto">
-            <strong>Supprimer ce tarif</strong>
-            <p class="mb-0">La suppression d'un tarif est définitive. Soyez certain.</p>
+            <strong><?= $LabelDelete ?></strong>
+            <p class="mb-0"><?= $WarningDelete ?></p>
         </div>
         <div>
-            <button type="button" onclick="deletePrice(<?php echo $id ?>)" class="btn btn-outline-danger">Supprimer ce tarif</button>
+            <button type="button" onclick="deletePrice(<?php echo $id ?>)" class="btn btn-outline-danger"><?= $ButtonDelete ?></button>
         </div>
     </div>
 </section>

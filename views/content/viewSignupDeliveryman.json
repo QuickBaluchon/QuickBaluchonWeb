@@ -1,0 +1,54 @@
+{
+  "FR": {
+    "Title": "Inscription",
+
+    "TitlePersonal": "Informations personnelles",
+    "InputSurname": "Nom",
+    "InputName": "Prénom",
+    "InputEmail": "Email",
+    "InputPhone": "Téléphone",
+    "InputPassword": "Mot de passe",
+
+    "TitleBank": "Informations bancaires",
+    "InputBIC": "BIC",
+    "InputRIB": "RIB",
+
+    "TitleDelivery": "Informations de livraison",
+    "LabelWarehouse": "Entrepôt",
+    "InputRadius": "Rayon (km)",
+    "InputVolume": "Volume (m3)",
+
+    "TitleFiles": "Fichiers",
+    "LabelLicense": "Permis de conduire",
+    "LabelRegistration": "Carte grise",
+
+    "ButtonRegister": "S'inscrire",
+    "LinkLogin": "Vous possédez déjà un compte ?"
+  },
+  "EN": {
+    "Title": "Signup",
+
+    "TitlePersonal": "Personal data",
+    "InputSurname": "Surname",
+    "InputName": "Name",
+    "InputEmail": "Email",
+    "InputPhone": "Phone",
+    "InputPassword": "Password",
+
+    "TitleBank": "Banking informations",
+    "InputBIC": "BIC",
+    "InputRIB": "Account number",
+
+    "TitleDelivery": "Delivery informations",
+    "LabelWarehouse": "Warehouse",
+    "InputRadius": "Radius (km)",
+    "InputVolume": "Volume (m3)",
+
+    "TitleFiles": "Files",
+    "LabelLicense": "Driving license",
+    "LabelRegistration": "Truck registration",
+
+    "ButtonRegister": "Signup",
+    "LinkLogin": "You already have an account?"
+  }
+}

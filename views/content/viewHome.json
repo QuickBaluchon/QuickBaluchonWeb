@@ -1,0 +1,20 @@
+{
+  "FR": {
+    "TitleDelivery": "Nous Livrerons Quoi Qu'il Arrive",
+    "TextDelivery": "Passez-nous le relais",
+    "ButtonBegin": "Commencer",
+
+    "TitlePackage": "Vous attendez un colis ?",
+    "TextTrack": "Suivez-le !",
+    "InputPackage": "N° du colis"
+  },
+  "EN": {
+    "TitleDelivery": "We'll Deliver Whatever Happens",
+    "TextDelivery": "Leave us in charge",
+    "ButtonBegin": "Begin",
+
+    "TitlePackage": "Are you expecting a package?",
+    "TextTrack": "Follow it!",
+    "InputPackage": "Package number"
+  }
+}

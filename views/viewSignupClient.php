@@ -2,6 +2,7 @@
 $this->_header = ROOT . '/templates/Front/header.php';
 $this->_css = ['header', 'signup_client'];
 $this->_js = ['main', 'client/signup'];
+extract($this->_content) ;
 ?>
 
 <!-- HERO BANNER LOGIN -->
@@ -12,42 +13,42 @@ $this->_js = ['main', 'client/signup'];
 
         <!-- FORM LOGIN-->
         <div class="jumbotron bg-white">
-          <h1 class="display-4">Inscription</h1>
+          <h1 class="display-4"><?= $Title ?></h1>
 
           <form onsubmit="return false">
             <div class="form-group row">
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputName" placeholder="nom d'utilisateur">
+                <input type="text" class="form-control" id="inputName" placeholder="<?= $InputUsername ?>">
               </div>
             </div>
             <div class="form-group row">
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputUrl" placeholder="site web">
+                <input type="text" class="form-control" id="inputUrl" placeholder="<?= $InputWebsite ?>">
               </div>
             </div>
             <div class="form-group row">
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputPaymentMethod" placeholder="méthode de paiement">
+                <input type="text" class="form-control" id="inputPaymentMethod" placeholder="<?= $InputPayment ?>">
               </div>
             </div>
             <div class="form-group row">
               <div class="col-sm-10">
-                <input type="password" class="form-control" id="inputPassword1" placeholder="mot de passe">
+                <input type="password" class="form-control" id="inputPassword1" placeholder="<?= $InputPassword ?>">
               </div>
             </div>
             <div class="form-group row">
               <div class="col-sm-10">
-                <input type="password" class="form-control" id="inputPassword2" placeholder="mot de passe">
+                <input type="password" class="form-control" id="inputPassword2" placeholder="<?= $InputPassword ?>">
               </div>
             </div>
             <div class="form-group row">
               <div class="col-sm-10">
-                <button onclick="trySignup()" type="submit" class="btn btn-round btn-primary">S'inscrire</button>
+                <button onclick="trySignup()" type="submit" class="btn btn-round btn-primary"><?= $ButtonSignup ?></button>
               </div>
             </div>
             <div class="form-group row">
               <div class="col-sm-10">
-                <small class="form-text text-muted"><a href="#">Vous possédez déjà un compte ?</a></small>
+                <small class="form-text text-muted"><a href="#"><?= $LinkAccount ?></a></small>
               </div>
             </div>
           </form>

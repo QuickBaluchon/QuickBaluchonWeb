@@ -3,6 +3,7 @@ $this->_header = ROOT . '/templates/Front/header.php';
 $this->_css = ['header', 'home'];
 $this->_js = ['main'] ;
 
+extract($this->_content) ;
 ?>
 
 <!-- HERO BANNER HOME -->
@@ -11,10 +12,10 @@ $this->_js = ['main'] ;
     <div class="row">
       <div class="col-lg">
         <div class="jumbotron bg-white">
-          <h1 class="display-4">Nous Livrevrons Quoi Qu'il Arrive.</h1>
-          <p class="lead">Passez-nous le relais.</p>
+          <h1 class="display-4"><?= $TitleDelivery ?></h1>
+          <p class="lead"><?= $TextDelivery ?></p>
           <p class="lead">
-            <a class="btn btn-round btn-primary btn-lg" href="<?= WEB_ROOT . 'login#signup-links' ?>" role="button">Commencer</a>
+            <a class="btn btn-round btn-primary btn-lg" href="<?= WEB_ROOT . 'login#signup-links' ?>" role="button"><?= $ButtonBegin ?></a>
           </p>
         </div>
       </div>
@@ -36,11 +37,11 @@ $this->_js = ['main'] ;
       <div class="col-lg">
 
         <div class="jumbotron bg-transparent">
-          <h1 class="display-4">Vous attendez un colis ?</h1>
-          <p class="lead text-white">Suivez le !</p>
+          <h1 class="display-4"><?= $TitlePackage ?></h1>
+          <p class="lead text-white"><?= $TextTrack ?></p>
 
           <div class="input-group input-group-lg mb-3">
-            <input type="text" class="form-control" placeholder="N° du colis">
+            <input type="text" class="form-control" placeholder="<?= $InputPackage ?>">
             <div class="input-group-append">
               <button class="btn btn-warning" type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">

@@ -58,8 +58,7 @@ class ControllerClient
         }
     }
 
-    private function signup()
-    {
+    private function signup() {
         $this->_view = new View('SignupClient');
         $this->_view->generateView([]);
     }
@@ -77,8 +76,7 @@ class ControllerClient
         $this->_view->generateView(['content' => $profile, 'name' => $client['website']]);
     }
 
-    private function bills()
-    {
+    private function bills() {
 
         $this->_view = new View('Back');
 
@@ -127,10 +125,11 @@ class ControllerClient
         $this->_view->generateView(['content' => $package, 'name' => $client['website']]);
     }
 
-    public function pay($grossAmount){
-        $price = $grossAmount[0];
-        $this->_view = new View('Stripe');
-        $this->_view->generateView(["price" => $price]);
+    public function pay ($url) {
+        $bill = intval($url[0]);
+        $this->_view = new View('Back');
+        $stripe = $this->_view->generateTemplate('stripe', ["bill" => $bill]);
+        $this->_view->generateView(['content' => $stripe, 'name' => "stripe"]);
     }
 
     public function createBillPdf($id){

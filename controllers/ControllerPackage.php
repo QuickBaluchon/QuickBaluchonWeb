@@ -24,9 +24,6 @@ class ControllerPackage {
       if (isset($url[0]) && !empty($url[0])) {
           if ($this->getPackage($url[0]) != 0) {
               switch ($this->_data['status']) {
-                  case 0:
-                    $this->recievePackage() ;
-                    break ;
                   case 1:
                     $this->inWarehouse() ;
                     break ;
@@ -39,6 +36,9 @@ class ControllerPackage {
                   case 4:
                     $this->sentBack() ;
                     break ;
+                  default:
+                      $this->recievePackage() ;
+                      break ;
               }
           } else
             http_response_code(404) ;
@@ -50,7 +50,7 @@ class ControllerPackage {
   private function getPackage ($id) {
       $this->_packageManager = new PackageManager() ;
       $this->_id = intval($id) ;
-      $this->_data = $this->_packageManager->getPackage($this->_id, ['id', 'status', 'dateDeposit']) ;
+      $this->_data = $this->_packageManager->getPackage($this->_id, ['id', 'PACKAGE.status', 'dateDeposit']) ;
 
       return count($this->_data) ;
   }

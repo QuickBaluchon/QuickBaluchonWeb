@@ -4,8 +4,15 @@
 $this->_css = ['sidebar'];
 $url = explode("/", $_GET['url']);
 $id = $url[2];
-if(!isset($_SESSION["price$id"]) &&  $_SESSION["price$id"] <= 0)
-    header("Location:http://localhost:8888/QuickBaluchonWeb/client/bills");
+foreach ($_SESSION["price"] as $price) {
+
+    if(!isset($price["price$id"]) && $price["price$id"] <= 0)
+        header("Location:http://localhost:8888/QuickBaluchonWeb/client/bills");
+    else {
+        break;
+    }
+}
+
 extract($this->_template);
 ?>
 
@@ -22,7 +29,7 @@ extract($this->_template);
              <form id="form" action="../../media/script/stripe/payement.php" method="POST" onsubmit="return false">
                  <div class="form-group row">
                    <div class="col-sm-10">
-                     <span><?= $LabelAmount . ' ' . $_SESSION["price$id"] . '€' ?></span>
+                     <span><?= $LabelAmount . ' ' . $price["price$id"] . '€' ?></span>
                    </div>
                  </div>
                <div class="form-group row">

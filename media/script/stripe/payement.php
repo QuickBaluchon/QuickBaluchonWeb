@@ -6,7 +6,7 @@ $name = $_POST['name'];
 $email = $_POST['email'];
 $price = $_POST['price'];
 
-$price = $_SESSION["price$price"] * 100;
+$price = $_SESSION["price"];
 
 
 if(filter_var($email, FILTER_VALIDATE_EMAIL) && !empty($name) && !empty($token)){

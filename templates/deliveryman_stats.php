@@ -20,12 +20,16 @@
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="packages" role="tabpanel" aria-labelledby="packages-tab">
-                    <div class="chart-container" style="position: relative; height:40vh; width:80vw">
+                    <div class="chart-container">
                         <canvas id="packagesCanvas"></canvas>
                     </div>
 
                 </div>
-                <div class="tab-pane fade" id="delivery" role="tabpanel" aria-labelledby="delivery-tab">b</div>
+                <div class="tab-pane fade" id="delivery" role="tabpanel" aria-labelledby="delivery-tab">
+                    <div class="chart-container">
+                        <canvas id="deliveriesCanvas"></canvas>
+                    </div>
+                </div>
                 <div class="tab-pane fade" id="salary" role="tabpanel" aria-labelledby="salary-tab">c</div>
             </div>
 

@@ -1,6 +1,9 @@
 <?php
 
 class AdminManager extends Model {
+    public function getListStaff($fields){
+        return $this->getCollection('admin', [ "fields" => join(',',$fields));
+    }
 
     public function login($username, $password): ?array {
         $credentials = [

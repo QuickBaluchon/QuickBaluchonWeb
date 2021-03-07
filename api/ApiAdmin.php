@@ -46,7 +46,7 @@ class ApiAdmin extends Api {
         self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
         $Staff = $this->get('STAFF', $_columns);
-        var_dump($Staff);
+
         return $Staff;
 
 

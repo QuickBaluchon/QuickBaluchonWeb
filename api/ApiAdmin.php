@@ -34,6 +34,24 @@ class ApiAdmin extends Api {
 
     }
 
+    public function getListStaff() {
+
+        if($this->_method != 'GET') $this->catError(405);
+
+        self::$_where[] = 'employed = 1';
+
+
+        $_columns = ["lastname",'firstname', 'sector', 'username'];
+        self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+        self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
+
+        $Staff = $this->get('STAFF', $_columns);
+        var_dump($Staff);
+        return $Staff;
+
+
+    }
+
     public function login() {
         if ($this->_method != 'POST') $this->catError(405);
         $admin = $this->getJsonArray();

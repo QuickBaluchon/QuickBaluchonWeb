@@ -2,7 +2,7 @@
 class Stripe
 {
 
-    private $api_key
+    private $api_key;
 
 
     public function __construct($api_key){

@@ -22,7 +22,12 @@
             if(response.error){
                 console.log(response.error);
             }else {
-                let hiddenInput = document.createElement("input")
+                let price = document.createElement("input");
+                price.setAttribute("type", "hidden");
+                price.name = "price";
+                price.value = parseInt(document.getElementsByTagName("button")[2].id);
+                form.appendChild(price);
+                let hiddenInput = document.createElement("input");
                 hiddenInput.setAttribute("type", "hidden");
                 hiddenInput.name = "stripeToken";
                 hiddenInput.value = response.id

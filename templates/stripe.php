@@ -75,8 +75,6 @@ extract($this->_template);
    </section>
  </section>
 
-
-<?php unset($_SESSION["price$id"]);?>
 <script src="https://js.stripe.com/v2/"></script>
 <script type="text/javascript" src="../../media/script/main.js"></script>
 <script type="text/javascript" src="../../media/script/stripe/payement.js"></script>

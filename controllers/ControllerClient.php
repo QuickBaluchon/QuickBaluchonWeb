@@ -77,7 +77,8 @@ class ControllerClient
     }
 
     private function bills() {
-
+        $price = [];
+        $_SESSION['price'] = [];
         $this->_view = new View('Back');
 
         $this->_clientManager = new ClientManager();
@@ -95,8 +96,8 @@ class ControllerClient
                 foreach($buttonsValues as $link => $inner){
                     $id = $bill['id'];
                     if($bill['paid'] == 0){
+                         $_SESSION["price"][] = ["price$id" => $bill['netAmount']];
 
-                        $_SESSION["price$id"] = $bill['netAmount'];
                         $buttons[] = '<a href="'. WEB_ROOT . "client/$link/" . $id .'"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
                     }else{
                         $buttons[] = '<span>déjà payé</span>';
@@ -111,7 +112,6 @@ class ControllerClient
                 $rows[] = $bill;
             unset($rows[$i]["paid"]);
             $i++;
-
             $buttons = [];
             }
         }else {

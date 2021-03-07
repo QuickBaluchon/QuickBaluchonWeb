@@ -15,6 +15,25 @@ class ApiAdmin extends Api {
             http_response_code(404);
     }
 
+    public function addStaff() {
+
+        if ($this->_method != 'PUT') $this->catError(405);
+        $data = $this->getJsonArray();
+        $allowed = ["lastname",'firstname', 'sector', 'username', 'password'];
+
+       if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
+          http_response_code(400);
+          exit(0);
+        }
+
+        $password = hash("sha256", $data['password']);
+        self::$_columns = ["lastname",'firstname', 'sector', 'username', 'password'];
+        self::$_params = [$data['lastname'],$data['firstname'], $data['sector'], $data['username'], $password];
+
+        $this->add('STAFF');
+
+    }
+
     public function login() {
         if ($this->_method != 'POST') $this->catError(405);
         $admin = $this->getJsonArray();

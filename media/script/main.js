@@ -146,3 +146,10 @@ function signout () {
     request.open('GET', '../api/client/signout', true);
     request.send();
 }
+
+function getPackage () {
+    let values = getInputsValue(['pkgInput'], true) ;
+    let pkg = parseInt(values['pkgInput']) ;
+    if (typeof(pkg) == "number")
+        window.location.href = `/package/${pkg}` ;
+}

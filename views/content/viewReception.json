@@ -1,6 +1,6 @@
 {
   "FR": {
-    "Title": "Réception d'un colis",
+    "Title": "Colis",
     "LabelWeight": "Poids",
     "LabelVolume": "Volume",
     "LabelAddress": "Adresse de livraison",
@@ -9,7 +9,7 @@
     "ButtonSave": "Enregistrer"
   },
   "EN": {
-    "Title": "Package reception",
+    "Title": "Package",
     "LabelWeight": "Weight",
     "LabelVolume": "Volume",
     "LabelAddress": "Recipient's address",

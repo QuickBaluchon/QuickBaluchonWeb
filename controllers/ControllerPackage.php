@@ -23,23 +23,20 @@ class ControllerPackage {
 
       if (isset($url[0]) && !empty($url[0])) {
           if ($this->getPackage($url[0]) != 0) {
-              switch ($this->_data['status']) {
-                  case 1:
-                    $this->inWarehouse() ;
-                    break ;
-                  case 2:
-                    $this->deliverPackage() ;
-                    break ;
-                  case 3:
-                    $this->retrieved() ;
-                    break ;
-                  case 4:
-                    $this->sentBack() ;
-                    break ;
-                  default:
-                      $this->recievePackage() ;
-                      break ;
+              if (isset($_SESSION['role']) && $_SESSION['role'] == 'deliveryman') {
+                  if ($this->_data['status'] == 2) {
+                      $v = $this->deliverPackage();
+                  } else
+                      $v = $this->viewExtern() ;
+              } elseif (isset($_SESSION['role']) && $_SESSION['role'] == 'staff') {
+                  if ($this->_data['status'] == 0) {
+                      $v = $this->recievePackage();
+                  } else
+                      $v = $this->viewExtern() ;
+              } else {
+                  $v = $this->viewExtern() ;
               }
+              $this->_view->generateView($v) ;
           } else
             http_response_code(404) ;
       } else
@@ -50,35 +47,24 @@ class ControllerPackage {
   private function getPackage ($id) {
       $this->_packageManager = new PackageManager() ;
       $this->_id = intval($id) ;
-      $this->_data = $this->_packageManager->getPackage($this->_id, ['id', 'PACKAGE.status', 'dateDeposit']) ;
+      $this->_data = $this->_packageManager->getPackage($this->_id, ['PACKAGE.id', 'PACKAGE.status', 'dateDeposit']) ;
 
       return count($this->_data) ;
   }
 
-  private function inWarehouse () {
-      echo "En cours de traitement dans l'entrepôt" ;
-  }
-
   private function deliverPackage () {
       $this->_view = new View('Delivering') ;
-      $this->_view->generateView([]) ;
+      return $this->_data ;
   }
 
   private function recievePackage () {
-      $package = $this->_packageManager->getPackage($this->_id, ['id', 'weight', 'volume', 'address', 'email', 'delay']) ;
+      $package = $this->_packageManager->getPackage($this->_id, ['PACKAGE.id', 'weight', 'volume', 'address', 'email', 'delay']) ;
       $this->_view = new View('Reception') ;
-      $this->_view->generateView($package);
+      return $package;
   }
 
-  private function updatePackage () {
-      $package = $this->_packageManager->updatePackage($this->_id, ['id', 'weight', 'volume', 'address', 'email', 'delay', 'dateDeposit', 'dateDelivery']) ;
-  }
-
-  private function sentBack () {
-      echo "Retour à l'expéditeur" ;
-  }
-
-  private function retrieved () {
-      echo "Livré" ;
+  private function viewExtern () {
+      $this->_view = new View('Package') ;
+      return $this->_data ;
   }
 }

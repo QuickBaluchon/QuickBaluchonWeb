@@ -7,6 +7,7 @@ class ApiAdmin extends Api {
     private $_method;
 
     public function __construct($url, $method) {
+
         $this->_method = $method;
         if (method_exists($this, $url[0])) {
             $function = $url[0];
@@ -35,21 +36,12 @@ class ApiAdmin extends Api {
     }
 
     public function getListStaff() {
-
         if($this->_method != 'GET') $this->catError(405);
 
-        self::$_where[] = 'employed = 1';
+        $columns = ['id', 'client', 'grossAmount', 'netAmount', 'dateBill', 'pdfPath', 'paid'];
+        $list = $this->get('MONTHLYBILL', $columns);
 
-
-        $_columns = ["lastname",'firstname', 'sector', 'username'];
-        self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
-        self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
-
-        $Staff = $this->get('STAFF', $_columns);
-
-        return $Staff;
-
-
+        return $list;
     }
 
     public function login() {
@@ -80,4 +72,5 @@ class ApiAdmin extends Api {
             http_response_code(400);
         }
     }
+    
 }

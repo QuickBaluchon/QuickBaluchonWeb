@@ -1,9 +1,6 @@
 <?php
 
 class AdminManager extends Model {
-    public function getListStaff($fields){
-        return $this->getCollection('admin', [ "fields" => join(',',$fields));
-    }
 
     public function login($username, $password): ?array {
         $credentials = [
@@ -12,5 +9,9 @@ class AdminManager extends Model {
         ];
         $result = $this->curl(API_ROOT . 'admin/login', $credentials);
         return is_array($result) ? $result : null;
+    }
+
+    public function getStaffs($fields) {
+      return $this->getCollection('admin/getListStaff', ["fields" => join(',',$fields)]);
     }
 }

@@ -1,5 +1,5 @@
 <?php
-
+$_SESSION["role"] = "admin";
 require_once('views/View.php');
 
 class ControllerAdmin {
@@ -98,6 +98,16 @@ class ControllerAdmin {
         $this->_view->generateView([]);
     }
 
+    private function staff($url) {
+        $this->_view = new View('Back');
+
+        $this->_adminManager = new AdminManager;
+        $list = $this->_adminManager->getStaffs([]);
+
+        $cols = ["lastname",'firstname', 'sector', 'username'];
+        $deliveryman = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
+        $this->_view->generateView(['content' => $deliveryman]);
+    }
 
     private function deliverymen($url) {
         $this->_view = new View('Back');

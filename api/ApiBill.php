@@ -34,8 +34,6 @@ class ApiBill extends Api
   public function getListBills(): array {
     if($this->_method != 'GET') $this->catError(405);
 
-    //$this->authentication(['admin']);
-
     if(isset($_GET['client'])) {
       self::$_where[] = 'client = ?';
       self::$_params[] = intval($_GET['client']);

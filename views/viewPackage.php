@@ -12,6 +12,7 @@ extract($this->_content) ;
 
                 <div class="jumbotron bg-white" id="jumbotron">
                     <h1 class="display-4"><?= $Title ?> <?= $data['id'] ?></h1>
+                    <p>Un jour, il y aura du WebGL ici :)</p>
                 </div>
             </div>
         </div>

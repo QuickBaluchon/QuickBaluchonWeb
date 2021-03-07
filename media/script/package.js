@@ -1,11 +1,12 @@
 function recieve (id) {
-    let data = getInputsValue(['weigt', 'volume', 'address', 'email', 'delay'], true) ;
+    let data = getInputsValue(['weight', 'volume', 'address', 'email', 'delay'], true) ;
     let json = JSON.stringify( { weight: data['weight'], volume: data['volume'], address: data['address'], email: data['email'], delay: data['delay'], status: 1 } );
 
     ajax(`/api/package/${id}`, json, 'PATCH', recieved) ;
 }
 
 function recieved (text) {
+    console.log(text) ;
     let jb = document.getElementById('jumbotron') ;
     jb.innerHTML = '<h1 class="display-4">Colis enregistré</h1>' ;
 }

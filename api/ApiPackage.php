@@ -106,9 +106,10 @@ class ApiPackage extends Api {
           self::$_set[] = "dateDeposit = now()" ;
           self::$_set[] = "dateDelivery = DATE_ADD(now(), INTERVAL ? DAY)" ;
           self::$_params[] = $data['delay'] ;
+          $pricelistQuery = "SELECT id FROM PRICELIST WHERE maxWeight > ? AND applicationDate < CURDATE() ORDER BY maxWeight ASC, applicationDate DESC LIMIT 1" ;
+          self::$_set[] = "pricelist = ($pricelistQuery)" ;
+          self::$_params[] = $data['weight'] ;
       }
       $this->patch('PACKAGE', $id);
   }
-
-
 }

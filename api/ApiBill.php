@@ -73,13 +73,14 @@ class ApiBill extends Api
     public function patchBill($id){
         $data = $this->getJsonArray();
         $allowed = ['paid'];
+
          if (count(array_diff(array_keys($data), $allowed)) > 0) {
              http_response_code(400);
              exit();
          }
 
         self::$_set[] = "paid = ?" ;
-        self::$_params[] = 1 ;
+        self::$_params[] = $data['paid'];
 
         $this->patch('MONTHLYBILL', $id);
     }

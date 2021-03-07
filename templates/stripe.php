@@ -9,8 +9,6 @@ if(!isset($_SESSION["price$id"]) &&  $_SESSION["price$id"] <= 0)
 extract($this->_template);
 ?>
 
-<div class="wrapper">
- <!-- Content -->
  <section id="back-content">
    <section id="heroBanner-login">
      <div class="container-xl">
@@ -24,8 +22,7 @@ extract($this->_template);
              <form id="form" action="../../media/script/stripe/payement.php" method="POST" onsubmit="return false">
                  <div class="form-group row">
                    <div class="col-sm-10">
-                     <span><?= $LabelAmount ?></span>
-                     <input type="text" name="price" value="<?php if(isset($_SESSION["price$id"])) echo $_SESSION["price$id"] ?>" class="form-control" id="price">
+                     <span><?= $LabelAmount . ' ' . $_SESSION["price$id"] . '€' ?></span>
                    </div>
                  </div>
                <div class="form-group row">
@@ -71,19 +68,13 @@ extract($this->_template);
 
          <div class="col-sm">
            <!-- IMAGE -->
-           <img class="d-lg-block mx-auto" src="../../assets/paid.png" alt="delivering">
+           <img class="d-lg-block mx-auto" src="<?=WEB_ROOT?>media/assets/paid.png" alt="delivering" style="display: none; width: inherit">
          </div>
        </div>
      </div>
    </section>
  </section>
 
-
-
-
-</div>
-
-<?php unset($_SESSION["price$id"]);?>
 <script src="https://js.stripe.com/v2/"></script>
 <script type="text/javascript" src="../../media/script/main.js"></script>
 <script type="text/javascript" src="../../media/script/stripe/payement.js"></script>

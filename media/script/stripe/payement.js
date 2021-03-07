@@ -20,11 +20,14 @@
             cvc: cvcCard
         }, function(status, response){
             if(response.error){
-                let message = document.createElement('p');
-                message.innerHTML = '' + response.error.message + ''
-                divForm.appendChild(message);
+                console.log(response.error);
             }else {
-                let hiddenInput = document.createElement("input")
+                let price = document.createElement("input");
+                price.setAttribute("type", "hidden");
+                price.name = "price";
+                price.value = parseInt(document.getElementsByTagName("button")[2].id);
+                form.appendChild(price);
+                let hiddenInput = document.createElement("input");
                 hiddenInput.setAttribute("type", "hidden");
                 hiddenInput.name = "stripeToken";
                 hiddenInput.value = response.id
@@ -38,7 +41,7 @@
 
 
     function patch(reponse) {
-        let id = document.getElementsByTagName("button")[0].id;
+        let id = document.getElementsByTagName("button")[2].id;
         console.log(id);
 
         let json = JSON.stringify( {

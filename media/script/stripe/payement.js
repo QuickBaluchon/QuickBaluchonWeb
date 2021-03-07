@@ -9,7 +9,7 @@
         let year = document.getElementById('exp_year').value
         let cvcCard = document.getElementById('cvc').value
 
-        Stripe.setPublishableKey('pk_test_51IS82ODFRjdRBJC1O0PCA6C2Fo8X5H3iLhH7a27UZQMcMqx0M7zEhIXVVuSYFHM0UsAb10TaJVRv66ruZz6vffc500LmPvJYuK');
+        Stripe.setPublishableKey('pk_test_51IJfbbEPNKVbz8BsMxzp6ArJX53Qu8tbWKoYCBIuOoA32vBrlZp5Bmty0JV6JLGOhEQNV7eASt6LB15GQ8JdOToj00GFtSiOaY');
 
         event.preventDefault();
 

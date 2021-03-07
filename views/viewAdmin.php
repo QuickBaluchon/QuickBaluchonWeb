@@ -3,6 +3,7 @@
 $this->_header = ROOT . '/templates/Front/header.php';
 $this->_css = ['header', 'login'];
 $this->_js = ['main', 'loginAdmin'];
+extract($this->_content) ;
 
 ?>
 
@@ -14,22 +15,22 @@ $this->_js = ['main', 'loginAdmin'];
 
         <!-- FORM LOGIN-->
         <div class="jumbotron bg-white">
-          <h1 class="display-4">Espace Admin</h1>
+          <h1 class="display-4"><?= $Title ?></h1>
 
           <form onsubmit="return false">
             <div class="form-group row">
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputLogin" placeholder="Nom d'utilisateur">
+                <input type="text" class="form-control" id="inputLogin" placeholder="<?= $InputUsername ?>">
               </div>
             </div>
             <div class="form-group row">
               <div class="col-sm-10">
-                <input type="password" class="form-control" id="inputPwd" placeholder="Mot de passe">
+                <input type="password" class="form-control" id="inputPwd" placeholder="<?= $InputPassword ?>">
               </div>
             </div>
             <div class="form-group row">
               <div class="col-sm-10">
-                <button onclick="tryLogin('admin')" class="btn btn-round btn-primary">Se connecter</button>
+                <button onclick="tryLogin('admin')" class="btn btn-round btn-primary"><?= $ButtonConnect ?></button>
               </div>
             </div>
           </form>

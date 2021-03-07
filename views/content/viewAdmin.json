@@ -1,0 +1,14 @@
+{
+  "FR": {
+    "Title": "Espace Admin",
+    "InputUsername": "Nom d'utilisateur",
+    "InputPassword": "Mot de passe",
+    "ButtonConnect": "Se connecter"
+  },
+  "EN": {
+    "Title": "Admin Zone",
+    "InputUsername": "Username",
+    "InputPassword": "Password",
+    "ButtonConnect": "Log in"
+  }
+}

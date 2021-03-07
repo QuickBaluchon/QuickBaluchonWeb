@@ -8,6 +8,7 @@ class View
     public $_js = [];
     public $_content = [] ;
     public $_template = [] ;
+    public $_headerContent = [] ;
 
     public function __construct($action = null) {
         if( $action ) {
@@ -23,11 +24,13 @@ class View
             if (key_exists($sh, $json))
                 switch($target) {
                     case 'template': $this->_template = $json[$sh]; break ;
+                    case 'header': $this->_headerContent = $json[$sh] ;
                     default: $this->_content = $json[$sh] ; break;
                 }
             else
                 switch($target) {
                     case 'template': $this->_template = $json['FR']; break ;
+                    case 'header': $this->_headerContent = $json['FR'] ;
                     default: $this->_content = $json['FR'] ; break;
                 }
         }
@@ -40,6 +43,9 @@ class View
         $this->setJSON('views/content/', $file) ;
 
         $html = $this->generateFile($this->_file, $data);
+        if (!empty($this->_header)) {
+            $this->setJSON('templates/content/Front/', 'header', 'header');
+        }
 
         $view = $this->generateFile('views/template.php',
             [

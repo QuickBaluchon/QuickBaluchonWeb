@@ -2,7 +2,8 @@
 require_once ('core/SidebarMenu.php');
 
 $this->_css = ['sidebar'];
-$this->_js = ['main', 'warehouse/updateWarehouse', 'languages/add'];
+array_unshift($this->_js,'main', 'languages/add');
+extract($this->_content) ;
 ?>
 
 <div class="wrapper">
@@ -54,7 +55,7 @@ $this->_js = ['main', 'warehouse/updateWarehouse', 'languages/add'];
 
             <!-- Dropdown Language-->
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Langue</a>
+              <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Langue <?= $_SESSION['defaultLang']['flag'] ?></a>
               <div class="dropdown-menu">
                   <?php foreach ($_SESSION['langs'] as $lang => $info) { ?>
                       <button class="dropdown-item" onclick="language('<?= $lang ?>')"><?= $info['flag'] . " " . $lang ?></button>

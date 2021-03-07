@@ -1,0 +1,14 @@
+{
+  "FR": {
+    "ButtonClear": "Effacer",
+    "TextFallback": "Le canvas n'a pas fonctionné",
+    "ButtonDelivered": "Livré",
+    "ButtonAbsent": "Absent"
+  },
+  "EN": {
+    "ButtonClear": "Clear",
+    "TextFallback": "The canvas didn't work",
+    "ButtonDelivered": "Delivered",
+    "ButtonAbsent": "Absent"
+  }
+}

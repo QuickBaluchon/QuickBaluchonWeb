@@ -1,3 +1,5 @@
+<?php extract($this->_headerContent) ; ?>
+
 <div class="container-xl">
   <nav class="navbar navbar-expand-lg navbar-light bg-white">
     <a class="navbar-brand" href="<?=WEB_ROOT?>">
@@ -14,18 +16,18 @@
       <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" href="#">Télécharger</a>
+            <a class="nav-link" href="#"><?= $LinkDownload ; ?></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Tarifs</a>
+            <a class="nav-link" href="#"><?= $LinkPrice ; ?></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">À propos</a>
+            <a class="nav-link" href="#"><?= $LinkAbout ; ?></a>
           </li>
 
           <!-- Dropdown Language-->
            <li class="nav-item dropdown">
-             <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Langue</a>
+             <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><?= $DropdownLanguages ; ?></a>
              <div class="dropdown-menu">
                  <?php foreach ($_SESSION['langs'] as $lang => $info) { ?>
                      <button class="dropdown-item" onclick="language('<?= $lang ?>')"><?= $info['flag'] . " " . $lang ?></button>
@@ -35,7 +37,7 @@
         </ul>
       </div>
 
-      <a href="<?=WEB_ROOT.'login'?>"><button class="btn btn-round btn-success my-2 my-sm-0">Se connecter</button></a>
+      <a href="<?=WEB_ROOT.'login'?>"><button class="btn btn-round btn-success my-2 my-sm-0"><?= $LinkConnect ; ?></button></a>
 
   </nav>
 </div>

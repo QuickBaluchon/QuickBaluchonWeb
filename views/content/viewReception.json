@@ -1,0 +1,20 @@
+{
+  "FR": {
+    "Title": "Réception d'un colis",
+    "LabelWeight": "Poids",
+    "LabelVolume": "Volume",
+    "LabelAddress": "Adresse de livraison",
+    "LabelEmail": "Email du destinataire",
+    "LabelDelay": "Délai de livraison",
+    "ButtonSave": "Enregistrer"
+  },
+  "EN": {
+    "Title": "Package reception",
+    "LabelWeight": "Weight",
+    "LabelVolume": "Volume",
+    "LabelAddress": "Recipient's address",
+    "LabelEmail": "Recipient's email",
+    "LabelDelay": "Delivery delay",
+    "ButtonSave": "Save"
+  }
+}

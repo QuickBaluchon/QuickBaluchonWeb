@@ -1,16 +1,17 @@
+<?php extract($this->_template) ; ?>
 
 <div class="container-xl">
   <div class="row">
     <div class="col-lg">
 
-      <h1><?= $name ?> / Profil</h1>
+      <h1><?= $name ?> / <?= $Title ?></h1>
 
       <ul class="nav nav-pills mb-3 mt-4" id="pills-tab" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" id="pills-password-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-home" aria-selected="true">Profil</a>
+          <a class="nav-link active" id="pills-password-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-home" aria-selected="true"><?= $LinkProfile ?></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-password" role="tab" aria-controls="pills-profile" aria-selected="false">Mot de passe</a>
+          <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-password" role="tab" aria-controls="pills-profile" aria-selected="false"><?= $LinkPassword ?></a>
         </li>
       </ul>
       <div class="tab-content" id="pills-tabContent">
@@ -19,15 +20,15 @@
           <!-- content navpills profile -->
           <form class="form-round col-lg" onsubmit="return false">
             <div class="form-group">
-              <label for="inputName">Nom d'utilisateur</label>
+              <label for="inputName"><?= $LabelUsername ?></label>
               <input type="text" class="form-control" id="inputName" placeholder="<?= $name ?>">
             </div>
             <div class="form-group">
-              <label for="inputWebsite">Site web</label>
+              <label for="inputWebsite"><?= $LabelWebsite ?></label>
               <input type="text" class="form-control" id="inputWebsite" placeholder="<?= $website ?>">
             </div>
 
-            <button onclick="updateProfile()" type="button" class="btn btn-success">Sauvegarder</button>
+            <button onclick="updateProfile()" type="button" class="btn btn-success"><?= $ButtonSave ?></button>
           </form>
 
         </div>
@@ -36,15 +37,15 @@
           <!-- content navpills password -->
           <form class="form-round col-lg" onsubmit="return false">
             <div class="form-group">
-              <label for="inputOldPassword">Ancien mot de passe</label>
+              <label for="inputOldPassword"><?= $LabelPreviousPassword ?></label>
               <input type="password" class="form-control" id="inputOldPassword">
             </div>
             <div class="form-group">
-              <label for="inputPassword">Mot de passe</label>
+              <label for="inputPassword"><?= $LabelNewPassword ?></label>
               <input type="password" class="form-control" id="inputPassword">
             </div>
 
-            <button onclick="updatePwd('client')" type="button" class="btn btn-success">Changer</button>
+            <button onclick="updatePwd('client')" type="button" class="btn btn-success"><?= $ButtonSave ?></button>
           </form>
 
         </div>

@@ -1,0 +1,22 @@
+{
+  "FR": {
+    "Title": "Entrepôt",
+
+    "TextDeliverymen": "livreurs associés",
+
+    "TitleDanger": "Danger Zone",
+    "LabelDelete": "Supprimer cet entrepôt",
+    "WarningDelete": "La suppression d'un entrepôt est définitive. Soyez certain.",
+    "ButtonDelete": "Supprimer cet entrepôt"
+  },
+  "EN": {
+    "Title": "Warehouse",
+
+    "TextDeliverymen": "associated deliverymen",
+
+    "TitleDanger": "Danger Zone",
+    "LabelDelete": "Delete this warehouse",
+    "WarningDelete": "The deletion of a warehouse is permanent. Beware.",
+    "ButtonDelete": "Delete this warehouse"
+  }
+}

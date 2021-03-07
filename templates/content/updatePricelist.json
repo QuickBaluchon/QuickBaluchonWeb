@@ -1,0 +1,16 @@
+{
+  "FR": {
+    "Title": "Prix",
+
+    "LabelWeight": "Poids",
+    "LabelExpress": "Prix Express",
+    "LabelStandard": "Prix Standard",
+    "LabelApplication": "Date d'application",
+    "ButtonSave": "Enregistrer",
+
+    "TitleDanger": "Danger Zone",
+    "LabelDelete": "Supprimer ce tarif",
+    "WarningDelete": "La suppression d'un tarif est définitive. Soyez certain.",
+    "ButtonDelete": "Supprimer ce tarif"
+  }
+}

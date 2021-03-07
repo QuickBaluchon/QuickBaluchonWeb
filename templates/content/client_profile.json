@@ -1,0 +1,30 @@
+{
+  "FR": {
+    "Title": "Profil",
+
+    "LinkProfile": "Profil",
+    "LinkPassword": "Mot de passe",
+
+    "LabelUsername": "Nom d'utilisateur",
+    "LabelWebsite": "Site web",
+
+    "LabelPreviousPassword": "Ancien mot de passe",
+    "LabelNewPassword": "Nouveau mot de passe",
+
+    "ButtonSave": "Sauvegarder"
+  },
+  "EN": {
+    "Title": "Profile",
+
+    "LinkProfile": "Profile",
+    "LinkPassword": "Password",
+
+    "LabelUsername": "Username",
+    "LabelWebsite": "Website",
+
+    "LabelPreviousPassword": "Previous password",
+    "LabelNewPassword": "New Password",
+
+    "ButtonSave": "Save"
+  }
+}

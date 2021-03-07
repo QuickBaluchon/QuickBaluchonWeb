@@ -8,6 +8,8 @@ if( isset($_GET['url']) && strlen($_GET['url']) > 0) {
 $this->_css = ['header', 'home', 'main', 'delivering'];
 $this->_js = ['main', 'package'] ;
 $this->_header = ROOT . '/templates/Front/header.php';
+
+extract($this->_content) ;
 ?>
 
 <div id="container" class="container-sm d-flex justify-content-center">
@@ -15,11 +17,11 @@ $this->_header = ROOT . '/templates/Front/header.php';
 
         <div class="card">
             <div class="card-header">
-                <button type="button" class="btn btn-danger btn-sm btn-block">Clear canvas</button>
+                <button type="button" class="btn btn-danger btn-sm btn-block"><?= $ButtonClear ?></button>
             </div>
             <div class="card-body">
                 <canvas class="myCanvas">
-                  <p>Add suitable fallback here.</p>
+                  <p><?= $TextFallback ?></p>
                 </canvas>
                 <img id='image'>
                 <script class="mb-1">
@@ -96,12 +98,12 @@ $this->_header = ROOT . '/templates/Front/header.php';
             </div>
 
             <div class="card-footer">
-                <button type="button" class="btn btn-primary btn-lg btn-block" onclick="deliver(<?= $id ; ?>)">Livré</button>
+                <button type="button" class="btn btn-primary btn-lg btn-block" onclick="deliver(<?= $id ; ?>)"><?= $ButtonDelivered ?></button>
             </div>
         </div>
 
 
       <hr>
-      <button type="button" class="btn btn-warning btn-lg btn-block" onclick="absent(<?= $id ; ?>)">Absent</button>
+      <button type="button" class="btn btn-warning btn-lg btn-block" onclick="absent(<?= $id ; ?>)"><?= $ButtonAbsent ?></button>
     </div>
 </div>

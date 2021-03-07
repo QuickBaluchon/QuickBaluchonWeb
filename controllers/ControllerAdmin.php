@@ -113,7 +113,7 @@ class ControllerAdmin {
 
     private function warehouses($url) {
         $this->_view = new View('Back');
-        $this->_view->_js[] = 'warehouse/updateWarehouse';
+
         $this->_WarehousesManager = new WarehouseManager;
         $list = $this->_WarehousesManager->getWarehouses([]);
         if (!$list) {
@@ -135,8 +135,16 @@ class ControllerAdmin {
             $buttons = [];
         }
 
+        $rows[] = [
+            '<input type="text" class="form-control" id="address" placeholder="address">',
+            '<input type="number" class="form-control" id="volume" placeholder="volume">',
+            '<button type="button" class="btn btn-success btn-sm" onclick="addWarehouse()">Ajouter</button>'
+        ] ;
+
         $cols = ['#', 'address', 'volume', 'AvailableVolume', 'delete'];
         if (!isset($rows)) $rows = [];
+        $this->_view->_js[] = 'warehouse/updateWarehouse';
+        $this->_view->_js[] = 'warehouse/addWarehouse';
         $warehouse = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->generateView(['content' => $warehouse, 'name' => 'QuickBaluchon']);
 
@@ -144,7 +152,7 @@ class ControllerAdmin {
 
     private function pricelist($url) {
         $this->_view = new View('Back');
-
+        $this->_view->_js[] = 'pricelist/addPrice';
         $this->_pricelistManager = new PricelistManager;
         $list = $this->_pricelistManager->getPricelists([]);
         if (!$list) $list = [];
@@ -162,6 +170,14 @@ class ControllerAdmin {
             $rows[] = array_merge($package, $buttons);
             $buttons = [];
         }
+        $rows[] = [
+            '<input type="text" class="form-control" id="maxWeight" placeholder="Max Weight">',
+            '<input type="number" class="form-control" id="ExpressPrice" placeholder="Express Price">',
+            '<input type="number" class="form-control" id="StandardPrice" placeholder="Standrad Price">',
+            '<input type="date" class="form-control" id="applicationDate" placeholder="application Date">',
+            '<input type="number" min="0" max="1" class="form-control" id="status" placeholder="status">',
+            '<button type="button" class="btn btn-success btn-sm" onclick="addPrice()">Ajouter</button>'
+        ] ;
 
         $cols = ['#', 'Max wheight', 'Express price', 'Standard price', 'application date'];
         $pricelist = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
@@ -169,14 +185,11 @@ class ControllerAdmin {
     }
 
     private function employ($url) {
+
         $this->_view = new View('Back');
         $this->_view->_js[] = 'deliveryman/employ';
         $this->_deliveryManager = new DeliveryManager;
-        $list = $this->_deliveryManager->getDeliveryNotEmployed([]);
-
-        $buttonsValues = [
-            'employ' => 'employer',
-        ];
+        $list = $this->_deliveryManager->getDeliveryNotEmployed(["id","firstname","lastname","phone","email","volumeCar","radius","IBAN","employed", "warehouse"]);
 
      $buttonsValues = [
          'employ' => 'employer',
@@ -186,15 +199,14 @@ class ControllerAdmin {
     foreach ($list as $delivery) {
         foreach($buttonsValues as $link => $inner){
         $buttons[] = '<button onclick="'. $link .'('.$delivery["id"].')" id="'.$delivery["id"].'" type="button" class="btn btn-primary btn-sm">' . $inner . '</button>';
-
       }
-
-        $cols = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG", 'employer'];
-        $delivery = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
-        $this->_view->generateView(['content' => $delivery, 'name' => 'QuickBaluchon']);
+      $rows[] = array_merge($delivery, $buttons);
+      $buttons = [];
     }
+    if(!isset($rows))
+        $rows = [];
 
-    $cols = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG", 'employer', 'refuser'];
+    $cols = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'employer', 'refuser'];
     $delivery = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
     $this->_view->generateView(['content' => $delivery, 'name' => 'QuickBaluchon']);
   }
@@ -241,6 +253,7 @@ class ControllerAdmin {
 
     public function warehouseDetails($url) {
         $this->_view = new View('Back');
+        $this->_js[] = "warehouse/updateWarehouse";
         $this->_WarehousesManager = new WarehouseManager;
         $details = $this->_WarehousesManager->getWarehouse($url[0], ["address", "volume", 'AvailableVolume']);
         $this->_DeliveryManager = new DeliveryManager;

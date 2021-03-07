@@ -1,0 +1,18 @@
+{
+  "FR": {
+    "LinkDownload": "Télécharger",
+    "LinkPrice": "Tarifs",
+    "LinkAbout": "À propos",
+
+    "DropdownLanguages": "Langue",
+    "LinkConnect": "Se connecter"
+  },
+  "EN": {
+    "LinkDownload": "Download",
+    "LinkPrice": "Prices",
+    "LinkAbout": "About",
+
+    "DropdownLanguages": "Language",
+    "LinkConnect": "Sign in"
+  }
+}

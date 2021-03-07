@@ -84,23 +84,35 @@ class ControllerClient
         $this->_billManager = new BillManager();
 
         $client = $this->_clientManager->getClient($this->_id, ['name', 'website']);
-        $billsList = $this->_billManager->getNotPaidBills($this->_id, ['id', 'grossAmount', 'netAmount','dateBill']);
+        $billsList = $this->_billManager->getBills($this->_id, ['id', 'grossAmount', 'netAmount','dateBill', 'paid']);
         $buttonsValues = [
             'pay' => 'payer',
-            'createBillPdf' => "visualiser"
         ];
 
         if($billsList != null){
+            $i = 0;
             foreach ($billsList as $bill) {
                 foreach($buttonsValues as $link => $inner){
-                $id = $bill['id'];
-                $_SESSION["price$id"] = $bill['netAmount'];
-                $buttons[] = '<a href="'. WEB_ROOT . "client/$link/" . $id .'"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
+                    $id = $bill['id'];
+                    if($bill['paid'] == 0){
+
+                        $_SESSION["price$id"] = $bill['netAmount'];
+                        $buttons[] = '<a href="'. WEB_ROOT . "client/$link/" . $id .'"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
+                    }else{
+                        $buttons[] = '<span>déjà payé</span>';
+                    }
+                    $buttons[] = '<a href="'. WEB_ROOT . "client/createBillPdf/" . $id .'"><button type="button" class="btn btn-primary btn-sm">visualiser</button></a>';
 
               }
 
-              $rows[] = array_merge($bill, $buttons);
-              $buttons = [];
+              if(isset($buttons))
+                $rows[] = array_merge($bill, $buttons);
+              else
+                $rows[] = $bill;
+            unset($rows[$i]["paid"]);
+            $i++;
+
+            $buttons = [];
             }
         }else {
             $rows = [];

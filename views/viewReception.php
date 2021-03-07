@@ -11,7 +11,7 @@ extract($this->_content) ;
       <div class="col">
 
           <div class="jumbotron bg-white" id="jumbotron">
-            <h1 class="display-4"><?= $Title ?></h1>
+            <h1 class="display-4"><?= $Title ?> <?= $data['id'] ?></h1>
             <form>
                 <div class="input-group mb-3">
                     <span class="input-group-text"><?= $LabelWeight ?></span>
@@ -38,7 +38,9 @@ extract($this->_content) ;
                 </div>
 
                 <button type="button" class="btn btn-primary btn-lg btn-block" onclick="recieve(<?= $data['id'] ; ?>)"><?= $ButtonSave ?></button>
+            </form>
             </div>
         </div>
     </div>
+  </div>
 </section>

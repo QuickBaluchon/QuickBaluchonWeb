@@ -109,12 +109,12 @@ class ApiPackage extends Api {
         }
         $this->patch('PACKAGE', $id);
         $this->resetParams();
-        if ($data['status'] == 3) {
-            $this->substractPackageFromWarehouse($id) ;
+        if ($data['status'] == 3 || $data['status'] == 1) {
+            $this->updateWarehouseVolume($id, $data['status']) ;
         }
     }
 
-    public function substractPackageFromWarehouse ($pkg) {
+    public function updateWarehouseVolume (int $pkg, int $status) {
         $col = ['warehouse', 'volume'];
         self::$_where[] = 'id = ?' ;
         self::$_params[] = $pkg ;
@@ -129,7 +129,14 @@ class ApiPackage extends Api {
         }
         $this->resetParams();
 
-        self::$_set[] = "AvailableVolume = AvailableVolume + ?" ;
+        if ($status == 1)
+            self::$_set[] = "AvailableVolume = AvailableVolume - ?" ;
+        elseif ($status == 3)
+            self::$_set[] = "AvailableVolume = AvailableVolume + ?" ;
+        else {
+            http_response_code(400) ;
+            return ;
+        }
         self::$_params[] = $volume ;
 
         $this->patch("WAREHOUSE", $id);

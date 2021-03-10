@@ -1,15 +1,19 @@
 window.onload = function () {
-    let json = JSON.stringify({
-        stats: "package",
-        deliveryman: 4
-    }) ;
-    ajax('../api/deliveryManStats/6', json, 'POST', displayStatsPackages, console.log) ;
-
-    displayStatsDeliveries();
+    let kilometer;
+    displayStatsPackages();
+    fetchKilometers();
 
 }
 
 function displayStatsPackages(stats) {
+
+    if( !stats ) {
+        let json = JSON.stringify({
+            stats: "package",
+            deliveryman: 4
+        }) ;
+        ajax('../api/deliveryManStats/6', json, 'POST', displayStatsPackages, console.log) ;
+    }
 
     let packages;
     let months = [];
@@ -31,7 +35,8 @@ function displayStatsPackages(stats) {
         responsive: true,
         data: {
             labels: months,
-            datasets: [{
+            datasets: [
+                {
                 label: 'Nb de colis livrés',
                 data: numbers,
                 backgroundColor: 'rgba(153, 102, 255, 0.2)'
@@ -53,55 +58,78 @@ function displayStatsPackages(stats) {
     chartPackages.canvas.parentNode.style.width = '600px';
 }
 
-function displayStatsDeliveries(stats) {
+function fetchKilometers() {
+    let json = JSON.stringify({
+        stats: "km",
+        deliveryman: 4
+    }) ;
+    ajax('../api/deliveryManStats/6', json, 'POST', fetchActivity, console.log) ;
+}
 
-    if( !stats ) {
-        let json = JSON.stringify({
-            stats: "km",
-            deliveryman: 4
-        }) ;
-        ajax('../api/deliveryManStats/6', json, 'POST', displayStatsDeliveries, console.log) ;
-        return;
-    }
+function fetchActivity(data) {
+    kilometer = data;
 
-    let kms;
+    let json = JSON.stringify({
+        stats: "activity",
+        deliveryman: 4
+    }) ;
+    ajax('../api/deliveryManStats/6', json, 'POST', displayStats, console.log) ;
+}
+
+function displayStats(activity) {
+    let kms,hours;
     let months = [];
-    let numbers = [];
-    try { kms = JSON.parse(stats); }
+    let km = [];
+    let hour = [];
+    try {
+        kms = JSON.parse(kilometer);
+        hours = JSON.parse(activity);
+    }
     catch (e) { return e }
     if( kms.length > 12 ) kms = kms.slice(0,11);
 
     for( let i = 0; i < 12; i++ ) {
         if( kms[i] ) {
             months.unshift(Object.keys(kms[i])[0]);
-            numbers.unshift(Object.values(kms[i])[0])
+            km.unshift(Object.values(kms[i])[0])
+            hour.unshift(Object.values(hours[i])[0])
         }
     }
 
     const ctx = document.getElementById('deliveriesCanvas');
-
-    const chartPackages = new Chart(ctx, {
+    let deliveriesChart = new Chart(ctx, {
         type: 'line',
-        responsive: true,
-        data:  {
+        data: {
             labels: months,
             datasets: [{
-                label: 'Nb',
-                data: numbers,
+                label: 'Kms',
+                yAxisID: 'Kms',
+                data: km,
                 backgroundColor: 'rgba(153, 102, 255, 0.2)'
+            }, {
+                label: 'Activité',
+                yAxisID: 'Activity',
+                data: hour,
+                backgroundColor: 'rgba(255, 206, 86, 0.2)'
             }]
         },
         options: {
             scales: {
                 yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
+                    id: 'Kms',
+                    type: 'linear',
+                    position: 'left',
+                    ticks: { stepSize: 1 }
+                }, {
+                    id: 'Activity',
+                    type: 'linear',
+                    position: 'right',
+                    ticks: { stepSize: 1 }
                 }]
             }
         }
     });
 
-    chartPackages.canvas.parentNode.style.height = '400px';
-    chartPackages.canvas.parentNode.style.width = '600px';
+    deliveriesChart.canvas.parentNode.style.height = '400px';
+    deliveriesChart.canvas.parentNode.style.width = '600px';
 }

@@ -43,7 +43,6 @@ class ApiStop extends Api {
 
   public function updateStop ($pkg) {
       $sql = "UPDATE STOP SET delivery = now() WHERE package = $pkg AND delivery IS NULL" ;
-      $update = $this->getDb()->prepare($sql) ;
       $stmt = $this->getDb()->prepare($sql);
       if ($stmt) {
         $success = $stmt->execute(self::$_params);

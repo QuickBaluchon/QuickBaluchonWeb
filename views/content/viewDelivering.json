@@ -1,14 +1,22 @@
 {
   "FR": {
+    "TitleDelivering": "Signature du destinataire",
     "ButtonClear": "Effacer",
     "TextFallback": "Le canvas n'a pas fonctionné",
     "ButtonDelivered": "Livré",
-    "ButtonAbsent": "Absent"
+    "ButtonAbsent": "Absent",
+    "TitleStop": "Arrêt de la tournée",
+    "WarningStop": "Attention, l'arrêt de la tournée est définitif pour les livraisons de la journée !",
+    "ButtonStop": "Arrêter la tournée"
   },
   "EN": {
+    "TitleDelivering": "Recipient's signature",
     "ButtonClear": "Clear",
     "TextFallback": "The canvas didn't work",
     "ButtonDelivered": "Delivered",
-    "ButtonAbsent": "Absent"
+    "ButtonAbsent": "Absent",
+    "TitleStop": "Stop delivering",
+    "WarningStop": "Beware, stopping deliveries is final for today's deliveries !",
+    "ButtonStop": "Stop deliveries"
   }
 }

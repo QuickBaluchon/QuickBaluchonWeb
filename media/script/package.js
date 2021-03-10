@@ -29,10 +29,18 @@ function absent (id) {
 function getVolume (text) {
     let arr = JSON.parse(text) ;
     let json = JSON.stringify( { AvailableVolume: -arr['volume'] } ) ;
-    ajax(`/api/warehouse/${arr['warehouse']}`, json, 'PATCH', absented) ;
+    ajax(`/api/warehouse/${arr['warehouse']}`, json, 'GET', absented) ;
 }
 
 function absented (text) {
     let jb = document.getElementById('jumbotron') ;
     jb.innerHTML = '<h1 class="display-4">Destinataire absent</h1>' ;
+}
+
+function stopDeliveries (id) {
+    ajax(`/api/stop/${id}`, '', 'DELETE', ended) ;
+}
+function ended (text) {
+    let jb = document.getElementById('jumbotron') ;
+    jb.innerHTML = '<h1 class="display-4">Tournée arrêtée</h1>' ;
 }

@@ -156,6 +156,8 @@ class ApiClient extends Api
     private function saveExcel($url)
     {
         $url = array_slice($url, 1);
+        $userID = $url[0] ;
+        $nbPkg = $url[1] ;
         $path = 'uploads/';
 
         if (isset($_FILES) && !empty($_FILES) && isset($url[0]) && !empty($url[0])) {
@@ -167,9 +169,9 @@ class ApiClient extends Api
             $filepath = $path . $_FILES['excel']['name'];
             move_uploaded_file($_FILES['excel']['tmp_name'], $filepath);
 
-            $exec = './main ' . $filepath . ' ' . $url[0] . ' ' . $url[1];
+            $exec = "./main $filepath $userID $nbPkg";
             exec($exec, $outputs, $rescode);
-            //echo $exec;
+            print_r( $outputs );
             //echo '  rescode: ' . $rescode ;
 
         } else {

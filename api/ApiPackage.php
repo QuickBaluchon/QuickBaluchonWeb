@@ -118,10 +118,10 @@ class ApiPackage extends Api {
         $col = ['warehouse', 'volume'];
         self::$_where[] = 'id = ?' ;
         self::$_params[] = $pkg ;
-        $warehouse = $this->get("PACKAGE", $col) ;
+        $package = $this->get("PACKAGE", $col) ;
         if (!empty($warehouse)) {
-            $id = $warehouse[0]['warehouse'];
-            $volume = $warehouse[0]['volume'] ;
+            $id = $package[0]['warehouse'] ;
+            $volume = $package[0]['volume'] * 0.000001 ; // cm3 to m3 conversion
         }
         else {
             http_response_code(404) ;

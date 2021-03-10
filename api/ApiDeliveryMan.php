@@ -192,7 +192,7 @@ class ApiDeliveryMan extends Api {
 
     public function registerFile(){
         if(!isset($_GET["id"])){
-            echo 'pas content';
+            header("Location:http://localhost:8888/QuickBaluchonWeb/deliveryman/signup");
             exit;
         }
         $id = $_GET["id"];
@@ -209,7 +209,7 @@ class ApiDeliveryMan extends Api {
 
         if( !isset($_FILES['fileLicense']['type']) || !in_array( $_FILES['fileLicense']['type'], $acceptable ) &&
         !isset($_FILES['fileRegistration']['type']) || !in_array( $_FILES['fileRegistration']['type'], $acceptable ) ){
-            echo 'pas content';
+            header("Location:http://localhost:8888/QuickBaluchonWeb/deliveryman/signup");
             exit;
         }
 
@@ -232,7 +232,7 @@ class ApiDeliveryMan extends Api {
             $filename = $_FILES['fileRegistration']['name'] = $id . "." . $extension;
             $filepath = $registration . $_FILES['fileRegistration']['name'];
             move_uploaded_file($_FILES['fileRegistration']['tmp_name'], $filepath);
-
+            header("Location:http://localhost:8888/QuickBaluchonWeb/deliveryman/signup");
         } else {
             echo 'Error with the Excel file';
             echo '$_FILES:';

@@ -12,14 +12,15 @@ $this->_header = ROOT . '/templates/Front/header.php';
 extract($this->_content) ;
 ?>
 
-<div id="container" class="container-sm d-flex justify-content-center">
+<div id="container" class="container-sm d-flex justify-content-center mt-3">
     <div class="col-8 d-flex flex-column justify-content-center" id="jumbotron">
 
         <div class="card">
             <div class="card-header">
+                <h2><?= $TitleDelivering ?></h2>
                 <button type="button" class="btn btn-danger btn-sm btn-block"><?= $ButtonClear ?></button>
             </div>
-            <div class="card-body">
+            <div class="card-body" id="canvas">
                 <canvas class="myCanvas">
                   <p><?= $TextFallback ?></p>
                 </canvas>
@@ -103,7 +104,18 @@ extract($this->_content) ;
         </div>
 
 
-      <hr>
-      <button type="button" class="btn btn-warning btn-lg btn-block" onclick="absent(<?= $id ; ?>)"><?= $ButtonAbsent ?></button>
+        <hr>
+        <button type="button" class="btn btn-warning btn-lg btn-block" onclick="absent(<?= $id ; ?>)"><?= $ButtonAbsent ?></button>
+        <hr>
+        <hr>
+        <div class="card">
+            <div class="card-header">
+                <h2><?= $TitleStop ?></h2>
+            </div>
+            <div class="card-body">
+                <p><?= $WarningStop ?></p>
+                <button type="button" class="btn btn-danger btn-lg btn-block mt-3" onclick="stopDeliveries(<?= $id ; ?>)"><?= $ButtonStop ?></button>
+            </div>
+        </div>
     </div>
 </div>

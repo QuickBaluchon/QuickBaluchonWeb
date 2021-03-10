@@ -87,12 +87,17 @@ class ApiPackage extends Api {
             return [];
     }
 
-    public function updatePackage($id) {
+    public function updatePackage (int $id) {
         $data = $this->getJsonArray();
         $allowed = ['weight', 'volume', 'address', 'email', 'delay', 'status', 'dateDeposit', 'dateDelivery'];
         if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
             http_response_code(400);
             exit(0);
+        }
+
+        if (!isset($data['delay']) || !isset($data['status']) || !isset($data['weight'])) {
+            http_response_code(400) ;
+            return ;
         }
 
         foreach ($data as $key => $value) {
@@ -119,24 +124,18 @@ class ApiPackage extends Api {
         self::$_where[] = 'id = ?' ;
         self::$_params[] = $pkg ;
         $package = $this->get("PACKAGE", $col) ;
-        if (!empty($warehouse)) {
+        if (!empty($package)) {
             $id = $package[0]['warehouse'] ;
             $volume = $package[0]['volume'] * 0.000001 ; // cm3 to m3 conversion
-        }
-        else {
+        } else {
             http_response_code(404) ;
             return ;
         }
         $this->resetParams();
 
         if ($status == 1)
-            self::$_set[] = "AvailableVolume = AvailableVolume - ?" ;
-        elseif ($status == 3)
-            self::$_set[] = "AvailableVolume = AvailableVolume + ?" ;
-        else {
-            http_response_code(400) ;
-            return ;
-        }
+            $volume *= -1 ;
+        self::$_set[] = "AvailableVolume = AvailableVolume + ?" ;
         self::$_params[] = $volume ;
 
         $this->patch("WAREHOUSE", $id);

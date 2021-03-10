@@ -18,7 +18,6 @@ class ApiStop extends Api {
         switch ($method) {
             case 'GET': $this->_data = $this->getStop($pkg);break;
             case 'PATCH': $this->_data = $this->updateStop($pkg);break;
-            case 'DELETE': $this->_data = $this->stopRound($pkg); break ;
         }
 
         echo json_encode( $this->_data, JSON_PRETTY_PRINT );
@@ -57,9 +56,5 @@ class ApiStop extends Api {
       } else {
         http_response_code(500);
       }
-  }
-
-  public function stopRound ($pkg) {
-    $columns = []
   }
 }

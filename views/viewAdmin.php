@@ -30,11 +30,11 @@ extract($this->_content) ;
             </div>
             <div class="form-group row">
               <div class="col-sm-10">
-                <button onclick="tryLogin('admin')" class="btn btn-round btn-primary"><?= $ButtonConnect ?></button>
+                <button onclick="tryLogin('admin', wrongCredential)" class="btn btn-round btn-primary"><?= $ButtonConnect ?></button>
               </div>
             </div>
           </form>
-
+          <div id="wrong"></div>
         </div>
 
       </div>

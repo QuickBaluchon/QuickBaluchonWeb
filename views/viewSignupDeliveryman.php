@@ -17,7 +17,7 @@ extract($this->_content) ;
                 <div class="jumbotron bg-white">
                     <h1 class="display-4"><?= $Title ?></h1>
                     <hr class="my-4">
-                    <form method="POST" action="../api/deliveryman/register" id="form" onsubmit="return false" enctype="multipart/form-data">
+                    <form method="POST" id="form" onsubmit="return false" enctype="multipart/form-data">
 
                         <!-- PERSONAL INFORMATIONS -->
                         <h2 class="h3"><?= $TitlePersonal ?></h1>
@@ -101,7 +101,7 @@ extract($this->_content) ;
                                         <hr class="my-4">
                                         <div class="form-group row">
                                             <div class="col-sm-10">
-                                                <input class="btn btn-round btn-primary" type="submit" onclick="hello()" value="<?= $ButtonRegister ?>"></input>
+                                                <input class="btn btn-round btn-primary" type="submit" onclick="signup()" value="<?= $ButtonRegister ?>"></input>
                                             </div>
                                         </div>
                                     </form>

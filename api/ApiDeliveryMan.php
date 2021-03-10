@@ -94,7 +94,8 @@ class ApiDeliveryMan extends Api {
 
 
         self::$_columns = ['firstname', 'lastname', 'password','phone', 'email', 'volumeCar', 'radius', 'IBAN', 'warehouse', 'employed'];
-        $this->add('DELIVERYMAN');
+        $id = $this->add('DELIVERYMAN');
+        $this->_data = ["id" => $id];
         //$this->login();
 
     }
@@ -190,17 +191,46 @@ class ApiDeliveryMan extends Api {
     }
 
     public function registerFile(){
-        $path = "paper/";
+        if(!isset($_GET["id"])){
+            echo 'pas content';
+            exit;
+        }
+        $id = $_GET["id"];
+
+        $license = "license/";
+        $registration = "registration/";
+
+        $acceptable = [
+            'image/jpeg',
+            'image/jpg',
+            'image/png',
+            'image/gif',
+        ];
+
+        if( !isset($_FILES['fileLicense']['type']) || !in_array( $_FILES['fileLicense']['type'], $acceptable ) &&
+        !isset($_FILES['fileRegistration']['type']) || !in_array( $_FILES['fileRegistration']['type'], $acceptable ) ){
+            echo 'pas content';
+            exit;
+        }
 
         if (isset($_FILES) && !empty($_FILES)) {
-             if (!file_exists($path)) {
-                 mkdir($path, 0777, true);
+             if (!file_exists($license) || !file_exists($registration)) {
+                 mkdir($license, 0777, true);
+                 mkdir($registration, 0777, true);
              }
 
-            $filepath = $path . $_FILES['fileLicense']['name'];
+            $fileName = $_FILES['fileLicense']['name'];
+            $temp = explode('.', $fileName);
+            $extension = end($temp);
+            $filename = $_FILES['fileLicense']['name'] = $id . "." . $extension;
+            $filepath = $license . $_FILES['fileLicense']['name'];
             move_uploaded_file($_FILES['fileLicense']['tmp_name'], $filepath);
 
-            $filepath = $path . $_FILES['fileRegistration']['name'];
+            $fileName = $_FILES['fileRegistration']['name'];
+            $temp = explode('.', $fileName);
+            $extension = end($temp);
+            $filename = $_FILES['fileRegistration']['name'] = $id . "." . $extension;
+            $filepath = $registration . $_FILES['fileRegistration']['name'];
             move_uploaded_file($_FILES['fileRegistration']['tmp_name'], $filepath);
 
         } else {

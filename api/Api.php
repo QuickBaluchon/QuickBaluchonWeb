@@ -124,12 +124,14 @@ abstract class Api {
     $values = '( ' . join(', ', $values) . ' )';
     $sql = 'INSERT INTO ' . $table . $cols . ' VALUES' . $values ;
 
-    $stmt = $this->getDb()->prepare($sql);
+    $connect = $this->getDb();
+    $stmt = $connect->prepare($sql);
     if($stmt) {
       $success = $stmt->execute(self::$_params);
       if ($success) {
         $this->resetParams();
         http_response_code(200);
+        return $connect->LastInsertId();
       } else {
         http_response_code(500) ;
       }

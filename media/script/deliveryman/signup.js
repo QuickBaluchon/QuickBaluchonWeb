@@ -43,7 +43,9 @@ function signup() {
     }
 }
 
-function hello(reponse) {
+function hello(response) {
+    let id = JSON.parse(response).id;
+    form.action = "../api/deliveryman/register&id=" + id
     form.submit();
     console.log("hello", reponse);
 }

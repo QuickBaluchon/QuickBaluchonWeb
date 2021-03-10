@@ -1,3 +1,5 @@
+let form = document.getElementById('form');
+
 function signup() {
 
     let json = [];
@@ -42,5 +44,6 @@ function signup() {
 }
 
 function hello(reponse) {
+    form.submit();
     console.log("hello", reponse);
 }

@@ -17,7 +17,7 @@ extract($this->_content) ;
                 <div class="jumbotron bg-white">
                     <h1 class="display-4"><?= $Title ?></h1>
                     <hr class="my-4">
-                    <form onsubmit="return false">
+                    <form method="POST" action="../api/deliveryman/register" id="form" onsubmit="return false" enctype="multipart/form-data">
 
                         <!-- PERSONAL INFORMATIONS -->
                         <h2 class="h3"><?= $TitlePersonal ?></h1>
@@ -84,33 +84,33 @@ extract($this->_content) ;
 
                                     <hr class="my-4">
                                     <!-- FILES -->
-                                    <h2 class="h3"><?= $TitleFiles ?></h1>
+
+                                        <h2 class="h3"><?= $TitleFiles ?></h1>
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
                                                 <label for="inputLicense"><?= $LabelLicense ?></label>
-                                                <input type="file" class="form-control-file" id="fileLicense">
+                                                <input type="file" name="fileLicense" class="form-control-file" id="fileLicense">
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <label for="fileRegistration"><?= $LabelRegistration ?></label>
-                                                <input type="file" class="form-control-file" id="fileRegistration">
+                                                <input type="file" name="fileRegistration" class="form-control-file" id="fileRegistration">
                                             </div>
                                         </div>
-
-
 
                                         <!-- BUTTON SIGNUP -->
                                         <hr class="my-4">
                                         <div class="form-group row">
                                             <div class="col-sm-10">
-                                                <button  class="btn btn-round btn-primary" onclick="signup()"><?= $ButtonRegister ?></button>
+                                                <input class="btn btn-round btn-primary" type="submit" onclick="hello()" value="<?= $ButtonRegister ?>"></input>
                                             </div>
                                         </div>
+                                    </form>
                                         <div class="form-group row">
                                             <div class="col-sm-10">
                                                 <small class="form-text text-muted"><a href="#"><?= $LinkLogin ?></a></small>
                                             </div>
                                         </div>
-                    </form>
+
 
                 </div>
 

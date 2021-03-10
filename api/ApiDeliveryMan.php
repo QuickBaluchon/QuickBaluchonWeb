@@ -26,6 +26,7 @@ class ApiDeliveryMan extends Api {
                 case 'signup': $this->signup();break;
                 case 'login': $this->login();break;
                 case 'employ': $this->employ();break;
+                case 'register': $this->registerFile();break;
                 default: http_response_code(404); exit();
             }
         }
@@ -185,8 +186,28 @@ class ApiDeliveryMan extends Api {
                 self::$_params[] = $value;
             }
         }
-
         $this->patch('DELIVERYMAN', $id);
     }
+
+    public function registerFile(){
+        $path = "paper/";
+
+        if (isset($_FILES) && !empty($_FILES)) {
+             if (!file_exists($path)) {
+                 mkdir($path, 0777, true);
+             }
+
+            $filepath = $path . $_FILES['fileLicense']['name'];
+            move_uploaded_file($_FILES['fileLicense']['tmp_name'], $filepath);
+
+            $filepath = $path . $_FILES['fileRegistration']['name'];
+            move_uploaded_file($_FILES['fileRegistration']['tmp_name'], $filepath);
+
+        } else {
+            echo 'Error with the Excel file';
+            echo '$_FILES:';
+        }
+    }
+
 
 }

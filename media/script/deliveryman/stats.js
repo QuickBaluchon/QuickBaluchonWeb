@@ -1,15 +1,18 @@
 window.onload = function () {
-    let json = JSON.stringify({
-        stats: "package",
-        deliveryman: 4
-    }) ;
-    ajax('../api/deliveryManStats/6', json, 'POST', displayStatsPackages, console.log) ;
-
+    displayStatsPackages();
     displayStatsDeliveries();
 
 }
 
 function displayStatsPackages(stats) {
+
+    if( !stats ) {
+        let json = JSON.stringify({
+            stats: "package",
+            deliveryman: 4
+        }) ;
+        ajax('../api/deliveryManStats/6', json, 'POST', displayStatsPackages, console.log) ;
+    }
 
     let packages;
     let months = [];
@@ -63,7 +66,6 @@ function displayStatsDeliveries(stats) {
         ajax('../api/deliveryManStats/6', json, 'POST', displayStatsDeliveries, console.log) ;
         return;
     }
-
     let kms;
     let months = [];
     let numbers = [];
@@ -86,7 +88,7 @@ function displayStatsDeliveries(stats) {
         data:  {
             labels: months,
             datasets: [{
-                label: 'Nb',
+                label: 'Kms parcourus',
                 data: numbers,
                 backgroundColor: 'rgba(153, 102, 255, 0.2)'
             }]

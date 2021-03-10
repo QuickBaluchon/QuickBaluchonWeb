@@ -42,7 +42,7 @@ class ApiWarehouse extends Api {
         self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
         self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
         self::$_where[] = "active = ?";
-        self::$_params[] = "1" ;
+        self::$_params[] = "1";
         $list = $this->get('WAREHOUSE', $columns);
 
         return $list;

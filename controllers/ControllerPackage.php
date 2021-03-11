@@ -3,13 +3,12 @@
 require_once('views/View.php');
 
 class ControllerPackage {
-
+  private $_data;
   private $_id;
   private $_view ;
   private $_packageManager ;
 
   public function __construct($url) {
-
     if( !isset($url) )
       // API NOT FOUND : 404
       http_response_code(404) ;

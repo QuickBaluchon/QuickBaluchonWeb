@@ -100,13 +100,30 @@ class ControllerAdmin {
 
     private function staff($url) {
         $this->_view = new View('Back');
-
+        $this->_view->_js[] = "admin/employ";
         $this->_adminManager = new AdminManager;
         $list = $this->_adminManager->getStaffs([]);
 
-        $cols = ["lastname",'firstname', 'sector', 'username'];
-        $deliveryman = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
-        $this->_view->generateView(['content' => $deliveryman]);
+        foreach ($list as $staff) {
+            if($staff["employed"] == 0){
+                $buttons[] = '<button type="button" class="btn btn-primary btn-sm" onclick="employStaff(' . $staff["id"] . ')">Employer</button>';
+            }else if($staff["employed"] == 1){
+                $buttons[] = '<button type="button" class="btn btn-danger btn-sm" onclick="deleteStaff(' . $staff["id"] . ')">Supprimer</button>';
+            }
+            if(isset($buttons)){
+                unset($staff["employed"]);
+                $rows[] = array_merge($staff, $buttons);
+                $buttons = [];
+            }
+            else {
+                unset($staff["employed"]);
+                $rows[] = $staff;
+            }
+        }
+
+        $cols = ["lastname",'firstname', 'sector', 'username', 'Employer'];
+        $deliveryman = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
+        $this->_view->generateView(['content' => $deliveryman, "name" => "QuickBalluchon"]);
     }
 
     private function deliverymen($url) {
@@ -114,6 +131,7 @@ class ControllerAdmin {
 
         $this->_DeliveryManager = new DeliveryManager;
         $list = $this->_DeliveryManager->getDeliverys([], NULL);
+
 
 
         $cols = ['#', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse'];
@@ -130,7 +148,6 @@ class ControllerAdmin {
             http_response_code(500);
             $list = [];
         }
-
 
         $buttonsValues = [
             'warehouseDetails' => 'Détails',

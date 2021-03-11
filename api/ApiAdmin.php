@@ -5,14 +5,45 @@ require_once('Api.php');
 class ApiAdmin extends Api {
 
     private $_method;
-
+    private $_data;
     public function __construct($url, $method) {
+
         $this->_method = $method;
         if (method_exists($this, $url[0])) {
             $function = $url[0];
-            $this->$function(array_slice($url, 2));
+            $this->_data = $this->$function(array_slice($url, 2));
         } else
             http_response_code(404);
+
+        echo json_encode($this->_data, JSON_PRETTY_PRINT);
+    }
+
+    public function addStaff() {
+
+        if ($this->_method != 'PUT') $this->catError(405);
+        $data = $this->getJsonArray();
+        $allowed = ["lastname",'firstname', 'sector', 'username', 'password'];
+
+       if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
+          http_response_code(400);
+          exit(0);
+        }
+
+        $password = hash("sha256", $data['password']);
+        self::$_columns = ["lastname",'firstname', 'sector', 'username', 'password'];
+        self::$_params = [$data['lastname'],$data['firstname'], $data['sector'], $data['username'], $password];
+
+        $this->add('STAFF');
+
+    }
+
+    public function getListStaff() {
+        if($this->_method != 'GET') $this->catError(405);
+
+        $columns = ["id", "lastname", "firstname", "sector", "username", "employed"];
+        $list = $this->get('STAFF', $columns);
+
+        return $list;
     }
 
     public function login() {
@@ -33,6 +64,7 @@ class ApiAdmin extends Api {
                     'access_token' => $this->generateJWT($id, 'admin', $expire)
                 ];
                 echo json_encode($response, JSON_PRETTY_PRINT);
+                exit;
             } else {
                 // username/password false
                 http_response_code(401);
@@ -43,4 +75,20 @@ class ApiAdmin extends Api {
             http_response_code(400);
         }
     }
+
+    private function updateStaff() {
+        $data = $this->getJsonArray();
+        $allowed = ["id", "employed"];
+        if (count(array_diff(array_keys($data), $allowed)) > 0) {
+            http_response_code(400);
+            exit();
+        }
+        if(isset($data["id"]) && isset($data["employed"])){
+            self::$_set[] = "employed = ?";
+            self::$_params[] = $data["employed"];
+        }
+
+        $this->patch('STAFF', $data["id"]);
+    }
+
 }

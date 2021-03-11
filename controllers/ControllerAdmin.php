@@ -1,5 +1,5 @@
 <?php
-
+$_SESSION["role"] = "admin";
 require_once('views/View.php');
 
 class ControllerAdmin {
@@ -98,12 +98,42 @@ class ControllerAdmin {
         $this->_view->generateView([]);
     }
 
+    private function staff($url) {
+        $this->_view = new View('Back');
+        $this->_view->_js[] = "admin/employ";
+        $this->_adminManager = new AdminManager;
+        $list = $this->_adminManager->getStaffs([]);
+
+        foreach ($list as $staff) {
+            if($staff["employed"] == 0){
+                $buttons[] = '<button type="button" class="btn btn-primary btn-sm" onclick="employStaff(' . $staff["id"] . ')">Employer</button>';
+            }else if($staff["employed"] == 1){
+                $buttons[] = '<button type="button" class="btn btn-danger btn-sm" onclick="refuseStaff(' . $staff["id"] . ')">Supprimer</button>';
+            }
+            if(isset($buttons)){
+                unset($staff["employed"]);
+                unset($staff["id"]);
+                $rows[] = array_merge($staff, $buttons);
+                $buttons = [];
+            }
+            else {
+                unset($staff["id"]);
+                unset($staff["employed"]);
+                $rows[] = $staff;
+            }
+        }
+
+        $cols = ["lastname",'firstname', 'sector', 'username', 'Action'];
+        $deliveryman = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
+        $this->_view->generateView(['content' => $deliveryman, "name" => "QuickBalluchon"]);
+    }
 
     private function deliverymen($url) {
         $this->_view = new View('Back');
 
         $this->_DeliveryManager = new DeliveryManager;
         $list = $this->_DeliveryManager->getDeliverys([], NULL);
+
 
 
         $cols = ['#', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse'];
@@ -120,7 +150,6 @@ class ControllerAdmin {
             http_response_code(500);
             $list = [];
         }
-
 
         $buttonsValues = [
             'warehouseDetails' => 'Détails',
@@ -191,24 +220,24 @@ class ControllerAdmin {
         $this->_deliveryManager = new DeliveryManager;
         $list = $this->_deliveryManager->getDeliveryNotEmployed(["id","firstname","lastname","phone","email","volumeCar","radius","IBAN","employed", "warehouse"]);
 
-     $buttonsValues = [
-         'employ' => 'employer',
-         'refuse' => 'refuser',
-     ];
+         $buttonsValues = [
+             'employ' => 'employer',
+             'refuse' => 'refuser',
+         ];
 
-    foreach ($list as $delivery) {
-        foreach($buttonsValues as $link => $inner){
-        $buttons[] = '<button onclick="'. $link .'('.$delivery["id"].')" id="'.$delivery["id"].'" type="button" class="btn btn-primary btn-sm">' . $inner . '</button>';
-      }
-      $rows[] = array_merge($delivery, $buttons);
-      $buttons = [];
-    }
-    if(!isset($rows))
-        $rows = [];
+        foreach ($list as $delivery) {
+            foreach($buttonsValues as $link => $inner){
+                $buttons[] = '<button onclick="'. $link .'('.$delivery["id"].')" id="'.$delivery["id"].'" type="button" class="btn btn-primary btn-sm">' . $inner . '</button>';
+            }
+            $rows[] = array_merge($delivery, $buttons);
+            $buttons = [];
+        }
+        if(!isset($rows))
+            $rows = [];
 
-    $cols = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'employer', 'refuser'];
-    $delivery = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
-    $this->_view->generateView(['content' => $delivery, 'name' => 'QuickBaluchon']);
+        $cols = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'employer', 'refuser'];
+        $delivery = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
+        $this->_view->generateView(['content' => $delivery, 'name' => 'QuickBaluchon']);
   }
 
     private function updatePricelist($url) {

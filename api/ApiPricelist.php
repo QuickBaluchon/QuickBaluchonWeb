@@ -34,7 +34,7 @@ class ApiPricelist extends Api {
   }
 
   public function getListPrice ($ExpressPrice=NULL): array  {
-    $packages = [];
+
     if($this->_method != 'GET') $this->catError(405);
 
     if(isset($_GET['pricelist'])) {

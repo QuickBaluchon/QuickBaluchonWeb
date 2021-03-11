@@ -8,19 +8,16 @@ function employStaff(idStaff) {
     ajax('../api/admin/updateStaff', json, 'POST', redirect);
 }
 
-function refuse(idDeliveryman) {
-
-    let delivery = document.getElementById(idDeliveryman);
-    delivery.remove();
+function refuseStaff(idStaff) {
 
     let json = JSON.stringify({
-        id: idDeliveryman,
-        employed: null
+        id: idStaff,
+        employed: 0
     });
 
-    ajax('../api/deliveryman/employ', json, 'POST', redirect);
+    ajax('../api/admin/updateStaff', json, 'POST', redirect);
 }
 
 function redirect(reponse) {
-    document.location.href="http://localhost:8888/QuickBaluchonWeb/admin/employ";
+    document.location.href="http://localhost:8888/QuickBaluchonWeb/admin/staff";
 }

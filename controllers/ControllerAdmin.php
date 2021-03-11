@@ -108,7 +108,7 @@ class ControllerAdmin {
             if($staff["employed"] == 0){
                 $buttons[] = '<button type="button" class="btn btn-primary btn-sm" onclick="employStaff(' . $staff["id"] . ')">Employer</button>';
             }else if($staff["employed"] == 1){
-                $buttons[] = '<button type="button" class="btn btn-danger btn-sm" onclick="deleteStaff(' . $staff["id"] . ')">Supprimer</button>';
+                $buttons[] = '<button type="button" class="btn btn-danger btn-sm" onclick="refuseStaff(' . $staff["id"] . ')">Supprimer</button>';
             }
             if(isset($buttons)){
                 unset($staff["employed"]);

@@ -112,16 +112,18 @@ class ControllerAdmin {
             }
             if(isset($buttons)){
                 unset($staff["employed"]);
+                unset($staff["id"]);
                 $rows[] = array_merge($staff, $buttons);
                 $buttons = [];
             }
             else {
+                unset($staff["id"]);
                 unset($staff["employed"]);
                 $rows[] = $staff;
             }
         }
 
-        $cols = ["lastname",'firstname', 'sector', 'username', 'Employer'];
+        $cols = ["lastname",'firstname', 'sector', 'username', 'Action'];
         $deliveryman = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->generateView(['content' => $deliveryman, "name" => "QuickBalluchon"]);
     }
@@ -218,24 +220,24 @@ class ControllerAdmin {
         $this->_deliveryManager = new DeliveryManager;
         $list = $this->_deliveryManager->getDeliveryNotEmployed(["id","firstname","lastname","phone","email","volumeCar","radius","IBAN","employed", "warehouse"]);
 
-     $buttonsValues = [
-         'employ' => 'employer',
-         'refuse' => 'refuser',
-     ];
+         $buttonsValues = [
+             'employ' => 'employer',
+             'refuse' => 'refuser',
+         ];
 
-    foreach ($list as $delivery) {
-        foreach($buttonsValues as $link => $inner){
-        $buttons[] = '<button onclick="'. $link .'('.$delivery["id"].')" id="'.$delivery["id"].'" type="button" class="btn btn-primary btn-sm">' . $inner . '</button>';
-      }
-      $rows[] = array_merge($delivery, $buttons);
-      $buttons = [];
-    }
-    if(!isset($rows))
-        $rows = [];
+        foreach ($list as $delivery) {
+            foreach($buttonsValues as $link => $inner){
+                $buttons[] = '<button onclick="'. $link .'('.$delivery["id"].')" id="'.$delivery["id"].'" type="button" class="btn btn-primary btn-sm">' . $inner . '</button>';
+            }
+            $rows[] = array_merge($delivery, $buttons);
+            $buttons = [];
+        }
+        if(!isset($rows))
+            $rows = [];
 
-    $cols = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'employer', 'refuser'];
-    $delivery = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
-    $this->_view->generateView(['content' => $delivery, 'name' => 'QuickBaluchon']);
+        $cols = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'employer', 'refuser'];
+        $delivery = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
+        $this->_view->generateView(['content' => $delivery, 'name' => 'QuickBaluchon']);
   }
 
     private function updatePricelist($url) {

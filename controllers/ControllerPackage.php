@@ -27,8 +27,8 @@ class ControllerPackage {
                       $v = $this->deliverPackage();
                   } else
                       $v = $this->viewExtern() ;
-              } elseif (isset($_SESSION['role']) && $_SESSION['role'] == 'staff') {
-                  if ($this->_data['status'] == 0) {
+              } elseif (isset($_SESSION['role']) && ($_SESSION['role'] == 'staff' || $_SESSION['role'] == 'admin')) {
+                  if ($this->_data['status'] == 0 || $this->_data['status'] == null) {
                       $v = $this->recievePackage();
                   } else
                       $v = $this->viewExtern() ;

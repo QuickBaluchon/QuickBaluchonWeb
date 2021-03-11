@@ -17,9 +17,8 @@ class ApiWarehouse extends Api {
                 case 'GET': $this->_data = $this->getListWarehouse();break;
                 case 'POST': $this->addWarehouse();
             }
-
-
         }     // list of packages - /api/warehouse
+
         elseif ( ($id = intval($url[0])) !== 0 ){// details one packages - /api/warehouse/{id}
             switch ($method) {
                 case 'GET': $this->_data = $this->getWarehouse($id);break;
@@ -27,22 +26,16 @@ class ApiWarehouse extends Api {
                 case 'PATCH': $this->patchWarehouse($id);break;
                 default: $this->catError(405) ; break ;
             }
-
-
         }
-
         echo json_encode( $this->_data, JSON_PRETTY_PRINT );
-
     }
 
     public function getListWarehouse(): array  {
         $packages = [];
 
-        $columns = ['id', 'address', 'volume', 'AvailableVolume'];
+        $columns = ['id', 'address', 'volume', 'AvailableVolume', 'active'];
         self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
         self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
-        self::$_where[] = "active = ?";
-        self::$_params[] = "1";
         $list = $this->get('WAREHOUSE', $columns);
 
         return $list;
@@ -52,7 +45,7 @@ class ApiWarehouse extends Api {
 
         if($this->_method != 'GET') $this->catError(405);
         //$this->authentication(['admin'], [$id]);
-        self::$_columns = ['id', 'address', 'volume', 'AvailableVolume'];
+        self::$_columns = ['id', 'address', 'volume', 'AvailableVolume', 'active'];
         self::$_where[] = 'id = ?';
         self::$_params[] = $id;
         $warehouse = $this->get('WAREHOUSE');
@@ -81,17 +74,31 @@ class ApiWarehouse extends Api {
     }
 
 
-    private function patchWarehouse(int $id, int $volume){
+    private function patchWarehouse (int $id) {
 
         $data = $this->getJsonArray();
-        $allowed = ['AvailableVolume'];
+        $allowed = ['volume', 'AvailableVolume', 'active', 'address'];
         if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
             http_response_code(400);
             exit(0);
         }
 
-        self::$_set[] = "AvailableVolume = AvailableVolume + ?" ;
-        self::$_params[] = $volume ;
+        if (isset($data['AvailableVolume'])) {
+            self::$_set[] = "AvailableVolume = ?";
+            self::$_params[] = $data['AvailableVolume'];
+        }
+        if (isset($data['volume'])) {
+            self::$_set[] = "volume = ?";
+            self::$_params[] = $data['volume'];
+        }
+        if (isset($data['active'])) {
+            self::$_set[] = "active = ?" ;
+            self::$_params[] = $data['active'] ;
+        }
+        if (isset($data['address'])) {
+            self::$_set[] = "address = ?" ;
+            self::$_params[] = $data['address'] ;
+        }
 
         $this->patch("WAREHOUSE", $id);
     }

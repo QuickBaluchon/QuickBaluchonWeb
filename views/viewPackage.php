@@ -14,9 +14,10 @@ extract($this->_content) ;
                     <p>Un jour, il y aura du WebGL ici :)</p>
 
                 </div>
+                <div id="webgl"></div>
             </div>
         </div>
     </div>
 </section>
-
-<script> let status = <?= $status ?> ; </script>
+<script>let status = <?= $status ?> </script>
+<script src="<?= WEB_ROOT.'media/script/packageWebGL.js' ?>" type="module" ></script>

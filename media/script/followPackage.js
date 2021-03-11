@@ -6,5 +6,3 @@ function getPackage () {
     else
         console.log('NaN')
 }
-
-alert(status);

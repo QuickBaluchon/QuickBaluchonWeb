@@ -156,6 +156,7 @@ class ControllerAdmin {
         ];
 
         foreach ($list as $warehouse) {
+            $warehouse['active'] = $warehouse['active'] == 1 ? "&#x2713" : "&#x10102" ;
             foreach ($buttonsValues as $link => $inner) {
                 $buttons[] = '<a href="' . WEB_ROOT . "admin/$link/" . $warehouse['id'] . '"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
             }
@@ -165,12 +166,13 @@ class ControllerAdmin {
         }
 
         $rows[] = [
+            null,
             '<input type="text" class="form-control" id="address" placeholder="address">',
             '<input type="number" class="form-control" id="volume" placeholder="volume">',
             '<button type="button" class="btn btn-success btn-sm" onclick="addWarehouse()">Ajouter</button>'
         ] ;
 
-        $cols = ['#', 'address', 'volume', 'AvailableVolume', 'delete'];
+        $cols = ['#', 'address', 'volume', 'AvailableVolume', 'active', 'delete'];
         if (!isset($rows)) $rows = [];
         $this->_view->_js[] = 'warehouse/updateWarehouse';
         $this->_view->_js[] = 'warehouse/addWarehouse';
@@ -280,15 +282,18 @@ class ControllerAdmin {
         return $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]) ;
     }
 
-    public function warehouseDetails($url) {
+    public function warehouseDetails ($url) {
         $this->_view = new View('Back');
         $this->_js[] = "warehouse/updateWarehouse";
+
         $this->_WarehousesManager = new WarehouseManager;
-        $details = $this->_WarehousesManager->getWarehouse($url[0], ["address", "volume", 'AvailableVolume']);
         $this->_DeliveryManager = new DeliveryManager;
+
         $deliveryman = $this->_DeliveryManager->getDeliverys(["id"], $url[0]);
+
         $template =  $this->_view->generateTemplate('warehouse', [
-            "details" => $details,
+            "warehouse" => $url[0],
+            "details" => $this->_WarehousesManager->getWarehouse($url[0], ["address", "volume", 'AvailableVolume', 'active']),
             "id" => $url[0], "deliveryman" => count($deliveryman)
         ]);
         $this->_view->generateView(['content' => $template, 'name' => 'QuickBaluchon']);

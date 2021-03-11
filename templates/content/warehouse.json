@@ -1,8 +1,12 @@
 {
   "FR": {
     "Title": "Entrepôt",
+    "LabelAddress": "Adresse",
+    "LabelVolume": "Volume disponible",
+    "LabelActive": "Actif",
+    "ButtonChanges": "Mettre à jour",
 
-    "TextDeliverymen": "livreurs associés",
+    "TextDeliverymen": "Livreurs associés",
 
     "TitleDanger": "Danger Zone",
     "LabelDelete": "Supprimer cet entrepôt",
@@ -11,8 +15,12 @@
   },
   "EN": {
     "Title": "Warehouse",
+    "LabelAddress": "Address",
+    "LabelVolume": "Available volume",
+    "LabelActive": "Active",
+    "ButtonChanges": "Update",
 
-    "TextDeliverymen": "associated deliverymen",
+    "TextDeliverymen": "Associated deliverymen",
 
     "TitleDanger": "Danger Zone",
     "LabelDelete": "Delete this warehouse",

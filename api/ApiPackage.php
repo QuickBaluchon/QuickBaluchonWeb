@@ -18,16 +18,16 @@ class ApiPackage extends Api {
             switch ($method) {
                 case 'GET': $this->_data = $this->getPackage($id);break;
                 case 'PATCH': $this->_data = $this->updatePackage($id);break;
+                default: $this->catError(405); break ;
             }
+        } else {
+            $this->_data = $this->insertPackage();
         }
 
         echo json_encode( $this->_data, JSON_PRETTY_PRINT );
     }
 
     public function getListPackages (): array  {
-        if($this->_method != 'GET') $this->catError(405);
-
-
         $columns = ['PACKAGE.id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'excelPath', 'dateDeposit'];
         if(isset($_GET['inner'])) {
             $columns[] = 'PRICELIST.ExpressPrice';
@@ -68,9 +68,6 @@ class ApiPackage extends Api {
     }
 
     public function getPackage($id): array {
-        if($this->_method != 'GET') $this->catError(405);
-
-
         if(isset($_GET['inner'])) {
             $columns[] = 'PRICELIST.ExpressPrice, ' . 'PRICELIST.StandardPrice';
             self::$_inner = explode(',',$_GET['inner']);
@@ -139,5 +136,18 @@ class ApiPackage extends Api {
         self::$_params[] = $volume ;
 
         $this->patch("WAREHOUSE", $id);
+    }
+
+    public function insertPackage() {
+        $sql = $this->getJsonArray();
+        $connect = $this->getDb();
+        $stmt = $connect->prepare($sql['insert']);
+        if ($stmt) {
+            $success = $stmt->execute() ;
+            if ($success)
+                return $connect->LastInsertId() ;
+        }
+        return [];
+
     }
 }

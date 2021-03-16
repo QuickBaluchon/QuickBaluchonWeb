@@ -112,7 +112,9 @@ class ControllerAdmin {
         $this->_view = new View('Back');
         $this->_view->_js[] = "admin/employ";
         $this->_adminManager = new AdminManager;
-        $list = $this->_adminManager->getStaffs([]);
+        $list = $this->_adminManager->getStaffs(["id", "firstname", "lastname", "username", "employed"]);
+        $this->_warehouseManager = new WarehouseManager;
+        $queryWarehouses = $this->_warehouseManager->getWarehouses(["id", "address"]);
 
         foreach ($list as $staff) {
             if($staff["employed"] == 0){
@@ -126,6 +128,7 @@ class ControllerAdmin {
                 $rows[] = array_merge($staff, $buttons);
                 $buttons = [];
             }
+
             else {
                 unset($staff["id"]);
                 unset($staff["employed"]);
@@ -133,9 +136,18 @@ class ControllerAdmin {
             }
         }
 
-        $cols = ["lastname",'firstname', 'sector', 'username', 'Action'];
+        $warehouses = $this->_view->generateTemplate('selectWarehouses', ["warehouses" => $queryWarehouses]);
+        $rows[] = [
+            '<input type="text" class="form-control" id="firstname" placeholder="first name">',
+            '<input type="text" class="form-control" id="lastname" placeholder="last name">',
+            '<input type="text" class="form-control" id="username" placeholder="username">',
+            $warehouses,
+            '<button type="button" class="btn btn-success btn-sm" onclick="addStaff()">Ajouter</button>'
+        ] ;
+
+        $cols = ["lastname",'firstname', 'username', 'Action'];
         $deliveryman = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
-        $this->_view->generateView(['content' => $deliveryman, "name" => "QuickBalluchon"]);
+        $this->_view->generateView(['content' => $deliveryman, "name" => "QuickBalluchon", "warehouses" => $warehouses]);
     }
 
     private function deliverymen($url) {

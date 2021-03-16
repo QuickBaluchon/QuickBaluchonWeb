@@ -18,6 +18,21 @@ function refuseStaff(idStaff) {
     ajax('../api/admin/updateStaff', json, 'POST', redirect);
 }
 
+
+function addStaff() {
+    let ids = ["firstname", "lastname", "username", "inputEntrepot"];
+    let values = getInputsValue(ids, true);
+
+    let json = JSON.stringify({
+        firstname: values["firstname"],
+        lastname: values["lastname"],
+        username: values["username"],
+        warehouse: values["inputEntrepot"]
+    });
+
+    ajax('../api/admin/addStaff', json, 'PUT', redirect);
+}
+
 function redirect(reponse) {
     document.location.href="http://localhost:8888/QuickBaluchonWeb/admin/staff";
 }

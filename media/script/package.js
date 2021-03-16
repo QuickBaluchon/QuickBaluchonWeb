@@ -2,7 +2,15 @@ function recieve (id) {
     let data = getInputsValue(['weight', 'address', 'email', 'delay'], true) ;
     let json = JSON.stringify( { weight: data['weight'], address: data['address'], email: data['email'], delay: data['delay'], status: 1 } );
 
-    ajax(`/api/package/${id}`, json, 'PATCH', recieved) ;
+    ajax(`/api/package/${id}`, json, 'PATCH', recieved, warehouseFull) ;
+}
+
+function warehouseFull (response) {
+    let jb = document.getElementById('jumbotron') ;
+    if (response.status == 507)
+        jb.innerHTML = '<h1 class="display-4">Capacité insuffisante dans cet entrepôt</h1>' ;
+    else
+        jb.innerHTML = '<h1 class="display-4">Une erreur est survenue</h1>' ;
 }
 
 function recieved (text) {

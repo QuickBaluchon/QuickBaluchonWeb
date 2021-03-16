@@ -73,15 +73,24 @@ class ControllerAdmin {
         $list = $this->_clientManager->getClients(['id', 'name']);
 
         $buttonsValues = [
-            'profile' => 'données personnelles',
-            'history' => 'Historique',
-            'bills' => 'Factures'
+            'profile' => [
+                'value' => 'Données personnelles',
+                'color' => 'info'
+            ],
+            'history' => [
+                'value' => 'Historique',
+                'color' => 'secondary'
+            ],
+            'bills' => [
+                'value' => 'Factures',
+                'color' => 'dark',
+            ]
         ];
 
         $rows = [];
         foreach ($list as $client) {
             foreach ($buttonsValues as $link => $inner) {
-                $buttons[] = '<a href="' . WEB_ROOT . "client/$link/" . $client['id'] . '"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
+                $buttons[] = '<a href="' . WEB_ROOT . "client/$link/" . $client['id'] . '"><button type="button" class="btn btn-' . $inner['color'] . ' btn-sm">' . $inner['value'] . '</button></a>';
             }
 
             $rows[] = array_merge($client, $buttons);

@@ -125,8 +125,8 @@ class ControllerDeliveryman
     public function calculPrimeColisDelivered($nbTotalColis){
         $total = 0;
 
-        foreach ($nbTotalColis as $key => $value) {
-            $total += $value*1.90;
+        foreach ($nbTotalColis[0] as $date => $nb) {
+                $total += $nb*1.90;
         }
         return $total;
 
@@ -142,10 +142,11 @@ class ControllerDeliveryman
 
     public function calculPrimePercentDelivered($nbTotalColisDelivered, $nbTotalColis){
         $total = 0;
-        foreach ($nbTotalColisDelivered as $key => $nbTotal) {
-            foreach ($nbTotalColis as $key => $nb) {
-                $total = 100*$nbTotal/$nb;
-            }
+
+        foreach ($nbTotalColisDelivered[0] as $key => $nbTotal) {
+                foreach ($nbTotalColis[0] as $key => $nb) {
+                        $total = 100*$nbTotal/$nb;
+                }
         }
         switch ($total) {
             case $total > 87:return 10;break;

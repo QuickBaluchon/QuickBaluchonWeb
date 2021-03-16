@@ -97,7 +97,6 @@ class ApiPackage extends Api {
             return ;
         }
 
-        $_SESSION['warehouse'] = 1 ;
         if ($data['status'] == 3 || $data['status'] == 1) {
             if ($this->updateWarehouseVolume($id, $data['status']) != 0)
                 return ;
@@ -116,9 +115,6 @@ class ApiPackage extends Api {
             $pricelistQuery = "SELECT id FROM PRICELIST WHERE maxWeight > ? AND applicationDate < CURDATE() ORDER BY maxWeight ASC, applicationDate DESC LIMIT 1" ;
             self::$_set[] = "pricelist = ($pricelistQuery)" ;
             self::$_params[] = $data['weight'] ;
-
-            $_SESSION['id'] = 1 ;
-            $_SESSION['role'] = 'admin' ;
 
             if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
                 http_response_code(401) ;

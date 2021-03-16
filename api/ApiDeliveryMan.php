@@ -111,7 +111,7 @@ class ApiDeliveryMan extends Api {
             exit();
         }
 
-        self::$_columns = ['id'];
+        self::$_columns = ['id', 'warehouse'];
         self::$_where = ['email = ?', 'password = ?'];
         self::$_params = [$deliveryman['name'], hash('sha256', $deliveryman['password'])];
 
@@ -128,6 +128,7 @@ class ApiDeliveryMan extends Api {
 
             $_SESSION['id'] = $id;
             $_SESSION['role'] = $role;
+            $_SESSION['warehouse'] = $deliveryman[0]['warehouse'] ;
             $this->_data = $response;
         } else {
             // email/password false

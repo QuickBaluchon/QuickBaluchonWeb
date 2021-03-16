@@ -56,6 +56,7 @@ class ControllerAdmin {
                  if( isset($admin['id'], $admin['role'], $admin['access_token']) ) {
                      $_SESSION['id'] = $admin['id'];
                      $_SESSION['role'] = $admin['role'];
+                     $_SESSION['warehouse'] = $admin['warehouse'] ;
                      echo json_encode($admin, JSON_PRETTY_PRINT);
                  } else
                      http_response_code(401);

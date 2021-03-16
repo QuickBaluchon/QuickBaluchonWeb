@@ -50,7 +50,7 @@ class ApiAdmin extends Api {
         if ($this->_method != 'POST') $this->catError(405);
         $admin = $this->getJsonArray();
         if (isset($admin['username'], $admin['password'])) {
-            self::$_columns = ['id'];
+            self::$_columns = ['id', 'warehouse'];
             self::$_where = ['username = ?', 'password = ?'];
             self::$_params = [$admin['username'], hash('sha256', $admin['password'])];
 
@@ -61,7 +61,8 @@ class ApiAdmin extends Api {
                 $response = [
                     'id' => $id,
                     'role' => 'admin',
-                    'access_token' => $this->generateJWT($id, 'admin', $expire)
+                    'access_token' => $this->generateJWT($id, 'admin', $expire),
+                    'warehouse' => $admin[0]['warehouse']
                 ];
                 echo json_encode($response, JSON_PRETTY_PRINT);
                 exit;

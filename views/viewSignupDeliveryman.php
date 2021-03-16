@@ -66,12 +66,7 @@ extract($this->_content) ;
                                 <h2 class="h3"><?= $TitleDelivery ?></h1>
                                     <div class="form-row">
                                         <div class="form-group col-md-4">
-                                            <select class="custom-select" id="inputEntrepot">
-                                                <option selected><?= $LabelWarehouse ?></option>
-                                                <?php foreach ($options as $option) {
-                                                    echo "<option>" . $option . "</option>";
-                                                } ?>
-                                            </select>
+                                        <?= $warehouses; ?>
                                         </div>
                                         <div class="form-group col-md-4">
                                             <input type="number" min="1" class="form-control" id="inputRadius" placeholder="<?= $InputRadius ?>">

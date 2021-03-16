@@ -22,16 +22,16 @@ class ApiAdmin extends Api {
 
         if ($this->_method != 'PUT') $this->catError(405);
         $data = $this->getJsonArray();
-        $allowed = ["lastname",'firstname', 'sector', 'username', 'password'];
+        $allowed = ["lastname",'firstname', 'username', 'warehouse'];
 
        if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
           http_response_code(400);
           exit(0);
         }
 
-        $password = hash("sha256", $data['password']);
-        self::$_columns = ["lastname",'firstname', 'sector', 'username', 'password'];
-        self::$_params = [$data['lastname'],$data['firstname'], $data['sector'], $data['username'], $password];
+
+        self::$_columns = ["lastname",'firstname', 'username', 'warehouse'];
+        self::$_params = [$data['lastname'],$data['firstname'], $data['username'], $data['warehouse']];
 
         $this->add('STAFF');
 

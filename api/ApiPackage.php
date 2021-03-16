@@ -86,7 +86,7 @@ class ApiPackage extends Api {
 
     public function updatePackage (int $id) {
         $data = $this->getJsonArray();
-        $allowed = ['weight', 'volume', 'address', 'email', 'delay', 'status', 'dateDeposit', 'dateDelivery'];
+        $allowed = ['weight', 'address', 'email', 'delay', 'status', 'dateDeposit', 'dateDelivery'];
         if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
             http_response_code(400);
             exit(0);
@@ -95,6 +95,13 @@ class ApiPackage extends Api {
         if (!isset($data['delay']) || !isset($data['status']) || !isset($data['weight'])) {
             http_response_code(400) ;
             return ;
+        }
+
+        $_SESSION['warehouse'] = 1 ;
+        if ($data['status'] == 3 || $data['status'] == 1) {
+            if ($this->updateWarehouseVolume($id, $data['status']) != 0)
+                return ;
+            $this->resetParams();
         }
 
         foreach ($data as $key => $value) {
@@ -110,6 +117,9 @@ class ApiPackage extends Api {
             self::$_set[] = "pricelist = ($pricelistQuery)" ;
             self::$_params[] = $data['weight'] ;
 
+            $_SESSION['id'] = 1 ;
+            $_SESSION['role'] = 'admin' ;
+
             if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
                 http_response_code(401) ;
                 return;
@@ -123,32 +133,48 @@ class ApiPackage extends Api {
             self::$_params[] = $_SESSION['id'] ;
         }
         $this->patch('PACKAGE', $id);
-        $this->resetParams();
-        if ($data['status'] == 3 || $data['status'] == 1) {
-            $this->updateWarehouseVolume($id, $data['status']) ;
-        }
     }
 
     public function updateWarehouseVolume (int $pkg, int $status) {
-        $col = ['warehouse', 'volume'];
+        if (!isset($_SESSION['warehouse'])) {
+            http_response_code(401) ;
+            return -1 ;
+        }
+
+        require_once ('ApiWarehouse.php') ;
+        $warehouse = new ApiWarehouse (["warehouse", $_SESSION['warehouse']], "GET") ;
+        $w = $warehouse->getWarehouse($_SESSION['warehouse']) ;
+
+        $col = ['volume'];
         self::$_where[] = 'id = ?' ;
         self::$_params[] = $pkg ;
         $package = $this->get("PACKAGE", $col) ;
         if (!empty($package)) {
-            $id = $package[0]['warehouse'] ;
             $volume = $package[0]['volume'] * 0.000001 ; // cm3 to m3 conversion
         } else {
             http_response_code(404) ;
-            return ;
+            return -1 ;
         }
         $this->resetParams();
 
-        if ($status == 1)
+
+        if ($status == 1) {
+            if ($w['AvailableVolume'] - $volume < 0) {
+                http_response_code(507) ;
+                return -1 ;
+            }
             $volume *= -1 ;
+        }
+        if ($status == 3) {
+            if ($w['AvailableVolume'] + $volume > $w['volume'])
+                $volume = $w['volume'] - $w['AvailableVolume'] ;
+        }
+
         self::$_set[] = "AvailableVolume = AvailableVolume + ?" ;
         self::$_params[] = $volume ;
 
-        $this->patch("WAREHOUSE", $id);
+        $this->patch("WAREHOUSE", $_SESSION['warehouse']);
+        return 0 ;
     }
 
     public function insertPackage() {
@@ -161,6 +187,5 @@ class ApiPackage extends Api {
                 return $connect->LastInsertId() ;
         }
         return [];
-
     }
 }

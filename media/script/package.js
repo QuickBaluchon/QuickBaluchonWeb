@@ -1,6 +1,6 @@
 function recieve (id) {
-    let data = getInputsValue(['weight', 'volume', 'address', 'email', 'delay'], true) ;
-    let json = JSON.stringify( { weight: data['weight'], volume: data['volume'], address: data['address'], email: data['email'], delay: data['delay'], status: 1 } );
+    let data = getInputsValue(['weight', 'address', 'email', 'delay'], true) ;
+    let json = JSON.stringify( { weight: data['weight'], address: data['address'], email: data['email'], delay: data['delay'], status: 1 } );
 
     ajax(`/api/package/${id}`, json, 'PATCH', recieved) ;
 }

@@ -1,6 +1,7 @@
 <?php
 extract($this->_template) ;
-$this->_js[] = 'warehouse/patchWarehouse'
+$this->_js[] = 'warehouse/patchWarehouse';
+
 ?>
 
 <section id="warehouse">
@@ -45,7 +46,11 @@ $this->_js[] = 'warehouse/patchWarehouse'
             <p class="mb-0"><?= $WarningDelete ?></p>
         </div>
         <div>
-            <button type="button" onclick="updateWarehouse(<?= $id ?>)" class="btn btn-outline-danger"><?= $ButtonDelete ?></button>
+            <?php if($details["AvailableVolume"] == $details["volume"]){ ?>
+                <button type='button' onclick='updateWarehouse(<?= $id ?>)' class='btn btn-outline-danger'><?= $ButtonDelete ?></button>
+            <?php }else{?>
+                <span>impossible de supprimer</span>
+            <?php }?>
         </div>
     </div>
 </section>

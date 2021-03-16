@@ -309,14 +309,16 @@ class ControllerAdmin {
 
         $this->_WarehousesManager = new WarehouseManager;
         $this->_DeliveryManager = new DeliveryManager;
-
+        $details = $this->_WarehousesManager->getWarehouse($url[0], ["address", "volume", 'AvailableVolume', 'active']);
         $deliveryman = $this->_DeliveryManager->getDeliverys(["id"], $url[0]);
 
-        $template =  $this->_view->generateTemplate('warehouse', [
-            "warehouse" => $url[0],
-            "details" => $this->_WarehousesManager->getWarehouse($url[0], ["address", "volume", 'AvailableVolume', 'active']),
-            "id" => $url[0], "deliveryman" => count($deliveryman)
-        ]);
+            $template =  $this->_view->generateTemplate('warehouse', [
+                "warehouse" => $url[0],
+                "details" => $details,
+                "id" => $url[0], "deliveryman" => count($deliveryman)
+            ]);
+
+
         $this->_view->generateView(['content' => $template, 'name' => 'QuickBaluchon']);
     }
 

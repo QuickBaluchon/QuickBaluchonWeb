@@ -80,13 +80,11 @@ class ControllerDeliveryman
         $delivery = $this->_DeliverymanManager->getDelivery($this->_id, ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
 
         $this->_warehouseManager = new WarehouseManager;
-        $warehouses = $this->_warehouseManager->getWarehouses(["id", "address"]);
+        $queryWarehouses = $this->_warehouseManager->getWarehouses(["id", "address"]);
+        $warehouses = $this->_view->generateTemplate('selectWarehouses', ["warehouses" => $queryWarehouses]);
 
-        foreach($warehouses as $warehouse) {
-            $options[] = "<option value=" . $warehouse["id"] . ">" . $warehouse["address"] . "</option>";
-        }
 
-        $this->_view->generateView(["options" => $options]);
+        $this->_view->generateView(["warehouses" => $warehouses]);
     }
 
     public function visualiser($id){
@@ -158,7 +156,7 @@ class ControllerDeliveryman
     }
 
     public function calculTotal($priceKm,$primeDelivered,$primeHeavy,$percent){
-        $salair = 1231 + $priceKm + $primeDelivered + $primeHeavy;
+        $salair = $priceKm + $primeDelivered + $primeHeavy;
         switch ($percent) {
             case 10: $salair *= 1.10; break;
             case 120:$salair += 120; break;

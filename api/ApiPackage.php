@@ -105,9 +105,22 @@ class ApiPackage extends Api {
             self::$_set[] = "dateDeposit = now()" ;
             self::$_set[] = "dateDelivery = DATE_ADD(now(), INTERVAL ? DAY)" ;
             self::$_params[] = $data['delay'] ;
+
             $pricelistQuery = "SELECT id FROM PRICELIST WHERE maxWeight > ? AND applicationDate < CURDATE() ORDER BY maxWeight ASC, applicationDate DESC LIMIT 1" ;
             self::$_set[] = "pricelist = ($pricelistQuery)" ;
             self::$_params[] = $data['weight'] ;
+
+            if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
+                http_response_code(401) ;
+                return;
+            }
+
+            $warehouseQuery = "SELECT warehouse FROM STAFF WHERE id = ?" ;
+            self::$_set[] = "warehouse = ($warehouseQuery)" ;
+            self::$_params[] = $_SESSION['id'] ;
+
+            self::$_set[] = 'staff = ?' ;
+            self::$_params[] = $_SESSION['id'] ;
         }
         $this->patch('PACKAGE', $id);
         $this->resetParams();

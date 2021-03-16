@@ -265,9 +265,9 @@ class ControllerAdmin {
     private function allLanguages () {
         $list = $this->_languagesManager->getLanguages() ;
         foreach ($list as $lang => $data) {
-            $onclick = 'onclick="deleteLanguage(\'' . $lang . '\')"' ;
+            $onclick = 'onclick="deleteLanguage(\'' . $data['shortcut'] . '\')"' ;
             $button = '<button type="button" class="btn btn-danger btn-sm"' . $onclick . '>Supprimer</button>';
-            $rows[] = array_merge([$lang], $data, [$button]);
+            $rows[] = array_merge($data, [$button]);
         }
 
         $rows[] = [

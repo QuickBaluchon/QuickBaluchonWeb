@@ -55,6 +55,17 @@ class ApiPackage extends Api {
             self::$_where[] = 'MONTH(dateDeposit) = ?';
             self::$_params[] = $date[1];
         }
+        if(isset($_GET['dateDelivery']) && $_GET['dateDelivery'] == 'now') {
+            self::$_where[] = 'dateDelivery <= CURDATE()';
+        }
+        if(isset($_GET['status'])) {
+            self::$_where[] = 'status = ?';
+            self::$_params[] = $_GET['status'] ;
+        }
+        if(isset($_GET['warehouse'])) {
+            self::$_where[] = 'warehouse = ?';
+            self::$_params[] = $_GET['warehouse'] ;
+        }
 
         $list = $this->get('PACKAGE', $columns);
         $packages = [];

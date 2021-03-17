@@ -14,10 +14,15 @@ class ApiRoadmap extends Api
 
         $this->_method = $method;
 
-        if (count($url) == 0)
-            $this->_data = $this->getListRoadmaps();     // list of bills - /api/bill
+        if (count($url) == 0) {
+            switch($method) {
+                case 'GET': $this->_data = $this->getListRoadmaps(); break;    // list of roadmaps - /api/roadmap
+                case 'POST': $this->_data = $this->createDailyRoadmaps() ; break;
+                default: $this->catError(405); break ;
+            }
+        }
 
-        elseif (($id = intval($url[0])) !== 0)      // details one bills - /api/bill/{id}
+        elseif (($id = intval($url[0])) !== 0)      // details one roadmap - /api/roadmap/{id}
             switch ($method) {
                 case 'GET':$this->_data = $this->getRoadmap($id);break;
                 case 'PATCH': $this->_data = $this->cancelRound($url); break ;
@@ -117,4 +122,48 @@ class ApiRoadmap extends Api
 
         return $this->get('ROADMAP', $columns) ;
     }
+
+    public function createDailyRoadmaps () {
+        $warehouses = $this->getExternData('ApiWarehouse', [], 'getListWarehouse') ;
+        foreach ($warehouses as $w) {
+            $packages = $this->getExternData('ApiPackage', [
+                'dateDelivery' => 'now',
+                'status' => 2,
+                'warehouse' => $w['id']
+            ], 'getListPackages') ;
+
+            $deliverymen = $this->getExternData('ApiDeliveryMan', [
+                'employed' => 1,
+                'warehouse' => $w['id'],
+            ], 'getListDelivery') ;
+
+            if ($w['active'] == 1)
+                $this->dispatchPackages($packages, $deliverymen) ;
+        }
+    }
+
+    private function getExternData ($api, $get, $function) {
+        require_once($api . '.php') ;
+        $_GET = [
+            'limit' => 50,
+            'offset' => 0
+        ] ;
+        $_GET = array_merge($_GET, $get) ;
+
+        $class = new $api([], 'GET') ;
+        $i = 0 ;
+        $data = [] ;
+        while (!empty($rows = $class->$function())) {
+            $data = array_merge($data, $rows) ;
+            $_GET['offset'] = ++$i * $_GET['limit'];
+        }
+        return $data ;
+    }
+
+    private function dispatchPackages ($packages, $deliverymen) {
+        foreach ($deliverymen as $d) {
+            echo "Coucou" ;
+        }
+    }
+
 }

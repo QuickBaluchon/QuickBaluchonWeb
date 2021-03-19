@@ -12,6 +12,8 @@ class ApiMail extends Api {
         $apiKey = getenv('SENDGRID_API_KEY');
         $sg = new \SendGrid($apiKey);
 
+
         $response = $sg->client->mail()->send()->post($mail);
+        return $response ;
     }
 }

@@ -189,6 +189,17 @@ class ApiDeliveryMan extends Api {
             }
         }
         $this->patch('DELIVERYMAN', $id);
+
+        /*require_once('ApiMail.php') ;
+        $this->_method = 'GET' ;
+        $email = $this->getDelivery($data['id']) ;
+        $email = $email['email'] ;
+
+        $subject = "Candidature validée" ;
+        $content = "Bonjour, votre candidature a été acceptée. Bienvenue parmi les livreurs de Quick Baluchon !" ;
+
+        $mail = new ApiMail($subject, $email, $content) ;
+        var_dump($mail) ;*/
     }
 
     public function registerFile(){

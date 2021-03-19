@@ -158,7 +158,7 @@ class ControllerAdmin {
 
 
 
-        $cols = ['#', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse'];
+        $cols = ['#', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licence', 'registration'];
         $deliveryman = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
         $this->_view->generateView(['content' => $deliveryman, 'name' => 'QuickBaluchon']);
     }

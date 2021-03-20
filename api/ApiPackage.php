@@ -54,6 +54,8 @@ class ApiPackage extends Api {
             $date = explode('-', $_GET['date']);
             self::$_where[] = 'MONTH(dateDeposit) = ?';
             self::$_params[] = $date[1];
+            self::$_where[] = 'YEAR(dateDeposit) = ?';
+            self::$_params[] = $date[0];
         }
         if(isset($_GET['dateDelivery']) && $_GET['dateDelivery'] == 'now') {
             self::$_where[] = 'dateDelivery <= CURDATE()';

@@ -27,7 +27,7 @@ function deletePrice(id) {
 
 
 function redirect(response){
-    document.location.href="http://localhost:8888/QuickBaluchonWeb/admin/pricelist";
+    document.location.href="/admin/pricelist";
 }
 
 function hello(reponse) {

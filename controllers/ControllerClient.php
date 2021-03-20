@@ -85,7 +85,7 @@ class ControllerClient
         $this->_billManager = new BillManager();
 
         $client = $this->_clientManager->getClient($this->_id, ['name', 'website']);
-        $billsList = $this->_billManager->getBills($this->_id, ['id', 'grossAmount', 'netAmount','dateBill', 'paid']);
+        $billsList = $this->_billManager->getBills($this->_id, ['id', 'grossAmount', 'netAmount','dateBill', 'paid', 'pdfPath']);
         $buttonsValues = [
             'pay' => 'payer',
         ];
@@ -102,8 +102,8 @@ class ControllerClient
                     }else{
                         $buttons[] = '<span>déjà payé</span>';
                     }
-                    $buttons[] = '<a href="'. WEB_ROOT . "client/createBillPdf/" . $id .'"><button type="button" class="btn btn-primary btn-sm">visualiser</button></a>';
-
+                    $buttons[] = '<a href="'. WEB_ROOT . $bill['pdfPath'] .'"><button type="button" class="btn btn-primary btn-sm">visualiser</button></a>';
+                    unset($bill['pdfPath']) ;
               }
 
               if(isset($buttons))
@@ -118,7 +118,7 @@ class ControllerClient
             $rows = [];
         }
 
-        $cols = ["#", "Montant brut","Montant net", "date", "payer", "visualiser"];
+        $cols = ["#", "Montant brut","Montant net", "date", "payée", "visualiser"];
         $bills = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->generateView(['content' => $bills, 'name' => $client['website']]);
     }
@@ -144,54 +144,6 @@ class ControllerClient
         $this->_view->generateView(['content' => $stripe, 'name' => "stripe"]);
     }
 
-    public function createBillPdf($id){
-        require_once __DIR__ . "/../media/fpdf/fpdf.php";
-        $this->_billManager = new BillManager();
-        $this->_packageManager = new PackageManager();
 
-        $dateBill = $this->_billManager->getBill($id[0], ['dateBill']);
-        $packages = $this->_packageManager->getPackages(
-            ["weight", "volume", "delay", "PRICELIST.ExpressPrice", "PRICELIST.StandardPrice"],
-            ["PRICELIST","PACKAGE.pricelist","PRICELIST.id"],
-            $dateBill["dateBill"],
-            $this->_id);
-        if ($packages != null) {
-            $totalPackage = $this->calculTotal($packages);
-            $cols = ["weight", 'volume', 'delay', 'Price'];
-            $pdf = new FPDF();
-            $pdf->AddPage();
-            $pdf->SetFont('Arial', '', 12);
-            foreach ($cols as $key) {
-                $pdf->Cell(40, 20, "$key");
-            }
-            $pdf->Ln(10);
-            foreach ($totalPackage as $package) {
-                foreach ($package as $key => $value) {
-                    $pdf->Cell(40, 20, "$value");
-                }
-                $pdf->Ln(10);
-            }
-
-            $pdf->Output();
-        }
-    }
-
-    public function calculTotal($packages){
-        $total = 0;
-        $i = 0;
-        foreach($packages as $package) {
-            if($package["delay"] == 2){
-                $total += $package["ExpressPrice"];
-                unset($packages[$i]["StandardPrice"]);
-            }
-            else{
-                $total += $package["StandardPrice"];
-                unset($packages[$i]["ExpressPrice"]);
-            }
-            $i++;
-        }
-        $packages[] = ["total" => $total];
-        return $packages;
-    }
 
 }

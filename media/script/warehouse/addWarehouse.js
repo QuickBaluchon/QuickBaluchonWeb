@@ -15,5 +15,5 @@ function addWarehouse() {
 
 
 function redirect(response) {
-    document.location.href="http://localhost:8888/QuickBaluchonWeb/admin/warehouses";
+    document.location.href="/admin/warehouses";
 }

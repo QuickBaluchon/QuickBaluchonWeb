@@ -17,12 +17,16 @@ class ApiBill extends Api
         if (count($url) == 0)
             $this->_data = $this->getListBills();     // list of bills - /api/bill
 
+
         elseif (($id = intval($url[0])) !== 0)      // details one bills - /api/bill/{id}
             switch ($method) {
                 case 'GET':$this->_data = $this->getBill($id);break;
+                case 'POST': $this->addBill($url); break;
                 case 'PATCH':$this->patchBill($id);break;
                 default: $this->catError(405); break;
             }
+        else
+            $this->catError(400);
 
 
         echo json_encode($this->_data, JSON_PRETTY_PRINT);
@@ -78,5 +82,87 @@ class ApiBill extends Api
         self::$_params[] = $data['paid'];
 
         $this->patch('MONTHLYBILL', $id);
+    }
+
+    public function addBill ($url)
+    {
+        if (count($url) != 2 || empty($url[0]) || empty($url[1])) {
+            http_response_code(400);
+            return;
+        }
+
+        require_once('ApiPackage.php');
+        $_GET['inner'] = 'PRICELIST, PRICELIST.id, PACKAGE.pricelist' ;
+        $_GET['client'] = $url[0] ;
+        $_GET['date'] = $url[1] ;
+
+        $packages = new ApiPackage([], 'GET');
+        $packages->resetParams();
+        $pkgs = $packages->getListPackages() ;
+
+        if ($packages != null) {
+            $total = $this->calculTotal($pkgs);
+        }
+
+        self::$_columns = ['grossAmount', 'netAmount', 'tva', 'dateBill', 'paid', 'client'] ;
+        self::$_params = [
+            $total * 1.2,
+            $total,
+            20,
+            $url[1] . '-01',
+            0,
+            $url[0]
+        ] ;
+        $id = $this->add('MONTHLYBILL') ;
+        $this->createBillPdf($id, $pkgs, $total) ;
+        $this->resetParams();
+
+        self::$_set[] = 'pdfPath = ?' ;
+        self::$_params[] =  "bills/$id.pdf" ;
+        $this->patch('MONTHLYBILL', $id) ;
+
+
+        /*$packages = $this->_packageManager->getPackages(
+            ["weight", "volume", "delay", "PRICELIST.ExpressPrice", "PRICELIST.StandardPrice"],
+            ["PRICELIST", "PACKAGE.pricelist", "PRICELIST.id"],
+            $dateBill["dateBill"],
+            $this->_id);*/
+
+    }
+
+    public function createBillPdf($id, $packages, $total){
+        require_once($_SERVER['DOCUMENT_ROOT'] . "/media/fpdf/fpdf.php");
+        $this->_billManager = new BillManager();
+
+        $cols = ["weight", 'volume', 'delay', 'Price'];
+        $pdf = new FPDF();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', '', 12);
+        foreach ($cols as $key) {
+            $pdf->Cell(40, 20, "$key");
+        }
+        $pdf->Ln(10);
+        foreach ($packages as $package) {
+            foreach ($package as $key => $value) {
+                $pdf->Cell(40, 20, "$value");
+            }
+            $pdf->Ln(10);
+        }
+
+        $pdf->Cell(40, 20, "$total");
+        $filename = $_SERVER['DOCUMENT_ROOT'] . "/bills/$id.pdf" ;
+        $pdf->Output($filename, 'F');
+    }
+
+
+    public function calculTotal($packages){
+        $total = 0;
+        foreach($packages as $package) {
+            if($package["delay"] == 2)
+                $total += $package["ExpressPrice"];
+            else
+                $total += $package["StandardPrice"];
+        }
+        return $total;
     }
 }

@@ -116,28 +116,28 @@ abstract class Api {
 
 
 
-  // INSERT
-  protected function add($table) {
+    // INSERT
+    protected function add($table) {
 
-    $cols = '( ' . join(', ', self::$_columns) . ' )';
-    $values = [];
-    foreach (self::$_columns as $col)  $values[] = '?';
-    $values = '( ' . join(', ', $values) . ' )';
-    $sql = 'INSERT INTO ' . $table . $cols . ' VALUES' . $values ;
+        $cols = '( ' . join(', ', self::$_columns) . ' )';
+        $values = [];
+        foreach (self::$_columns as $col)  $values[] = '?';
+        $values = '( ' . join(', ', $values) . ' )';
+        $sql = 'INSERT INTO ' . $table . $cols . ' VALUES' . $values ;
 
-    $connect = $this->getDb();
-    $stmt = $connect->prepare($sql);
-    if($stmt) {
-      $success = $stmt->execute(self::$_params);
-      if ($success) {
-        $this->resetParams();
-        http_response_code(200);
-        return $connect->LastInsertId();
-      } else {
-        http_response_code(500) ;
-      }
-    } else
-      http_response_code(500) ;
+        $connect = $this->getDb();
+        $stmt = $connect->prepare($sql);
+        if($stmt) {
+            $success = $stmt->execute(self::$_params);
+            if ($success) {
+                $this->resetParams();
+                http_response_code(200);
+                return $connect->LastInsertId();
+            } else {
+                http_response_code(500) ;
+            }
+        } else
+            http_response_code(500) ;
     }
 
     // UPDATE

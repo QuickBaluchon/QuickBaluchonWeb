@@ -171,8 +171,8 @@ class ControllerClient
                 }
                 $pdf->Ln(10);
             }
-
-            $pdf->Output();
+            $filename = $_SERVER['DOCUMENT_ROOT'] . "/bills/$id[0].pdf" ;
+            $pdf->Output($filename, 'F');
         }
     }
 

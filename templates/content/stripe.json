@@ -5,7 +5,7 @@
     "InputEmail": "Email",
     "InputCard": "N° de carte bancaire",
     "InputMM": "MM",
-    "InputYY": "AA",
+    "InputYY": "AAAA",
     "InputCVC": "CVC",
     "ButtonPay": "Payer"
   },
@@ -15,7 +15,7 @@
     "InputEmail": "Email",
     "InputCard": "Card number",
     "InputMM": "MM",
-    "InputYY": "YY",
+    "InputYY": "YYYY",
     "InputCVC": "CVC",
     "ButtonPay": "Pay"
   }

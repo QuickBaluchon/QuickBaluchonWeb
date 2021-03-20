@@ -34,5 +34,5 @@ if(filter_var($email, FILTER_VALIDATE_EMAIL) && !empty($name) && !empty($token))
         'customer' => $client->id
     ]);
 
-    header("Location:http://localhost:8888/QuickBaluchonWeb/client/bills");
+    header("Location:" . $_SERVER['DOCUMENT_ROOT'] . "/client/bills");
 }

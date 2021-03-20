@@ -34,5 +34,5 @@ function addStaff() {
 }
 
 function redirect(reponse) {
-    document.location.href="http://localhost:8888/QuickBaluchonWeb/admin/staff";
+    document.location.href="/admin/staff";
 }

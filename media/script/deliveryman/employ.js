@@ -25,5 +25,5 @@ function refuse(idDeliveryman) {
 }
 
 function redirect(reponse) {
-    document.location.href="http://localhost:8888/QuickBaluchonWeb/admin/employ";
+    document.location.href="/admin/employ";
 }

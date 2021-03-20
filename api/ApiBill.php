@@ -104,17 +104,22 @@ class ApiBill extends Api
             $total = $this->calculTotal($pkgs);
         }
 
-        self::$_columns = ['grossAmount', 'netAmount', 'tva', 'dateBill', 'pdfPath', 'paid', 'client'] ;
+        self::$_columns = ['grossAmount', 'netAmount', 'tva', 'dateBill', 'paid', 'client'] ;
         self::$_params = [
             $total * 1.2,
             $total,
             20,
             $url[1] . '-01',
-            'coucou',
             0,
             $url[0]
         ] ;
-        $this->add('MONTHLYBILL') ;
+        $id = $this->add('MONTHLYBILL') ;
+        $this->createBillPdf($id, $pkgs, $total) ;
+        $this->resetParams();
+
+        self::$_set[] = 'pdfPath = ?' ;
+        self::$_params[] =  "/bills/$id.pdf" ;
+        $this->patch('MONTHLYBILL', $id) ;
 
 
         /*$packages = $this->_packageManager->getPackages(
@@ -125,27 +130,29 @@ class ApiBill extends Api
 
     }
 
-    public function createBillPdf($id){
-        require_once("/media/fpdf/fpdf.php");
-            $this->_billManager = new BillManager();
+    public function createBillPdf($id, $packages, $total){
+        require_once($_SERVER['DOCUMENT_ROOT'] . "/media/fpdf/fpdf.php");
+        $this->_billManager = new BillManager();
 
-            $cols = ["weight", 'volume', 'delay', 'Price'];
-            $pdf = new FPDF();
-            $pdf->AddPage();
-            $pdf->SetFont('Arial', '', 12);
-            foreach ($cols as $key) {
-                $pdf->Cell(40, 20, "$key");
+        $cols = ["weight", 'volume', 'delay', 'Price'];
+        $pdf = new FPDF();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', '', 12);
+        foreach ($cols as $key) {
+            $pdf->Cell(40, 20, "$key");
+        }
+        $pdf->Ln(10);
+        foreach ($packages as $package) {
+            foreach ($package as $key => $value) {
+                $pdf->Cell(40, 20, "$value");
             }
             $pdf->Ln(10);
-            foreach ($totalPackage as $package) {
-                foreach ($package as $key => $value) {
-                    $pdf->Cell(40, 20, "$value");
-                }
-                $pdf->Ln(10);
-            }
-            $filename = $_SERVER['DOCUMENT_ROOT'] . "/bills/$id[0].pdf" ;
-            $pdf->Output($filename, 'F');
         }
+
+        $pdf->Cell(40, 20, "$total");
+        $filename = $_SERVER['DOCUMENT_ROOT'] . "/bills/$id.pdf" ;
+        $pdf->Output($filename, 'F');
+    }
 
 
     public function calculTotal($packages){

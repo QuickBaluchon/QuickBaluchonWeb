@@ -85,7 +85,7 @@ class ControllerClient
         $this->_billManager = new BillManager();
 
         $client = $this->_clientManager->getClient($this->_id, ['name', 'website']);
-        $billsList = $this->_billManager->getBills($this->_id, ['id', 'grossAmount', 'netAmount','dateBill', 'paid']);
+        $billsList = $this->_billManager->getBills($this->_id, ['id', 'grossAmount', 'netAmount','dateBill', 'paid', 'pdfPath']);
         $buttonsValues = [
             'pay' => 'payer',
         ];
@@ -102,8 +102,8 @@ class ControllerClient
                     }else{
                         $buttons[] = '<span>déjà payé</span>';
                     }
-                    $buttons[] = '<a href="'. WEB_ROOT . "client/createBillPdf/" . $id .'"><button type="button" class="btn btn-primary btn-sm">visualiser</button></a>';
-
+                    $buttons[] = '<a href="'. WEB_ROOT . $bill['pdfPath'] .'"><button type="button" class="btn btn-primary btn-sm">visualiser</button></a>';
+                    unset($bill['pdfPath']) ;
               }
 
               if(isset($buttons))
@@ -118,7 +118,7 @@ class ControllerClient
             $rows = [];
         }
 
-        $cols = ["#", "Montant brut","Montant net", "date", "payer", "visualiser"];
+        $cols = ["#", "Montant brut","Montant net", "date", "payée", "visualiser"];
         $bills = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->generateView(['content' => $bills, 'name' => $client['website']]);
     }

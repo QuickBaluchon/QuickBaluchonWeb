@@ -118,7 +118,7 @@ class ApiBill extends Api
         $this->resetParams();
 
         self::$_set[] = 'pdfPath = ?' ;
-        self::$_params[] =  "/bills/$id.pdf" ;
+        self::$_params[] =  "bills/$id.pdf" ;
         $this->patch('MONTHLYBILL', $id) ;
 
 

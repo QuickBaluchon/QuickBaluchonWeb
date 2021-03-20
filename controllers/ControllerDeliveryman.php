@@ -135,6 +135,7 @@ class ControllerDeliveryman
         foreach ($heavyPackages as $heavyPackage) {
             $total += (intval(($heavyPackage['weight']-30)/22)+1)*3 ;
         }
+
         return $total;
     }
 
@@ -143,7 +144,7 @@ class ControllerDeliveryman
 
         foreach ($nbTotalColisDelivered[0] as $key => $nbTotal) {
                 foreach ($nbTotalColis[0] as $key => $nb) {
-                        $total = 100*$nbTotal/$nb;
+                        $total = 100*($nbTotal/$nb);
                 }
         }
         switch ($total) {
@@ -156,14 +157,20 @@ class ControllerDeliveryman
     }
 
     public function calculTotal($priceKm,$primeDelivered,$primeHeavy,$percent){
+        echo $priceKm . " ";
+        echo $primeDelivered . " ";
+        echo $primeHeavy . " ";
+        echo $percent . " ";
         $salair = $priceKm + $primeDelivered + $primeHeavy;
         switch ($percent) {
             case 10: $salair *= 1.10; break;
             case 120:$salair += 120; break;
             case 50:$salair += 50; break;
-            case 0:$salair; break;
+            case 0:$salair += 0; break;
             case 15:$salair *= 0.85; break;
         }
+        echo $salair;
+        die();
         return $salair;
 
     }

@@ -21,7 +21,7 @@ extract($this->_content) ;
                 <button type="button" class="btn btn-danger btn-sm btn-block"><?= $ButtonClear ?></button>
             </div>
             <div class="card-body" id="canvas">
-                <canvas class="myCanvas">
+                <canvas class="myCanvas" id="signature">
                   <p><?= $TextFallback ?></p>
                 </canvas>
                 <img id='image'>

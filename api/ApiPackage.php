@@ -99,15 +99,10 @@ class ApiPackage extends Api {
 
     public function updatePackage (int $id) {
         $data = $this->getJsonArray();
-        $allowed = ['weight', 'address', 'email', 'delay', 'status', 'dateDeposit', 'dateDelivery'];
+        $allowed = ['weight', 'address', 'email', 'delay', 'status', 'dateDeposit', 'dateDelivery', 'signature'];
         if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
             http_response_code(400);
             exit(0);
-        }
-
-        if (!isset($data['delay']) || !isset($data['status']) || !isset($data['weight'])) {
-            http_response_code(400) ;
-            return ;
         }
 
         if ($data['status'] == 3 || $data['status'] == 1) {

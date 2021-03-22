@@ -105,11 +105,6 @@ class ApiPackage extends Api {
             exit(0);
         }
 
-        if (!isset($data['delay']) || !isset($data['status']) || !isset($data['weight'])) {
-            http_response_code(400) ;
-            return ;
-        }
-
         if ($data['status'] == 3 || $data['status'] == 1) {
             if ($this->updateWarehouseVolume($id, $data['status']) != 0)
                 return ;

@@ -20,10 +20,14 @@ function recieved (text) {
 }
 
 function deliver (id) {
-    let json = JSON.stringify( { status: 3 } );
+    let img = document.getElementById('signature').toDataURL() ;
+    let json = JSON.stringify( { status: 3, signature: img } );
+
     ajax(`/api/stop/${id}`, '', 'PATCH', delivered) ;
     ajax(`/api/package/${id}`, json, 'PATCH', delivered) ;
+
 }
+
 
 function delivered (text) {
     let jb = document.getElementById('jumbotron') ;

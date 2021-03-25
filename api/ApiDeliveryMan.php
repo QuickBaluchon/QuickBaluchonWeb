@@ -74,7 +74,6 @@ class ApiDeliveryMan extends Api {
     }
 
     private function signup() {
-
         $data = $this->getJsonArray();
         $cols = ['firstname', 'lastname','password', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'warehouse', 'employed'];
         for ($i = 0; $i < count($cols); $i++) {
@@ -88,16 +87,18 @@ class ApiDeliveryMan extends Api {
                 self::$_params[] = hash('sha256', $data[$cols[$i]]);
             else
                 self::$_params[] = $data[$cols[$i]];
-
-
         }
-
 
         self::$_columns = ['firstname', 'lastname', 'password','phone', 'email', 'volumeCar', 'radius', 'IBAN', 'warehouse', 'employed'];
         $id = $this->add('DELIVERYMAN');
         $this->_data = ["id" => $id];
         //$this->login();
+        $email = $data['email'] ;
+        $subject = "Candidature chez QuickBaluchon" ;
+        $content = "Bonjour, votre candidature a été enregistrée. Nous reviendrons vers vous ultérieurement. Cordialement, l'équipe de Quick Baluchon." ;
 
+        require_once('ApiMail.php') ;
+        $mail = new ApiMail($subject, $email, $content) ;
     }
 
     private function login() {
@@ -189,17 +190,20 @@ class ApiDeliveryMan extends Api {
             }
         }
         $this->patch('DELIVERYMAN', $id);
+        $this->resetParams();
 
-        /*require_once('ApiMail.php') ;
         $this->_method = 'GET' ;
-        $email = $this->getDelivery($data['id']) ;
-        $email = $email['email'] ;
+        $d = $this->getDelivery($id) ;
 
-        $subject = "Candidature validée" ;
-        $content = "Bonjour, votre candidature a été acceptée. Bienvenue parmi les livreurs de Quick Baluchon !" ;
+        $email = $d['email'] ;
+        $subject = "Candidature chez QuickBaluchon" ;
+        if (isset($data['employed']) && $data['employed'] == 1)
+            $content = "Bonjour, votre candidature a été acceptée. Bienvenue parmi les livreurs de Quick Baluchon !" ;
+        else
+            $content = "Bonjour, nous sommes navrés de vous annoncer que votre candidature chez Quick Baluchon a été refusée. Bonne continuation dans vos recherches." ;
 
+        require_once('ApiMail.php') ;
         $mail = new ApiMail($subject, $email, $content) ;
-        var_dump($mail) ;*/
     }
 
     public function registerFile(){

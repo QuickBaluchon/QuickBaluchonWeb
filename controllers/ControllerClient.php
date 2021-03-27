@@ -20,16 +20,13 @@ class ControllerClient
                 if( isset($_SESSION['id']) ){
                     header('location:' . WEB_ROOT . 'client/profile');
                     exit();
-                }else {
-                    header('location:' . WEB_ROOT . 'login');
-                    exit();
                 }
-                break;
+                header('location:' . WEB_ROOT . 'login');
+                exit();
             default :
                 http_response_code(500);
                 exit();
         }
-
     }
 
     private function action($url) {
@@ -132,7 +129,7 @@ class ControllerClient
         $package = $this->_packageManager->getClientPackages($this->_id, ['id', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'status', 'dateDeposit']);
         $client = $this->_clientManager->getClient($this->_id, ['website']);
 
-        $cols = ['#', 'Poids', 'Volume', 'Adresse', 'E-mail', 'Délais', 'Date de livraison', 'Status', 'Déposé le'];
+        $cols = ['#', 'Poids', 'Volume', 'Adresse', 'E-mail', 'Délais', 'Date de livraison', 'Déposé le'];
         $package = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $package]);
         $this->_view->generateView(['content' => $package, 'name' => $client['website']]);
     }
@@ -143,7 +140,5 @@ class ControllerClient
         $stripe = $this->_view->generateTemplate('stripe', ["bill" => $bill]);
         $this->_view->generateView(['content' => $stripe, 'name' => "stripe"]);
     }
-
-
 
 }

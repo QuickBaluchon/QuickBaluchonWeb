@@ -37,7 +37,6 @@ class ApiDeliveryMan extends Api {
     }
 
     public function getListDelivery(): array {
-        $packages = [];
         if ($this->_method != 'GET') $this->catError(405);
 
         if (isset($_GET['employed'])) {

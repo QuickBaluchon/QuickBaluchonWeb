@@ -51,7 +51,7 @@ class ApiDeliveryMan extends Api {
         }
 
 
-        $columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG"];
+        $columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG", 'employStart', 'employEnd'];
         self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
         self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 

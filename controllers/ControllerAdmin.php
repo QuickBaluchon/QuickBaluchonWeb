@@ -157,13 +157,14 @@ class ControllerAdmin {
         $list = $this->_DeliveryManager->getDeliverys([], NULL);
 
         foreach ($list as $d) {
-            $buttons[] = '<button type="button" class="btn btn-primary btn-sm" onclick="dismissDeliveryman(' . $d['id'] . ')">Licensier</button>';
+            $buttons[] = '<button type="button" class="btn btn-danger btn-sm" onclick="dismissDeliveryman(' . $d['id'] . ')">Licensier</button>';
             unset($d['id']);
+            $d['employed'] = $d['employed'] == 1 ? "&#x2713" : "&#x10102" ;
             $rows[] = array_merge($d, $buttons);
             $buttons = [];
         }
 
-        $cols = ['firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licence', 'registration', 'dismiss'];
+        $cols = ['firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licence', 'registration', 'contract start', 'contract end', 'dismiss'];
 
         $deliveryman = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->_js[] = 'deliveryman/dismiss';

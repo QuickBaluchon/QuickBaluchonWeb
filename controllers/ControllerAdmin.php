@@ -156,10 +156,17 @@ class ControllerAdmin {
         $this->_DeliveryManager = new DeliveryManager;
         $list = $this->_DeliveryManager->getDeliverys([], NULL);
 
+        foreach ($list as $d) {
+            $buttons[] = '<button type="button" class="btn btn-primary btn-sm" onclick="dismissDeliveryman(' . $d['id'] . ')">Licensier</button>';
+            unset($d['id']);
+            $rows[] = array_merge($d, $buttons);
+            $buttons = [];
+        }
 
+        $cols = ['firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licence', 'registration', 'dismiss'];
 
-        $cols = ['#', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licence', 'registration'];
-        $deliveryman = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
+        $deliveryman = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
+        $this->_view->_js[] = 'deliveryman/dismiss';
         $this->_view->generateView(['content' => $deliveryman, 'name' => 'QuickBaluchon']);
     }
 

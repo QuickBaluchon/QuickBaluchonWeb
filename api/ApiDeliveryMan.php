@@ -189,8 +189,14 @@ class ApiDeliveryMan extends Api {
                 self::$_params[] = $value;
             }
         }
-        self::$_set[] = 'employStart = ?' ;
-        self::$_params[] = date("Y-m-d");
+        if ($data['employed'] == 1) {
+            self::$_set[] = 'employStart = ?' ;
+            self::$_params[] = date("Y-m-d");
+        } else {
+            self::$_set[] = 'employEnd = ?' ;
+            self::$_params[] = date("Y-m-d");
+        }
+
         $this->patch('DELIVERYMAN', $id);
         $this->resetParams();
 

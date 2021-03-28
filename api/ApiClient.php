@@ -13,7 +13,7 @@ class ApiClient extends Api
 
         $this->_method = $method;
 
-        if (count($url) == 0)
+       $
             $this->_data = $this->getListClients();     // list of clients - /api/client
 
         elseif (($id = intval($url[0])) !== 0) { // details one client - /api/client/{id}

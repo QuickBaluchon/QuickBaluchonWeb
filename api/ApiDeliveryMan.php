@@ -51,7 +51,7 @@ class ApiDeliveryMan extends Api {
         }
 
 
-        $columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG"];
+        $columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG", 'employStart', 'employEnd'];
         self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
         self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
@@ -189,6 +189,14 @@ class ApiDeliveryMan extends Api {
                 self::$_params[] = $value;
             }
         }
+        if ($data['employed'] == 1) {
+            self::$_set[] = 'employStart = ?' ;
+            self::$_params[] = date("Y-m-d");
+        } else {
+            self::$_set[] = 'employEnd = ?' ;
+            self::$_params[] = date("Y-m-d");
+        }
+
         $this->patch('DELIVERYMAN', $id);
         $this->resetParams();
 

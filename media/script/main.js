@@ -49,8 +49,7 @@ function ajax(url, json, method, callback, error) {
     }
     request.open(method, url, true);
     request.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-    request.send(json);
-
+    request.send(json);$
 }
 
 function getCookie(cname) {

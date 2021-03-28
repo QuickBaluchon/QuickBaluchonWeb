@@ -98,9 +98,9 @@ class ApiBill extends Api
 
         $packages = new ApiPackage([], 'GET');
         $packages->resetParams();
-        $pkgs = $packages->getListPackages() ;
+        $pkgs = $packages->getListPackages(['PACKAGE.id', 'weight', 'volume', 'delay', 'dateDeposit']) ;
 
-        if ($packages != null) {
+        if ($pkgs != null) {
             $total = $this->calculTotal($pkgs);
         }
 
@@ -117,24 +117,18 @@ class ApiBill extends Api
         $this->createBillPdf($id, $pkgs, $total) ;
         $this->resetParams();
 
+        die();
+
         self::$_set[] = 'pdfPath = ?' ;
         self::$_params[] =  "bills/$id.pdf" ;
         $this->patch('MONTHLYBILL', $id) ;
-
-
-        /*$packages = $this->_packageManager->getPackages(
-            ["weight", "volume", "delay", "PRICELIST.ExpressPrice", "PRICELIST.StandardPrice"],
-            ["PRICELIST", "PACKAGE.pricelist", "PRICELIST.id"],
-            $dateBill["dateBill"],
-            $this->_id);*/
-
     }
 
     public function createBillPdf($id, $packages, $total){
         require_once($_SERVER['DOCUMENT_ROOT'] . "/media/fpdf/fpdf.php");
         $this->_billManager = new BillManager();
 
-        $cols = ["weight", 'volume', 'delay', 'Price'];
+        $cols = ['Date deposit', "weight", 'volume', 'delay', 'Price'];
         $pdf = new FPDF();
         $pdf->AddPage();
         $pdf->SetFont('Arial', '', 12);
@@ -143,25 +137,36 @@ class ApiBill extends Api
         }
         $pdf->Ln(10);
         foreach ($packages as $package) {
-            foreach ($package as $key => $value) {
-                $pdf->Cell(40, 20, "$value");
-            }
+            if ($package['delay'] == 2)
+                $price = $package['ExpressPrice'];
+            else
+                $price = $package['StandardPrice'];
+
+            $pdf->Cell(40, 20, $package['dateDeposit']);
+            $pdf->Cell(40, 20, $package['weight']);
+            $pdf->Cell(40, 20, $package['volume']);
+            $pdf->Cell(40, 20, $package['delay']);
+            $pdf->Cell(40, 20, $price);
+
             $pdf->Ln(10);
         }
 
+        $pdf->Cell(160, 20, "Total");
         $pdf->Cell(40, 20, "$total");
         $filename = $_SERVER['DOCUMENT_ROOT'] . "/bills/$id.pdf" ;
         $pdf->Output($filename, 'F');
     }
 
-
     public function calculTotal($packages){
         $total = 0;
         foreach($packages as $package) {
-            if($package["delay"] == 2)
+            if ($package["delay"] == 2) {
                 $total += $package["ExpressPrice"];
-            else
+                $package['price'] = $package["ExpressPrice"];
+            } else {
                 $total += $package["StandardPrice"];
+                $package['price'] = $package['StandardPrice'];
+            }
         }
         return $total;
     }

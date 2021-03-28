@@ -118,8 +118,6 @@ class ApiBill extends Api
         $this->createBillPdf($id, $pkgs, $total) ;
         $this->resetParams();
 
-        die();
-
         self::$_set[] = 'pdfPath = ?' ;
         self::$_params[] =  "bills/$id.pdf" ;
         $this->patch('MONTHLYBILL', $id) ;

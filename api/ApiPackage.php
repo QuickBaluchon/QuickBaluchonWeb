@@ -27,8 +27,9 @@ class ApiPackage extends Api {
         echo json_encode( $this->_data, JSON_PRETTY_PRINT );
     }
 
-    public function getListPackages (): array  {
-        $columns = ['PACKAGE.id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'excelPath', 'dateDeposit'];
+    public function getListPackages ($columns = null): array  {
+        if ($columns == null)
+            $columns = ['PACKAGE.id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'excelPath', 'dateDeposit'];
         if(isset($_GET['inner'])) {
             $columns[] = 'PRICELIST.ExpressPrice';
             $columns[] = 'PRICELIST.StandardPrice';

@@ -19,7 +19,7 @@
             <a class="nav-link" href="#"><?= $LinkDownload ; ?></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#"><?= $LinkPrice ; ?></a>
+            <a class="nav-link" href="/prices"><?= $LinkPrice ; ?></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#"><?= $LinkAbout ; ?></a>

@@ -8,6 +8,7 @@ class ApiBill extends Api
 
     private $_method;
     private $_data = [];
+    private $_tva = 1.2;
 
     public function __construct($url, $method)
     {
@@ -106,7 +107,7 @@ class ApiBill extends Api
 
         self::$_columns = ['grossAmount', 'netAmount', 'tva', 'dateBill', 'paid', 'client'] ;
         self::$_params = [
-            $total * 1.2,
+            $total * $this->_tva,
             $total,
             20,
             $url[1] . '-01',
@@ -131,11 +132,20 @@ class ApiBill extends Api
         $cols = ['Date deposit', "weight", 'volume', 'delay', 'Price'];
         $pdf = new FPDF();
         $pdf->AddPage();
+        $pdf->SetFont('Arial', '', 20);
+        $pdf->Cell(160, 20, "Quick Baluchon");
+        $pdf->Ln(10);
         $pdf->SetFont('Arial', '', 12);
+        $pdf->Cell(160, 20, "Facture No : " . $id);
+        $pdf->Ln(30);
+
+        $pdf->SetFont('Arial', '', 14);
         foreach ($cols as $key) {
             $pdf->Cell(40, 20, "$key");
         }
         $pdf->Ln(10);
+
+        $pdf->SetFont('Arial', '', 12);
         foreach ($packages as $package) {
             if ($package['delay'] == 2)
                 $price = $package['ExpressPrice'];
@@ -151,8 +161,18 @@ class ApiBill extends Api
             $pdf->Ln(10);
         }
 
+        $pdf->Ln(20);
         $pdf->Cell(160, 20, "Total");
-        $pdf->Cell(40, 20, "$total");
+        $pdf->Cell(40, 20, $total . " EUR");
+        $pdf->Ln(10);
+
+        $pdf->Cell(160, 20, "TVA");
+        $pdf->Cell(40, 20, ($this->_tva - 1) * 100 . " %");
+        $pdf->Ln(10);
+
+        $pdf->Cell(160, 20, "Total TTC");
+        $pdf->Cell(40, 20, $total * $this->_tva . " EUR");
+        $pdf->Ln(10);
         $filename = $_SERVER['DOCUMENT_ROOT'] . "/bills/$id.pdf" ;
         $pdf->Output($filename, 'F');
     }

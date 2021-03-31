@@ -32,7 +32,16 @@ class ControllerClient
     private function action($url) {
         if( isset($_SESSION['id']) ){
             if (method_exists($this, $url[1])) {
-                $this->_id = $_SESSION['id'];
+                if ($_SESSION['role'] == 'client')
+                    $this->_id = $_SESSION['id'];
+                else
+                    if (isset($url[2]) && $_SESSION['role'] == 'admin')
+                        $this->_id = intVal($url[2]);
+                    else {
+                        $this->_view = new View('Error');
+                        $this->_view->generateView(['cat' => 403]);
+                        return;
+                    }
                 $method = $url[1];
                 $this->$method(array_slice($url, 2));
             } else {
@@ -69,8 +78,13 @@ class ControllerClient
         else
             $client = $this->_clientManager->getClient($id[0], ['name', 'website']);
 
-        $profile = $this->_view->generateTemplate('client_profile', $client);
-        $this->_view->generateView(['content' => $profile, 'name' => $client['website']]);
+        if ($client == null) {
+            $this->_view = new View('Error');
+            $this->_view->generateView(['cat' => 404]);
+        } else {
+            $profile = $this->_view->generateTemplate('client_profile', $client);
+            $this->_view->generateView(['content' => $profile, 'name' => $client['website']]);
+        }
     }
 
     private function bills() {

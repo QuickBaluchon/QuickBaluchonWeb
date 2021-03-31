@@ -24,10 +24,10 @@ class View
             if (!key_exists($sh, $json))
                 $sh = 'FR';
             switch($target) {
-                case 'template': $this->_template = $json[$sh]; break ;
-                case 'header': $this->_headerContent = $json[$sh] ;
-                default: $this->_content = $json[$sh] ; break;
-
+                case 'template': $this->_template = $json[$sh]; break;
+                case 'header': $this->_headerContent = $json[$sh];
+                default: $this->_content = $json[$sh]; break;
+            }
         }
     }
 

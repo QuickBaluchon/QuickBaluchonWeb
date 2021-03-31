@@ -37,12 +37,14 @@
             </ul>
         </div>
 
-        <?php if (!isset($_SESSION)): ?>
+
+
+        <?php if (!isset($_SESSION) || !isset($_SESSION['role'])): ?>
             <a href="<?=WEB_ROOT.'login'?>"><button class="btn btn-round btn-success my-2 my-sm-0"><?= $LinkConnect ; ?></button></a>
         <?php elseif ($_SESSION['role'] != 'admin'): ?>
             <a href="<?=WEB_ROOT . $_SESSION['role'] . '/profile'?>"><button class="btn btn-round btn-success my-2 my-sm-0"><?= $LinkProfile ; ?></button></a>
         <?php else: ?>
-            <a href="<?=WEB_ROOT . '/admin'?>"><button class="btn btn-round btn-success my-2 my-sm-0"><?= $LinkAdmin ; ?></button></a>
+            <a href="<?=WEB_ROOT . 'admin'?>"><button class="btn btn-round btn-success my-2 my-sm-0"><?= $LinkAdmin ; ?></button></a>
         <?php endif ?>
     </nav>
 </div>

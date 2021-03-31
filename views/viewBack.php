@@ -37,7 +37,7 @@ extract($this->_content) ;
     <!-- Menu-->
     <?php
       $sidebar = new SidebarMenu($_SESSION['role']);
-      $sidebar->dispay();
+      $sidebar->display();
     ?>
 
   </nav>

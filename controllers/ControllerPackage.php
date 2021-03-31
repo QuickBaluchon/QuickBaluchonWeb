@@ -28,10 +28,7 @@ class ControllerPackage {
                   } else
                       $v = $this->viewExtern() ;
               } elseif (isset($_SESSION['role']) && ($_SESSION['role'] == 'staff' || $_SESSION['role'] == 'admin')) {
-                  if ($this->_data['status'] == 0 || $this->_data['status'] == null) {
-                      $v = $this->recievePackage();
-                  } else
-                      $v = $this->viewExtern() ;
+                  $v = $this->packageData();
               } else {
                   $v = $this->viewExtern() ;
               }
@@ -56,8 +53,8 @@ class ControllerPackage {
       return $this->_data ;
   }
 
-  private function recievePackage () {
-      $package = $this->_packageManager->getPackage($this->_id, ['PACKAGE.id', 'weight', 'volume', 'address', 'email', 'delay']) ;
+  private function packageData () {
+      $package = $this->_packageManager->getPackage($this->_id, ['PACKAGE.id', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'client']) ;
       $this->_view = new View('Reception') ;
       return $package;
   }

@@ -31,9 +31,7 @@ class ApiDeliveryMan extends Api {
             }
         }
 
-
         echo json_encode($this->_data, JSON_PRETTY_PRINT);
-
     }
 
     public function getListDelivery(): array {
@@ -48,7 +46,6 @@ class ApiDeliveryMan extends Api {
             self::$_where[] = 'warehouse = ?';
             self::$_params[] = intval($_GET['warehouse']);
         }
-
 
         $columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG", 'employStart', 'employEnd'];
         self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;

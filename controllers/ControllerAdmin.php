@@ -243,7 +243,7 @@ class ControllerAdmin {
             '<button type="button" class="btn btn-success btn-sm" onclick="addPrice()">Ajouter</button>'
         ] ;
 
-        $cols = ['#', 'Max wheight', 'Express price', 'Standard price', 'application date'];
+        $cols = ['#', 'Max weight', 'Express price', 'Standard price', 'application date'];
         $pricelist = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->generateView(['content' => $pricelist, 'name' => 'QuickBaluchon']);
     }

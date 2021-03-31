@@ -16,7 +16,7 @@ class ControllerPrices {
         $list = $this->_pricelistManager->getPricelists([]);
 
 
-        $cols = ['#', 'Max wheight', 'Express price', 'Standard price', 'application date'];
+        $cols = ['#', 'Max weight', 'Express price', 'Standard price', 'application date'];
         $pricelist = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
         $this->_view->generateView(["content" => $pricelist]);
       }

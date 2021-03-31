@@ -55,9 +55,9 @@ class SidebarMenu extends View {
     }
 
     private function admin() {
-        $items = ['Tarifs', 'Clients', 'Livreurs', 'Entrepôts', 'Langues'];
-        $links = ['pricelist', 'clients', 'deliverymen', 'warehouses', 'languages'];
-        $svg = ['invoice', 'user', 'truck', 'box-seam', 'open-book'];
+        $items = ['Tarifs', 'Clients', 'Livreurs', 'Candidatures', 'Entrepôts', 'Langues'];
+        $links = ['pricelist', 'clients', 'deliverymen', 'employ', 'warehouses', 'languages'];
+        $svg = ['invoice', 'user', 'truck', 'truck', 'box-seam', 'open-book'];
         $data = [];
 
         for( $i = 0; $i < count($items); $i++ )

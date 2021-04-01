@@ -1,0 +1,30 @@
+{
+  "FR": {
+    "profile": {
+      "itemName": "Données personnnelles",
+      "svg": "user"
+    },
+    "bills": {
+      "itemName": "Factures",
+      "svg": "invoice"
+    },
+    "history": {
+      "itemName": "Historique",
+      "svg": "open-book"
+    }
+  },
+  "EN": {
+    "profile": {
+      "itemName": "Personal data",
+      "svg": "user"
+    },
+    "bills": {
+      "itemName": "Bills",
+      "svg": "invoice"
+    },
+    "history": {
+      "itemName": "Order history",
+      "svg": "open-book"
+    }
+  }
+}

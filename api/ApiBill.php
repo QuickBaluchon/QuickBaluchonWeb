@@ -8,6 +8,7 @@ class ApiBill extends Api
 
     private $_method;
     private $_data = [];
+    private $_tva = 1.2;
 
     public function __construct($url, $method)
     {
@@ -98,15 +99,15 @@ class ApiBill extends Api
 
         $packages = new ApiPackage([], 'GET');
         $packages->resetParams();
-        $pkgs = $packages->getListPackages() ;
+        $pkgs = $packages->getListPackages(['PACKAGE.id', 'weight', 'volume', 'delay', 'dateDeposit']) ;
 
-        if ($packages != null) {
+        if ($pkgs != null) {
             $total = $this->calculTotal($pkgs);
         }
 
         self::$_columns = ['grossAmount', 'netAmount', 'tva', 'dateBill', 'paid', 'client'] ;
         self::$_params = [
-            $total * 1.2,
+            $total * $this->_tva,
             $total,
             20,
             $url[1] . '-01',
@@ -120,48 +121,70 @@ class ApiBill extends Api
         self::$_set[] = 'pdfPath = ?' ;
         self::$_params[] =  "bills/$id.pdf" ;
         $this->patch('MONTHLYBILL', $id) ;
-
-
-        /*$packages = $this->_packageManager->getPackages(
-            ["weight", "volume", "delay", "PRICELIST.ExpressPrice", "PRICELIST.StandardPrice"],
-            ["PRICELIST", "PACKAGE.pricelist", "PRICELIST.id"],
-            $dateBill["dateBill"],
-            $this->_id);*/
-
     }
 
     public function createBillPdf($id, $packages, $total){
         require_once($_SERVER['DOCUMENT_ROOT'] . "/media/fpdf/fpdf.php");
         $this->_billManager = new BillManager();
 
-        $cols = ["weight", 'volume', 'delay', 'Price'];
+        $cols = ['Date deposit', "weight", 'volume', 'delay', 'Price'];
         $pdf = new FPDF();
         $pdf->AddPage();
+        $pdf->SetFont('Arial', '', 20);
+        $pdf->Cell(160, 20, "Quick Baluchon");
+        $pdf->Ln(10);
         $pdf->SetFont('Arial', '', 12);
+        $pdf->Cell(160, 20, "Facture No : " . $id);
+        $pdf->Ln(30);
+
+        $pdf->SetFont('Arial', '', 14);
         foreach ($cols as $key) {
             $pdf->Cell(40, 20, "$key");
         }
         $pdf->Ln(10);
+
+        $pdf->SetFont('Arial', '', 12);
         foreach ($packages as $package) {
-            foreach ($package as $key => $value) {
-                $pdf->Cell(40, 20, "$value");
-            }
+            if ($package['delay'] == 2)
+                $price = $package['ExpressPrice'];
+            else
+                $price = $package['StandardPrice'];
+
+            $pdf->Cell(40, 20, $package['dateDeposit']);
+            $pdf->Cell(40, 20, $package['weight']);
+            $pdf->Cell(40, 20, $package['volume']);
+            $pdf->Cell(40, 20, $package['delay']);
+            $pdf->Cell(40, 20, $price);
+
             $pdf->Ln(10);
         }
 
-        $pdf->Cell(40, 20, "$total");
+        $pdf->Ln(20);
+        $pdf->Cell(160, 20, "Total");
+        $pdf->Cell(40, 20, $total . " EUR");
+        $pdf->Ln(10);
+
+        $pdf->Cell(160, 20, "TVA");
+        $pdf->Cell(40, 20, ($this->_tva - 1) * 100 . " %");
+        $pdf->Ln(10);
+
+        $pdf->Cell(160, 20, "Total TTC");
+        $pdf->Cell(40, 20, $total * $this->_tva . " EUR");
+        $pdf->Ln(10);
         $filename = $_SERVER['DOCUMENT_ROOT'] . "/bills/$id.pdf" ;
         $pdf->Output($filename, 'F');
     }
 
-
     public function calculTotal($packages){
         $total = 0;
         foreach($packages as $package) {
-            if($package["delay"] == 2)
+            if ($package["delay"] == 2) {
                 $total += $package["ExpressPrice"];
-            else
+                $package['price'] = $package["ExpressPrice"];
+            } else {
                 $total += $package["StandardPrice"];
+                $package['price'] = $package['StandardPrice'];
+            }
         }
         return $total;
     }

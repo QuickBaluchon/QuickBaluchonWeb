@@ -13,7 +13,7 @@ class ApiClient extends Api
 
         $this->_method = $method;
 
-       $
+        if (count($url) == 0)
             $this->_data = $this->getListClients();     // list of clients - /api/client
 
         elseif (($id = intval($url[0])) !== 0) { // details one client - /api/client/{id}
@@ -119,8 +119,9 @@ class ApiClient extends Api
 
     public function signout()
     {
-        if (isset($_SESSION['id']))
-            unset($_SESSION['id']);
+        if (isset($_SESSION['id'])) {
+            $_SESSION = [];
+        }
 
         if (isset($this->_data)) {
             unset($this->_data['id']);

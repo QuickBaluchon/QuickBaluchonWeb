@@ -5,7 +5,9 @@
     "LinkAbout": "À propos",
 
     "DropdownLanguages": "Langue",
-    "LinkConnect": "Se connecter"
+    "LinkConnect": "Se connecter",
+    "LinkProfile": "Profil",
+    "LinkAdmin": "Admin"
   },
   "EN": {
     "LinkDownload": "Download",
@@ -13,6 +15,8 @@
     "LinkAbout": "About",
 
     "DropdownLanguages": "Language",
-    "LinkConnect": "Sign in"
+    "LinkConnect": "Sign in",
+    "LinkProfile": "Profile",
+    "LinkAdmin": "Admin"
   }
 }

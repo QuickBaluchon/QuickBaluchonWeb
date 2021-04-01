@@ -21,18 +21,13 @@ class View
         if (file_exists($location)) {
             $json = json_decode(file_get_contents($location), true);
             $sh = $_SESSION['defaultLang']['shortcut'];
-            if (key_exists($sh, $json))
-                switch($target) {
-                    case 'template': $this->_template = $json[$sh]; break ;
-                    case 'header': $this->_headerContent = $json[$sh] ;
-                    default: $this->_content = $json[$sh] ; break;
-                }
-            else
-                switch($target) {
-                    case 'template': $this->_template = $json['FR']; break ;
-                    case 'header': $this->_headerContent = $json['FR'] ;
-                    default: $this->_content = $json['FR'] ; break;
-                }
+            if (!key_exists($sh, $json))
+                $sh = 'FR';
+            switch($target) {
+                case 'template': $this->_template = $json[$sh]; break;
+                case 'header': $this->_headerContent = $json[$sh];
+                default: $this->_content = $json[$sh]; break;
+            }
         }
     }
 

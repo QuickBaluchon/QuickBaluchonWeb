@@ -20,22 +20,28 @@ class ControllerClient
                 if( isset($_SESSION['id']) ){
                     header('location:' . WEB_ROOT . 'client/profile');
                     exit();
-                }else {
-                    header('location:' . WEB_ROOT . 'login');
-                    exit();
                 }
-                break;
+                header('location:' . WEB_ROOT . 'login');
+                exit();
             default :
                 http_response_code(500);
                 exit();
         }
-
     }
 
     private function action($url) {
         if( isset($_SESSION['id']) ){
             if (method_exists($this, $url[1])) {
-                $this->_id = $_SESSION['id'];
+                if ($_SESSION['role'] == 'client')
+                    $this->_id = $_SESSION['id'];
+                else
+                    if (isset($url[2]) && $_SESSION['role'] == 'admin')
+                        $this->_id = intVal($url[2]);
+                    else {
+                        $this->_view = new View('Error');
+                        $this->_view->generateView(['cat' => 403]);
+                        return;
+                    }
                 $method = $url[1];
                 $this->$method(array_slice($url, 2));
             } else {
@@ -72,8 +78,13 @@ class ControllerClient
         else
             $client = $this->_clientManager->getClient($id[0], ['name', 'website']);
 
-        $profile = $this->_view->generateTemplate('client_profile', $client);
-        $this->_view->generateView(['content' => $profile, 'name' => $client['website']]);
+        if ($client == null) {
+            $this->_view = new View('Error');
+            $this->_view->generateView(['cat' => 404]);
+        } else {
+            $profile = $this->_view->generateTemplate('client_profile', $client);
+            $this->_view->generateView(['content' => $profile, 'name' => $client['website']]);
+        }
     }
 
     private function bills() {
@@ -132,7 +143,7 @@ class ControllerClient
         $package = $this->_packageManager->getClientPackages($this->_id, ['id', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'status', 'dateDeposit']);
         $client = $this->_clientManager->getClient($this->_id, ['website']);
 
-        $cols = ['#', 'Poids', 'Volume', 'Adresse', 'E-mail', 'Délais', 'Date de livraison', 'Status', 'Déposé le'];
+        $cols = ['#', 'Poids', 'Volume', 'Adresse', 'E-mail', 'Délais', 'Date de livraison', 'Déposé le'];
         $package = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $package]);
         $this->_view->generateView(['content' => $package, 'name' => $client['website']]);
     }
@@ -143,7 +154,5 @@ class ControllerClient
         $stripe = $this->_view->generateTemplate('stripe', ["bill" => $bill]);
         $this->_view->generateView(['content' => $stripe, 'name' => "stripe"]);
     }
-
-
 
 }

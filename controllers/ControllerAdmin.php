@@ -156,13 +156,16 @@ class ControllerAdmin {
         $this->_DeliveryManager = new DeliveryManager;
         $list = $this->_DeliveryManager->getDeliverys([], NULL);
 
-        foreach ($list as $d) {
-            $buttons[] = '<button type="button" class="btn btn-danger btn-sm" onclick="dismissDeliveryman(' . $d['id'] . ')">Licensier</button>';
-            unset($d['id']);
-            $d['employed'] = $d['employed'] == 1 ? "&#x2713" : "&#x10102" ;
-            $rows[] = array_merge($d, $buttons);
-            $buttons = [];
-        }
+        if ($list != null) {
+            foreach ($list as $d) {
+                $buttons[] = '<button type="button" class="btn btn-danger btn-sm" onclick="dismissDeliveryman(' . $d['id'] . ')">Licensier</button>';
+                unset($d['id']);
+                $d['employed'] = $d['employed'] == 1 ? "&#x2713" : "&#x10102" ;
+                $rows[] = array_merge($d, $buttons);
+                $buttons = [];
+            }
+        } else
+            $rows = [];
 
         $cols = ['firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licence', 'registration', 'contract start', 'contract end', 'dismiss'];
 
@@ -240,7 +243,7 @@ class ControllerAdmin {
             '<button type="button" class="btn btn-success btn-sm" onclick="addPrice()">Ajouter</button>'
         ] ;
 
-        $cols = ['#', 'Max wheight', 'Express price', 'Standard price', 'application date'];
+        $cols = ['#', 'Max weight', 'Express price', 'Standard price', 'application date'];
         $pricelist = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->generateView(['content' => $pricelist, 'name' => 'QuickBaluchon']);
     }

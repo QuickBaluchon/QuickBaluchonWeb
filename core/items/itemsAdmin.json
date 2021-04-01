@@ -1,0 +1,54 @@
+{
+  "FR": {
+    "pricelist": {
+      "itemName": "Tarifs",
+      "svg": "invoice"
+    },
+    "clients": {
+      "itemName": "Clients",
+      "svg": "user"
+    },
+    "deliverymen": {
+      "itemName": "Livreurs",
+      "svg": "truck"
+    },
+    "employ": {
+      "itemName": "Candidatures",
+      "svg": "truck"
+    },
+    "warehouses": {
+      "itemName": "Entrepôts",
+      "svg": "box-seam"
+    },
+    "languages": {
+      "itemName": "Langue",
+      "svg": "open-book"
+    }
+  },
+  "EN": {
+    "pricelist": {
+      "itemName": "Pricelists",
+      "svg": "invoice"
+    },
+    "clients": {
+      "itemName": "Clients",
+      "svg": "user"
+    },
+    "deliverymen": {
+      "itemName": "Deliverymen",
+      "svg": "truck"
+    },
+    "employ": {
+      "itemName": "Candidates",
+      "svg": "truck"
+    },
+    "warehouses": {
+      "itemName": "Warehouses",
+      "svg": "box-seam"
+    },
+    "languages": {
+      "itemName": "Languages",
+      "svg": "open-book"
+    }
+  }
+}

@@ -21,6 +21,13 @@ class ControllerDeliveryman
 
         $actions = ['payslip', 'profile', 'statistics', "signup"];
         if (method_exists($this, $url[1])) {
+            if ($_SESSION['role'] == 'deliveryman')
+                $this->_id = $_SESSION['id'];
+            else {
+                $this->_view = new View('Error');
+                $this->_view->generateView(['cat' => 403]);
+                return;
+            }
             $method = $url[1];
             $this->$method(array_slice($url, 2));
         } else {

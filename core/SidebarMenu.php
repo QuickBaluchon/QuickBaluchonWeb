@@ -7,12 +7,28 @@ class SidebarMenu extends View {
 
     private $_role;
     private $_html;
+    private $_items;
 
     public function __construct($role) {
         $this->_role = $role;
 
-        if( method_exists($this, $role) )
-            $this->$role();
+        $itemsLocation = __DIR__ . '/items/items' . ucfirst($role) . '.json';
+
+        if (file_exists($itemsLocation)) {
+            $this->_items = json_decode(file_get_contents($itemsLocation), true);
+            $sh = $_SESSION['defaultLang']['shortcut'];
+            if (key_exists($sh, $this->_items)) {
+                $this->_items = $this->_items[$sh];
+            } else {
+                $this->_items = $this->_items['FR'];
+            }
+        }
+
+        $data = [];
+
+        foreach ($this->_items as $link => $item)
+            $data[] = new SidebarMenuItem($item['itemName'], $this->_role.'/'.$link, $item['svg']);
+        $this->_html = $this->build($data);
     }
 
     private function build($data) {
@@ -24,47 +40,8 @@ class SidebarMenu extends View {
         return $view->generateTemplate('sidebar', ['items' => $li]);
     }
 
-    public function dispay() {
+    public function display() {
         echo $this->_html;
-    }
-
-    private function client() {
-        $items = ['Données personnelles', 'Factures', 'Historique'];
-        $links = ['profile', 'bills', 'history'];
-        $svg = ['user', 'invoice', 'open-book'];
-        $data = [];
-
-        for( $i = 0; $i < count($items); $i++ )
-            $data[] = new SidebarMenuItem($items[$i], $this->_role.'/'.$links[$i], $svg[$i]);
-
-        $this->_html = $this->build($data);
-
-    }
-
-    private function deliveryman() {
-        $items = ['Données personnelles', 'Statistiques', 'Fiches de paie'];
-        $links = ['profile', 'statistics', 'payslip'];
-        $svg = ['user', 'speedometer', 'invoice' ];
-        $data = [];
-
-        for( $i = 0; $i < count($items); $i++ )
-            $data[] = new SidebarMenuItem($items[$i], $this->_role.'/'.$links[$i], $svg[$i]);
-
-        $this->_html = $this->build($data);
-
-    }
-
-    private function admin() {
-        $items = ['Tarifs', 'Clients', 'Livreurs', 'Entrepôts', 'Langues'];
-        $links = ['pricelist', 'clients', 'deliverymen', 'warehouses', 'languages'];
-        $svg = ['invoice', 'user', 'truck', 'box-seam', 'open-book'];
-        $data = [];
-
-        for( $i = 0; $i < count($items); $i++ )
-            $data[] = new SidebarMenuItem($items[$i], $this->_role.'/'.$links[$i], $svg[$i]);
-
-        $this->_html = $this->build($data);
-
     }
 
 }

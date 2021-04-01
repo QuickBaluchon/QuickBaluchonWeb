@@ -27,8 +27,9 @@ class ApiPackage extends Api {
         echo json_encode( $this->_data, JSON_PRETTY_PRINT );
     }
 
-    public function getListPackages (): array  {
-        $columns = ['PACKAGE.id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'excelPath', 'dateDeposit'];
+    public function getListPackages ($columns = null): array  {
+        if ($columns == null)
+            $columns = ['PACKAGE.id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'excelPath', 'dateDeposit'];
         if(isset($_GET['inner'])) {
             $columns[] = 'PRICELIST.ExpressPrice';
             $columns[] = 'PRICELIST.StandardPrice';
@@ -120,7 +121,7 @@ class ApiPackage extends Api {
             self::$_set[] = "dateDelivery = DATE_ADD(now(), INTERVAL ? DAY)" ;
             self::$_params[] = $data['delay'] ;
 
-            $pricelistQuery = "SELECT id FROM PRICELIST WHERE maxWeight > ? AND applicationDate < CURDATE() ORDER BY maxWeight ASC, applicationDate DESC LIMIT 1" ;
+            $pricelistQuery = "SELECT id FROM PRICELIST WHERE maxWeight > ? AND applicationDate <= CURDATE() ORDER BY maxWeight ASC, applicationDate DESC LIMIT 1" ;
             self::$_set[] = "pricelist = ($pricelistQuery)" ;
             self::$_params[] = $data['weight'] ;
 

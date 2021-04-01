@@ -1,0 +1,30 @@
+{
+  "FR": {
+    "profile": {
+      "itemName": "Données personnnelles",
+      "svg": "user"
+    },
+    "bills": {
+      "itemName": "Fiche de paie",
+      "svg": "invoice"
+    },
+    "statistics": {
+      "itemName": "Statistiques",
+      "svg": "speedometer"
+    }
+  },
+  "EN": {
+    "profile": {
+      "itemName": "Personal data",
+      "svg": "user"
+    },
+    "bills": {
+      "itemName": "Invoices",
+      "svg": "invoice"
+    },
+    "statistics": {
+      "itemName": "Statistics",
+      "svg": "speedometer"
+    }
+  }
+}

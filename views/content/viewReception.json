@@ -1,20 +1,34 @@
 {
   "FR": {
     "Title": "Colis",
+    "Sender": "Voir l'expéditeur",
     "LabelWeight": "Poids",
     "LabelVolume": "Volume",
     "LabelAddress": "Adresse de livraison",
     "LabelEmail": "Email du destinataire",
     "LabelDelay": "Délai de livraison",
-    "ButtonSave": "Enregistrer"
+    "ButtonSave": "Enregistrer",
+    "Messages": {
+      "1": "Le paquet est en cours de traitement dans l'entrepôt",
+      "2": "Le paquet est en cours de livraison",
+      "3": "Le paquet a été livré le",
+      "4": "Le paquet a été retourné à l'expéditeur"
+    }
   },
   "EN": {
     "Title": "Package",
+    "Sender": "To the sender",
     "LabelWeight": "Weight",
     "LabelVolume": "Volume",
     "LabelAddress": "Recipient's address",
     "LabelEmail": "Recipient's email",
     "LabelDelay": "Delivery delay",
-    "ButtonSave": "Save"
+    "ButtonSave": "Save",
+    "Messages": {
+      "1": "The package is in the warehouse",
+      "2": "The package is being delivered today",
+      "3": "The package has been delivered on the",
+      "4": "The package has been returned to the sender"
+    }
   }
 }

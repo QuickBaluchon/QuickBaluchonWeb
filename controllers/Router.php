@@ -20,10 +20,8 @@ class Router {
             if (!isset($_SESSION['defaultLang']))
                 $_SESSION['defaultLang'] = $_SESSION['langs']['FR'] ;
 
-
             $url = '';
-            var_dump($_GET);
-            die();
+
           if( isset($_GET['url']) && strlen($_GET['url']) > 0) {
             $url = explode( '/', filter_var($_GET['url'],
             FILTER_SANITIZE_URL) );

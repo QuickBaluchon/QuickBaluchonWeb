@@ -25,7 +25,7 @@ abstract class Api {
         } else {
             $host = 'localhost';
             $dbn = 'hedwige';
-            $port = 8889;
+            $port = 3306;
             $usr = 'root';
             $pwd = 'root';
         }

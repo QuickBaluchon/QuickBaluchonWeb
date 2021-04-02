@@ -9,10 +9,17 @@ class ApiPayslip extends Api {
   private $id = 5;
   public function __construct($url, $method) {
 
+
     $this->_method = $method;
 
-    if (count($url) == 0)
-      $this->_data = $this->getListPayslip();     // list of packages - /api/package
+    if (count($url) == 0){
+        switch ($method) {
+            case 'GET': $this->_data = $this->getListPayslip();break;
+            case 'POST': $this->addPayslip();break;
+            default: $this->catError(405); break ;
+        }
+    }
+
 
     elseif ( ($id = intval($url[0])) !== 0 ){     // details one packages - /api/package/{id}
       $this->_data = $this->getPayslip($id);
@@ -34,9 +41,7 @@ class ApiPayslip extends Api {
       self::$_params[] = intval($_GET['id']);
     }
 
-
-
-    self::$_columns = ["id", "grossAmount", "bonus", "netAmount", "datePay", "pdfPath",	"paid"];
+    self::$_columns = ["id", "grossAmount", "bonus", "datePay", "pdfPath",	"paid"];
     self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
     self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
@@ -49,7 +54,7 @@ class ApiPayslip extends Api {
 
     if($this->_method != 'GET') $this->catError(405);
     //$this->authentication(['admin'], [$id]);
-    $columns = ["id", "grossAmount", "bonus", "netAmount", "datePay", "pdfPath", "paid" ];
+    $columns = ["id", "grossAmount", "bonus", "datePay", "pdfPath", "paid" ];
     self::$_where[] = 'id = ?';
     self::$_params[] = self::$id;
     $Payslip = $this->get('PAYSLIP', $columns);
@@ -59,5 +64,18 @@ class ApiPayslip extends Api {
       return [];
   }
 
+  public function addPayslip(){
+      $data = $this->getJsonArray();
+      $allowed = ["grossAmount",'bonus', 'datePay', 'paid', 'deliveryman'];
 
-}
+      if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
+          http_response_code(400);
+          exit(0);
+      }
+
+      self::$_columns = ["grossAmount",'bonus', 'datePay', 'paid', 'deliveryman'];
+      self::$_params = [$data["grossAmount"], $data["bonus"], $data["datePay"], $data["paid"], $data["deliveryman"]];
+
+      $this->add('PAYSLIP');
+    }
+  }

@@ -92,6 +92,8 @@ abstract class Api {
         // ORDER BY
         if (isset(self::$_order)) {
             $sql .= ' ORDER BY ' . self::$_order ;
+        } elseif (isset($_GET['order'])) {
+            $sql .= ' ORDER BY ' . $_GET['order'] ;
         }
 
         // LIMIT
@@ -204,11 +206,6 @@ abstract class Api {
         self::$_limit = 1;
         self::$_order = NULL ;
         self::$_join = [] ;
-    }
-
-    // RECOVER POST DATA
-    protected function getPostJson() {
-        return json_encode(json_decode($content), JSON_PRETTY_PRINT);
     }
 
     protected function getJsonArray() {

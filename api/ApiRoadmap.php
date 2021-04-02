@@ -135,11 +135,28 @@ class ApiRoadmap extends Api
             $deliverymen = $this->getExternData('ApiDeliveryMan', [
                 'employed' => 1,
                 'warehouse' => $w['id'],
+                'order' => 'radius desc'
             ], 'getListDelivery') ;
 
             if ($w['active'] == 1)
                 $this->dispatchPackages($packages, $deliverymen) ;
         }
+    }
+
+    private function dispatchPackages ($packages, $deliverymen) {
+        $avg = count($packages) / count($deliverymen);
+        $d = 0;
+        for (; $d < count($deliverymen) ; ++$d) {
+            for($nb = 0 ; $nb < $avg ; ++$nb) {
+                print_r($deliverymen[$d]);
+                $packages[$d * $avg + $nb]['distance'] = random_int(1, $deliverymen[$d]['radius']);
+                echo "DISTANCE " . $packages[$d * $avg + $nb]['distance'] . '<hr>' ;
+            }
+        }
+    }
+
+    private function createStep ($stepNb, $packageID, $roadmapID) {
+        echo "$stepNb";
     }
 
     private function getExternData ($api, $get, $function) {
@@ -158,12 +175,6 @@ class ApiRoadmap extends Api
             $_GET['offset'] = ++$i * $_GET['limit'];
         }
         return $data ;
-    }
-
-    private function dispatchPackages ($packages, $deliverymen) {
-        foreach ($deliverymen as $d) {
-            echo "Coucou" ;
-        }
     }
 
 }

@@ -5,7 +5,7 @@ extract($this->_content) ;
 ?>
 
 <section id="heroBanner-package">
-    <div class="container col-8 d-flex flex-column justify-content-center">
+    <div class="container col-8 d-flex flex-column justify-content-center" id="jumbo">
         <div class="row">
             <div class="col">
 

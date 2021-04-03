@@ -7,37 +7,29 @@ import  Stats  from '../../libraries/three.js-master/examples/jsm/libs/stats.mod
 
 let container, containerWidth, containerHeight;
 let camera, scene, renderer;
+let meshes=[];
 let mesh;
 let loadingManager, mixer, mixer2, mixer3, truck, house, warehouse, action;
-let movelet
 let clock;
 let spotLight, lightHelper, shadowCameraHelper;
 let controls, direction;
 let sky, sun, effectController;
-let key ;
+let key;
 let ground ;
-
-function logsAngle (angle) {
-    console.log("Angle " + angle);
-    console.log(Math.sin(angle));
-    console.log(Math.cos(angle));
-}
-
-logsAngle(2);
-logsAngle(-2);
-logsAngle(0);
-logsAngle(1.5);
-logsAngle(-1.5);
-
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2( 1, 1 );
 
 clock = new THREE.Clock();
 container = document.getElementById('webgl');
-containerWidth = 1000;
+containerWidth = 1500;
 containerHeight = 700;
 window.addEventListener('keydown', onkeydownAnimation);
 window.addEventListener('keyup', onkeyupAnimation)
 
 init();
+
+
+
 
 function init() {
     camera = new THREE.PerspectiveCamera( 70, containerWidth / containerHeight, 1, 1000000000 );
@@ -47,7 +39,9 @@ function init() {
     ground = createPhongMaterial( '../media/webgl/assets_low/sand.jpg', 70, 70 );
 
     setRenderer();
+    container.addEventListener( 'mousemove', onMouseMove );
     container.appendChild( renderer.domElement );
+
     window.addEventListener( 'resize', onWindowResize, false );
 
     //	Controls & light
@@ -73,6 +67,15 @@ function onWindowResize() {
     controls.handleResize();
 }
 
+
+function onMouseMove( event ) {
+
+  event.preventDefault();
+
+  mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+}
 //###############		ANIMATIONS		##################################
 
 function onkeydownAnimation (e) {
@@ -103,15 +106,14 @@ function animate() {
             moveTruck();
         } else action.paused = true;
     }
+    render()
     renderer.render( scene, camera );
     controls.update();
 }
 
 function moveTruck () {
     let speedCoeff = 15;
-    console.log(truck.rotation.y);
-    console.log(Math.sin(truck.rotation.y));
-    console.log(Math.cos(truck.rotation.y));
+
     switch (direction) {
         case 'forward':
             truck.position.x -= speedCoeff * Math.cos(truck.rotation.y);
@@ -142,6 +144,8 @@ function setRenderer(){
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( containerWidth, containerHeight );
 
+
+
     // Shadow management
     renderer.shadowMap.enabled = true ;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -151,6 +155,13 @@ function setRenderer(){
 function render(){
     lightHelper.update();
     //shadowCameraHelper.update();
+
+    raycaster.setFromCamera( mouse, camera );
+    const intersection = raycaster.intersectObjects( meshes );
+
+    if ( intersection.length > 0 ) {
+      console.log(intersection[0].object.scale.x += 0.01)
+    }
     renderer.render( scene, camera );
 }
 
@@ -300,20 +311,21 @@ function createTruck(){
     const loader = new GLTFLoader(loadingManager);
     loader.load("../media/webGl/nissan/scene.gltf", function(obj){
         obj.scene.position.set(-20, -35, 300);
-        console.log("ok");
+
         //animation
         mixer = new THREE.AnimationMixer( obj.scene );
         action = mixer.clipAction( obj.animations[0] );
         action.timeScale = 2;  // animation speed / 2
         action.play();
-        console.log(action);
+
         truck = obj.scene;
-        console.log(truck);
+
         truck.scale.set(0.1, 0.1, 0.1);
 
         //shadow
         truck.traverse( function(child){
-            if( child.isMesh ){
+            if( child.isMesh ) {
+                meshes.push(child);
                 shadow(child);
             }
             if(child.name == "ground_occlu")
@@ -328,18 +340,20 @@ function createHouse(){
     const loader = new GLTFLoader(loadingManager);
     loader.load("../media/webGl/house/scene.gltf", function(obj){
         obj.scene.position.set(-20, -175, 300);
-        console.log("ok house");
+
         //animation
         mixer2 = new THREE.AnimationMixer( obj.scene );
         house = obj.scene;
-        console.log(house);
+
         house.scale.set(1.5,1.5,1.5);
         house.rotation.y = Math.PI;
 
         //shadow
         house.traverse( function(child){
-            if( child.isMesh )
+            if( child.isMesh ) {
+                meshes.push(child);
                 shadow(child);
+            }
         });
     });
 
@@ -350,18 +364,20 @@ function createWarehouse(){
     const loader = new GLTFLoader(loadingManager);
     loader.load("../media/webGl/warehouse/scene.gltf", function(obj){
         obj.scene.position.set(-20, -175, 300);
-        console.log("ok warehouse");
+
         //animation
         mixer3 = new THREE.AnimationMixer( obj.scene );
         warehouse = obj.scene;
-        console.log(warehouse);
+
         warehouse.scale.set(0.5, 0.5, 0.5);
         warehouse.position.set(0, 0, -10000);
 
         //shadow
         warehouse.traverse( function(child){
-            if( child.isMesh )
+            if( child.isMesh ) {
+                meshes.push(child);
                 shadow(child);
+            }
         });
     });
 

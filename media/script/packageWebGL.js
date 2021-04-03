@@ -8,9 +8,10 @@ import  Stats  from '../../libraries/three.js-master/examples/jsm/libs/stats.mod
 let container, containerWidth, containerHeight;
 let camera, scene, renderer;
 let meshes=[];
-let loadingManager, mixer, mixer2, mixer3, mixer4, monsterMixers = [];
+let loadingManager, mixer, houseMixer, warehouseMixer, monsterMixers = [];
+let roadMixers = [], road = [], roadNb = 8;
 let truck, action, house, warehouse, monsters = [], monsterActions = [];
-let i, monsterNb = 5, intersection;
+let i, monsterNb = 15, intersection;
 let clock;
 let spotLight, lightHelper, shadowCameraHelper;
 let controls, direction;
@@ -57,6 +58,8 @@ function init() {
     createWarehouse();
     for (i = 0 ; i < monsterNb ; ++i)
         createMonster(i);
+    for (i = 0 ; i < roadNb ; ++i)
+        createRoad(i);
 
     animate();
 }
@@ -166,7 +169,7 @@ function render(){
 }
 
 function removeMonster(){
-  console.log("ok");
+    console.log("ok");
     intersection[0].object.scale.x = 0
 }
 //###############		CONTROLS		##################################
@@ -308,6 +311,8 @@ function addObjects(){
     scene.add(warehouse);
     for (i = 0 ; i < monsterNb ; ++i)
         scene.add(monsters[i]);
+    for (i = 0 ; i < roadNb ; ++i)
+        scene.add(road[i]);
     render();
 }
 
@@ -315,8 +320,6 @@ function createTruck(){
 
     const loader = new GLTFLoader(loadingManager);
     loader.load("../media/webGl/nissan/scene.gltf", function(obj){
-        obj.scene.position.set(-20, -35, 300);
-
         //animation
         mixer = new THREE.AnimationMixer( obj.scene );
         action = mixer.clipAction( obj.animations[0] );
@@ -324,7 +327,8 @@ function createTruck(){
         action.play();
 
         truck = obj.scene;
-
+        truck.rotation.y = -Math.PI / 2;
+        truck.position.set(-1000, -30, 0);
         truck.scale.set(0.1, 0.1, 0.1);
 
         //shadow
@@ -344,14 +348,13 @@ function createHouse(){
 
     const loader = new GLTFLoader(loadingManager);
     loader.load("../media/webGl/house/scene.gltf", function(obj){
-        obj.scene.position.set(-20, -175, 300);
+        obj.scene.position.set(-1400, -175, -8000);
 
         //animation
-        mixer2 = new THREE.AnimationMixer( obj.scene );
+        houseMixer = new THREE.AnimationMixer( obj.scene );
         house = obj.scene;
 
         house.scale.set(1.5,1.5,1.5);
-        house.rotation.y = Math.PI;
 
         //shadow
         house.traverse( function(child){
@@ -368,14 +371,14 @@ function createWarehouse(){
 
     const loader = new GLTFLoader(loadingManager);
     loader.load("../media/webGl/warehouse/scene.gltf", function(obj){
-        obj.scene.position.set(-20, -175, 300);
 
         //animation
-        mixer3 = new THREE.AnimationMixer( obj.scene );
+        warehouseMixer = new THREE.AnimationMixer( obj.scene );
         warehouse = obj.scene;
 
         warehouse.scale.set(0.5, 0.5, 0.5);
-        warehouse.position.set(0, 0, -10000);
+        warehouse.rotation.y = Math.PI;
+        warehouse.position.set(-1000, -30, 3000);
 
         //shadow
         warehouse.traverse( function(child){
@@ -393,19 +396,49 @@ function createMonster(i) {
     const loader = new GLTFLoader(loadingManager);
     loader.load("../media/webGl/monster/scene.gltf", function(obj){
         console.log('ok monster');
-        obj.scene.position.set(-20, -30, 0 - i * 100);
+
 
         //animation
         monsterMixers[i] = new THREE.AnimationMixer( obj.scene );
         monsterActions[i] = monsterMixers[i].clipAction( obj.animations[0] );
         monsters[i] = obj.scene;
 
-        monsters[i].scale.set(5, 5, 5);
+        let r = parseInt(Math.random() * 5000)
+        let r2 = Math.random() + 1
+        let side = Math.random() < 0.5 ? 1 : -1;
+        if (r < 500) r += 500;
+        monsters[i].scale.set(10, 10, 10);
+        monsters[i].position.set(-1000 + side * 100 * r2, -30, - r * r2);
 
         //shadow
         monsters[i].traverse( function(child){
             if( child.isMesh ) {
                 meshes.push(child);
+                shadow(child);
+            }
+        });
+    });
+
+}
+
+function createRoad (i) {
+
+    const loader = new GLTFLoader(loadingManager);
+    loader.load("../media/webGl/road/scene.gltf", function(obj){
+        console.log('ok road');
+
+        //animation
+        roadMixers[i] = new THREE.AnimationMixer( obj.scene );
+        road[i] = obj.scene;
+        road[i].position.y = -35;
+        road[i].position.x = -1000;
+        road[i].position.z = 0 - i * 1100;
+        road[i].scale.set(100, 100, 100);
+
+        //shadow
+        road[i].traverse( function(child){
+            if( child.isMesh ) {
+                //meshes.push(child);
                 shadow(child);
             }
         });

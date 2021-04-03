@@ -10,7 +10,7 @@ let camera, scene, renderer;
 let meshes=[];
 let loadingManager, mixer, mixer2, mixer3, mixer4, monsterMixers = [];
 let truck, action, house, warehouse, monsters = [], monsterActions = [];
-let i, monsterNb = 5;
+let i, monsterNb = 5, intersection;
 let clock;
 let spotLight, lightHelper, shadowCameraHelper;
 let controls, direction;
@@ -156,15 +156,19 @@ function render(){
     //shadowCameraHelper.update();
 
     raycaster.setFromCamera( mouse, camera );
-    const intersection = raycaster.intersectObjects( meshes );
+    intersection = raycaster.intersectObjects( meshes );
 
     if ( intersection.length > 0 ) {
-      console.log("ok")
+      window.addEventListener("click", removeMonster )
     }
+
     renderer.render( scene, camera );
 }
 
-
+function removeMonster(){
+  console.log("ok");
+    intersection[0].object.scale.x = 0
+}
 //###############		CONTROLS		##################################
 
 function createControls(){
@@ -326,7 +330,7 @@ function createTruck(){
         //shadow
         truck.traverse( function(child){
             if( child.isMesh ) {
-                meshes.push(child);
+                //meshes.push(child);
                 shadow(child);
             }
             if(child.name === "ground_occlu")
@@ -352,7 +356,7 @@ function createHouse(){
         //shadow
         house.traverse( function(child){
             if( child.isMesh ) {
-                meshes.push(child);
+                //meshes.push(child);
                 shadow(child);
             }
         });
@@ -376,7 +380,7 @@ function createWarehouse(){
         //shadow
         warehouse.traverse( function(child){
             if( child.isMesh ) {
-                meshes.push(child);
+                //meshes.push(child);
                 shadow(child);
             }
         });

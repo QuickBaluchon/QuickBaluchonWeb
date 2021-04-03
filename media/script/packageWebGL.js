@@ -8,7 +8,9 @@ import  Stats  from '../../libraries/three.js-master/examples/jsm/libs/stats.mod
 let container, containerWidth, containerHeight;
 let camera, scene, renderer;
 let meshes=[];
-let loadingManager, mixer, mixer2, mixer3, truck, house, warehouse, action;
+let loadingManager, mixer, mixer2, mixer3, mixer4, monsterMixers = [];
+let truck, action, house, warehouse, monsters = [], monsterActions = [];
+let i, monsterNb = 5;
 let clock;
 let spotLight, lightHelper, shadowCameraHelper;
 let controls, direction;
@@ -19,17 +21,16 @@ const mouse = new THREE.Vector2( 1, 1 );
 
 clock = new THREE.Clock();
 container = document.getElementById('webgl');
-containerWidth = window.width;
-containerHeight = window.height;
+containerWidth = 1920;
+containerHeight = 1080;
 window.addEventListener('keydown', onkeydownAnimation);
 window.addEventListener('keyup', onkeyupAnimation)
 
 init();
 
 
-
-
 function init() {
+
     camera = new THREE.PerspectiveCamera( 70, containerWidth / containerHeight, 1, 1000000000 );
     camera.position.set( 80, -100, 500 );
     scene = new THREE.Scene();
@@ -53,7 +54,10 @@ function init() {
     loadingManager = new THREE.LoadingManager( addObjects );
     createTruck();
     createHouse();
-    createWarehouse()
+    createWarehouse();
+    for (i = 0 ; i < monsterNb ; ++i)
+        createMonster(i);
+
     animate();
 }
 
@@ -155,7 +159,7 @@ function render(){
     const intersection = raycaster.intersectObjects( meshes );
 
     if ( intersection.length > 0 ) {
-      console.log(intersection[0].object.scale.x += 0.01)
+      console.log("ok")
     }
     renderer.render( scene, camera );
 }
@@ -297,7 +301,9 @@ function time() {
 function addObjects(){
     scene.add(truck);
     scene.add(house);
-    scene.add(warehouse)
+    scene.add(warehouse);
+    for (i = 0 ; i < monsterNb ; ++i)
+        scene.add(monsters[i]);
     render();
 }
 
@@ -369,6 +375,31 @@ function createWarehouse(){
 
         //shadow
         warehouse.traverse( function(child){
+            if( child.isMesh ) {
+                meshes.push(child);
+                shadow(child);
+            }
+        });
+    });
+
+}
+
+function createMonster(i) {
+
+    const loader = new GLTFLoader(loadingManager);
+    loader.load("../media/webGl/monster/scene.gltf", function(obj){
+        console.log('ok monster');
+        obj.scene.position.set(-20, -30, 0 - i * 100);
+
+        //animation
+        monsterMixers[i] = new THREE.AnimationMixer( obj.scene );
+        monsterActions[i] = monsterMixers[i].clipAction( obj.animations[0] );
+        monsters[i] = obj.scene;
+
+        monsters[i].scale.set(5, 5, 5);
+
+        //shadow
+        monsters[i].traverse( function(child){
             if( child.isMesh ) {
                 meshes.push(child);
                 shadow(child);

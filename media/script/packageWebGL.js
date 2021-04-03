@@ -8,21 +8,19 @@ import  Stats  from '../../libraries/three.js-master/examples/jsm/libs/stats.mod
 let container, containerWidth, containerHeight;
 let camera, scene, renderer;
 let meshes=[];
-let mesh;
 let loadingManager, mixer, mixer2, mixer3, truck, house, warehouse, action;
 let clock;
 let spotLight, lightHelper, shadowCameraHelper;
 let controls, direction;
 let sky, sun, effectController;
-let key;
 let ground ;
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2( 1, 1 );
 
 clock = new THREE.Clock();
 container = document.getElementById('webgl');
-containerWidth = 1500;
-containerHeight = 700;
+containerWidth = window.width;
+containerHeight = window.height;
 window.addEventListener('keydown', onkeydownAnimation);
 window.addEventListener('keyup', onkeyupAnimation)
 
@@ -76,17 +74,18 @@ function onMouseMove( event ) {
   mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
 }
+
 //###############		ANIMATIONS		##################################
 
 function onkeydownAnimation (e) {
     if (e.key === 'z') {
         direction = 'forward';
     } else if (e.key === 'q') {
-        direction = 'left'
+        direction = 'left';
     } else if (e.key === 's') {
-        direction = 'backward'
+        direction = 'backward';
     } else if (e.key === 'd') {
-        direction = 'right'
+        direction = 'right';
     }
 }
 
@@ -133,10 +132,6 @@ function moveTruck () {
             break;
         default: break;
     }
-}
-
-function computeZDirection (x, coeff) {
-    return coeff * (x * Math.sin(truck.rotation.y) / Math.cos(truck.rotation.y) + Math.sin(truck.rotation.y));
 }
 
 function setRenderer(){
@@ -328,7 +323,7 @@ function createTruck(){
                 meshes.push(child);
                 shadow(child);
             }
-            if(child.name == "ground_occlu")
+            if(child.name === "ground_occlu")
                 child.scale.set(0,0,0);
         });
     });

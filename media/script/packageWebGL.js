@@ -17,6 +17,19 @@ let sky, sun, effectController;
 let key ;
 let ground ;
 
+function logsAngle (angle) {
+    console.log("Angle " + angle);
+    console.log(Math.sin(angle));
+    console.log(Math.cos(angle));
+}
+
+logsAngle(2);
+logsAngle(-2);
+logsAngle(0);
+logsAngle(1.5);
+logsAngle(-1.5);
+
+
 clock = new THREE.Clock();
 container = document.getElementById('webgl');
 containerWidth = 1000;
@@ -52,27 +65,30 @@ function init() {
     animate();
 }
 
-function onkeydownAnimation (e) {
-    if (e.key == 'z' || e.key == 'ArrowUp')
-        direction = 'forward';
-    else if (e.key == 'q' || e.key == 'ArrowLeft')
-        direction = 'left'
-    else if (e.key == 's' || e.key == 'ArrowDown')
-        direction = 'backward'
-    else if (e.key == 'd' || e.key == 'ArrowRight')
-        direction = 'right'
-}
-
-function onkeyupAnimation (e) {
-    direction = null;
-}
-
 function onWindowResize() {
     camera.aspect = containerWidth / containerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize( containerWidth, containerHeight );
 
     controls.handleResize();
+}
+
+//###############		ANIMATIONS		##################################
+
+function onkeydownAnimation (e) {
+    if (e.key === 'z') {
+        direction = 'forward';
+    } else if (e.key === 'q') {
+        direction = 'left'
+    } else if (e.key === 's') {
+        direction = 'backward'
+    } else if (e.key === 'd') {
+        direction = 'right'
+    }
+}
+
+function onkeyupAnimation (e) {
+    direction = null;
 }
 
 function animate() {
@@ -92,29 +108,26 @@ function animate() {
 }
 
 function moveTruck () {
-    // direction.z = Number( moveForward ) - Number( moveBackward );  // Number can convert boolean to int 0 or 1
-    // direction.x = Number( moveRight ) - Number( moveLeft );
-    // direction.normalize(); // this ensures consistent movements in all directions
-    //
-    // if ( moveForward || moveBackward ) velocity.z -= direction.z * 200.0 * delt;
-    // else velocity.z = 0
-    // if ( moveLeft || moveRight ) velocity.x -= direction.x * 200.0 * delt;
-    // else velocity.x = 0
-
+    let speedCoeff = 15;
+    console.log(truck.rotation.y);
+    console.log(Math.sin(truck.rotation.y));
+    console.log(Math.cos(truck.rotation.y));
     switch (direction) {
         case 'forward':
-            truck.position.z += computeZDirection(1, 25);
-            truck.position.x -= 25;
+            truck.position.x -= speedCoeff * Math.cos(truck.rotation.y);
+            truck.position.z += speedCoeff * Math.sin(truck.rotation.y);
             break;
         case 'backward':
-            truck.position.z -= computeZDirection(1, 25);
-            truck.position.x -= 25;
+            truck.position.x += speedCoeff * Math.cos(truck.rotation.y);
+            truck.position.z -= speedCoeff * Math.sin(truck.rotation.y);
             break;
         case 'right':
             truck.rotation.y -= 0.05;
+            truck.rotation.y %= (2 * Math.PI);
             break;
         case 'left':
             truck.rotation.y += 0.05;
+            truck.rotation.y %= (2 * Math.PI);
             break;
         default: break;
     }
@@ -141,51 +154,25 @@ function render(){
     renderer.render( scene, camera );
 }
 
-function shadow(obj){
-    obj.castShadow = true ;
-    obj.receiveShadow = true;
-}
 
-function addObjects(){
-    scene.add(truck);
-    scene.add(house);
-    scene.add(warehouse)
-    render();
-}
-
-/*
-Creates a MeshPhongMaterial for a given texture
-textureName 	name of the used material
-repeat_x 		repeat value in x
-repeat_y		repeat value in y
-*/
-function createPhongMaterial(textureName, repeat_x, repeat_y){
-    let loader = new THREE.TextureLoader();
-    const texture = loader.load( textureName );
-    if(repeat_x && repeat_y) {
-        texture.wrapS = THREE.RepeatWrapping ;
-        texture.wrapT = THREE.RepeatWrapping ;
-        texture.repeat.set( repeat_x, repeat_y );
-    }
-    return new THREE.MeshPhongMaterial( { map: texture} );
-}
-
+//###############		CONTROLS		##################################
 
 function createControls(){
-  controls = new OrbitControls( camera, renderer.domElement );
+    controls = new OrbitControls( camera, renderer.domElement );
 
-  controls.enabledDamping = true;
-  controls.dampingFactor = 0.05;
-  controls.screenPanning = false;
+    controls.enabledDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.screenPanning = false;
 
-  controls.minDistance = 2;
-  controls.maxDistance = 10000000000000000;
+    controls.minDistance = 2;
+    controls.maxDistance = 10000000000000000;
 
-  controls.maxPolarAngle = Math.PI / 2 ;
-  controls.target = new THREE.Vector3( 0,0,0);
+    controls.maxPolarAngle = Math.PI / 2 ;
+    controls.target = new THREE.Vector3( 0,0,0);
 
 }
 
+//###############		LIGHTS / SHADOWS		##################################
 
 function createLight () {
     const ambient = new THREE.AmbientLight( 0xffffff, 1 );
@@ -209,6 +196,11 @@ function createLight () {
     scene.add( spotLight );
 }
 
+function shadow(obj){
+    obj.castShadow = true ;
+    obj.receiveShadow = true;
+}
+
 function lightShadow(spotLight){
     spotLight.castShadow = true;
     spotLight.shadow.camera.near = 10;
@@ -217,6 +209,25 @@ function lightShadow(spotLight){
 
     // shadowCameraHelper = new THREE.CameraHelper( spotLight.shadow.camera );
     // scene.add( shadowCameraHelper );
+}
+
+//###############		MESH		##################################
+
+/*
+Creates a MeshPhongMaterial for a given texture
+textureName 	name of the used material
+repeat_x 		repeat value in x
+repeat_y		repeat value in y
+*/
+function createPhongMaterial(textureName, repeat_x, repeat_y){
+    let loader = new THREE.TextureLoader();
+    const texture = loader.load( textureName );
+    if(repeat_x && repeat_y) {
+        texture.wrapS = THREE.RepeatWrapping ;
+        texture.wrapT = THREE.RepeatWrapping ;
+        texture.repeat.set( repeat_x, repeat_y );
+    }
+    return new THREE.MeshPhongMaterial( { map: texture} );
 }
 
 function createRectangleMesh (x, y, z, material, rot_x, rot_y, rot_z) {
@@ -235,7 +246,7 @@ function addToPosition (object, off_x, off_y, off_z) {
     return object ;
 }
 
-//########		ENVIRONMENT		############################
+//###############		ENVIRONMENT		##################################
 
 function createPlane(){
     let floor;
@@ -277,6 +288,13 @@ function time() {
 
 //###############		OBJECTS		##################################
 
+function addObjects(){
+    scene.add(truck);
+    scene.add(house);
+    scene.add(warehouse)
+    render();
+}
+
 function createTruck(){
 
     const loader = new GLTFLoader(loadingManager);
@@ -299,13 +317,11 @@ function createTruck(){
                 shadow(child);
             }
             if(child.name == "ground_occlu")
-              child.scale.set(0,0,0);
+                child.scale.set(0,0,0);
         });
     });
 
 }
-
-
 
 function createHouse(){
 

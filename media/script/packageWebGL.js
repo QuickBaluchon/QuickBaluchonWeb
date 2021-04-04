@@ -116,7 +116,7 @@ function animate() {
     }
     if (truck && monsters) {
         checkCollision();
-        //checkRoadExit();
+        checkRoadExit();
     }
     render()
     renderer.render( scene, camera );
@@ -161,15 +161,26 @@ function checkCollision () {
         xRange['right'] = monsters[i].position.x + offsetX;
         zRange['front'] = monsters[i].position.z + offsetZ;
         zRange['back'] = monsters[i].position.z - offsetZ;
-        if (xRange['left'] < truck.position.x && truck.position.x < xRange['right'])
-            if (zRange['back'] < truck.position.z && truck.position.z < zRange['front']) {
-                truck.position.set(truckStartPosition.x, truckStartPosition.y, truckStartPosition.z);
-                truck.rotation.y = truckStartRotationY;
+        if (zRange['back'] < truck.position.z && truck.position.z < zRange['front'])
+            if (xRange['left'] < truck.position.x && truck.position.x < xRange['right']) {
+                console.log("Monster " + i + " collision");
+                resetTruck();
             }
     }
 }
 
+function checkRoadExit () {
+    let roadOffset = 400;
+    if (truck.position.x < -1000 - roadOffset || truck.position.x > -1000 + roadOffset) {
+        console.log("ok");
+        resetTruck();
+    }
+}
 
+function resetTruck () {
+    truck.position.set(truckStartPosition.x, truckStartPosition.y, truckStartPosition.z);
+    truck.rotation.y = truckStartRotationY;
+}
 
 function setRenderer(){
     renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -198,7 +209,20 @@ function render(){
 
 function removeMonster(){
     console.log("ok");
-    intersection[0].object.scale.x = 0
+
+    for (i = 0 ; i < monsterNb ; ++i) {
+        console.log(intersection[0].object.matrixWorld.elements[12]);
+
+        if (parseInt(intersection[0].object.matrixWorld.elements[12]) == parseInt(monsters[i].position.x) &&
+            parseInt(intersection[0].object.matrixWorld.elements[14]) == parseInt(monsters[i].position.z)) {
+                monsters[i].position.set(4000, 0, 4000);
+            }
+    }
+
+
+    // intersection[0].object.position.z = 4000;
+    // intersection[0].object.position.x = 4000;
+    //intersection[0].object.scale.x = 0
 }
 //###############		CONTROLS		##################################
 
@@ -431,6 +455,7 @@ function createMonster(i) {
         monsterMixers[i] = new THREE.AnimationMixer( obj.scene );
         monsterActions[i] = monsterMixers[i].clipAction( obj.animations[0] );
         monsters[i] = obj.scene;
+        monsters[i].name += i;
 
         let r = parseInt(Math.random() * 5000)
         let r2 = Math.random() + 1
@@ -438,7 +463,7 @@ function createMonster(i) {
         if (r < 500) r += 500;
         monsters[i].scale.set(10, 10, 10);
         monsters[i].position.set(-1000 + side * 100 * r2, -30, - r * r2);
-
+        
         //shadow
         monsters[i].traverse( function(child){
             if( child.isMesh ) {
@@ -462,7 +487,7 @@ function createRoad (i) {
         road[i].position.y = -33;
         road[i].position.x = -1000;
         road[i].position.z = 0 - i * 1100;
-        road[i].scale.set(100, 100, 100);
+        road[i].scale.set(150, 150, 150);
         //shadow
         road[i].traverse( function(child){
             if( child.isMesh ) {

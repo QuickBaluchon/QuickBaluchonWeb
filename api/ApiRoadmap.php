@@ -11,6 +11,7 @@ class ApiRoadmap extends Api
 
     public function __construct($url, $method)
     {
+        $this->computeDistance('242 rue du Faubourg Saint Antoine, Paris', '114 avenue Michelet, 93400 Saint Ouen');
         $this->_method = $method;
 
         if (count($url) == 0) {
@@ -156,10 +157,19 @@ class ApiRoadmap extends Api
 
     private function computeDistance ($address1, $address2) {
         $url = $address1 . '|' . $address2;
+        $url = $this->urlEncode($url);
         $url = 'https://maps.googleapis.com/maps/api/distancematrix/json?origins=' . $url;
-        echo $url = $this->urlEncode($url);
-        /*$curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);*/
+        echo $url;
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($curl, CURLOPT_HEADER, FALSE);
+        curl_setopt($curl, CURLOPT_POST, TRUE);
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        echo $response;
     }
 
     private function urlEncode ($string) {

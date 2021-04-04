@@ -11,7 +11,6 @@ class ApiRoadmap extends Api
 
     public function __construct($url, $method)
     {
-
         $this->_method = $method;
 
         if (count($url) == 0) {
@@ -135,11 +134,54 @@ class ApiRoadmap extends Api
             $deliverymen = $this->getExternData('ApiDeliveryMan', [
                 'employed' => 1,
                 'warehouse' => $w['id'],
+                'order' => 'radius desc'
             ], 'getListDelivery') ;
 
             if ($w['active'] == 1)
                 $this->dispatchPackages($packages, $deliverymen) ;
         }
+    }
+
+    private function dispatchPackages ($packages, $deliverymen) {
+        $avg = count($packages) / count($deliverymen);
+        $d = 0;
+        for (; $d < count($deliverymen) ; ++$d) {
+            for($nb = 0 ; $nb < $avg ; ++$nb) {
+                print_r($deliverymen[$d]);
+                $packages[$d * $avg + $nb]['distance'] = random_int(1, $deliverymen[$d]['radius']);
+                echo "DISTANCE " . $packages[$d * $avg + $nb]['distance'] . '<hr>' ;
+            }
+        }
+    }
+
+    private function computeDistance ($address1, $address2) {
+        $url = $address1 . '|' . $address2;
+        $url = 'https://maps.googleapis.com/maps/api/distancematrix/json?origins=' . $url;
+        echo $url = $this->urlEncode($url);
+        /*$curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);*/
+    }
+
+    private function urlEncode ($string) {
+        $str = $string;
+        $encodingMap = [
+            ' ' => '%20',
+            '"' => '%22',
+            '+' => '%2B',
+            ',' => '%2C',
+            '<' => '%3C',
+            '>' => '%3E',
+            '#' => '%23',
+            '%' => '%25',
+            '|' => '%7C'
+        ];
+        foreach ($encodingMap as $character => $replacement)
+            $str = str_replace($character, $replacement, $str);
+        return $str;
+    }
+
+    private function createStep ($stepNb, $packageID, $roadmapID) {
+        echo "$stepNb";
     }
 
     private function getExternData ($api, $get, $function) {
@@ -158,12 +200,6 @@ class ApiRoadmap extends Api
             $_GET['offset'] = ++$i * $_GET['limit'];
         }
         return $data ;
-    }
-
-    private function dispatchPackages ($packages, $deliverymen) {
-        foreach ($deliverymen as $d) {
-            echo "Coucou" ;
-        }
     }
 
 }

@@ -10,8 +10,8 @@ let camera, scene, renderer;
 let meshes=[];
 let loadingManager, mixer, houseMixer, warehouseMixer, monsterMixers = [];
 let roadMixers = [], road = [], roadNb = 8;
-let truck, action, house, warehouse, monsters = [], monsterActions = [];
-let i, monsterNb = 15, intersection;
+let truck, action, house, warehouse, monsters = [], monsterActions = [], monsterNb = 15;
+let i, intersection;
 let clock, animationState = true;
 let spotLight, lightHelper, shadowCameraHelper;
 let controls, direction;
@@ -108,6 +108,9 @@ function animate() {
 
     if (animationState) {
         if ( mixer ) mixer.update(delta);
+        for (i = 0 ; i < monsterNb ; ++i) {
+            if ( monsterMixers[i] ) monsterMixers[i].update(delta);
+        }
 
         if (action) {
             if(direction != null) {
@@ -166,7 +169,6 @@ function checkCollision () {
         zRange['back'] = monsters[i].position.z - offsetZ;
         if (zRange['back'] < truck.position.z && truck.position.z < zRange['front'])
             if (xRange['left'] < truck.position.x && truck.position.x < xRange['right']) {
-                console.log("Monster " + i + " collision");
                 resetTruck();
             }
     }
@@ -184,8 +186,8 @@ function checkRoadWin () {
     let roadOffset = 400;
     if (truck.position.z < -8100) {
         animationState = false;
-        alert("Vous avez gagné !");
-        setTimeout(relaunchGame, 5000);
+        alert("QuickBaluchon : nous livrerons quoi qu'il arrive !");
+        setTimeout(relaunchGame, 3000);
     }
 }
 
@@ -194,6 +196,7 @@ function relaunchGame () {
 }
 
 function resetTruck () {
+    alert('Vous êtes mort écrasé par un monstre :(');
     truck.position.set(truckStartPosition.x, truckStartPosition.y, truckStartPosition.z);
     truck.rotation.y = truckStartRotationY;
 }
@@ -231,15 +234,14 @@ function removeMonster(){
 
         if (parseInt(intersection[0].object.matrixWorld.elements[12]) == parseInt(monsters[i].position.x) &&
             parseInt(intersection[0].object.matrixWorld.elements[14]) == parseInt(monsters[i].position.z)) {
+                monsterActions[i]['attack'].paused = true;
                 monsters[i].position.set(4000, 0, 4000);
             }
     }
-
-
-    // intersection[0].object.position.z = 4000;
-    // intersection[0].object.position.x = 4000;
-    //intersection[0].object.scale.x = 0
 }
+
+
+
 //###############		CONTROLS		##################################
 
 function createControls(){
@@ -467,9 +469,13 @@ function createMonster(i) {
         console.log('ok monster');
 
 
-        //animation
         monsterMixers[i] = new THREE.AnimationMixer( obj.scene );
-        monsterActions[i] = monsterMixers[i].clipAction( obj.animations[0] );
+
+        monsterActions[i] = [];
+        monsterActions[i]['attack'] = monsterMixers[i].clipAction(obj.animations[3]);
+        monsterActions[i]['attack'].timeScale = 2;
+        monsterActions[i]['attack'].play();
+
         monsters[i] = obj.scene;
         monsters[i].name += i;
 
@@ -479,7 +485,7 @@ function createMonster(i) {
         if (r < 500) r += 500;
         monsters[i].scale.set(10, 10, 10);
         monsters[i].position.set(-1000 + side * 100 * r2, -30, - r * r2);
-        
+
         //shadow
         monsters[i].traverse( function(child){
             if( child.isMesh ) {

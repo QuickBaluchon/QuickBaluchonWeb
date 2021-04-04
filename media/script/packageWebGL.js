@@ -1,7 +1,7 @@
 
 import * as THREE from '../../libraries/three.js-master/build/three.module.js';
 import { GLTFLoader } from '../../libraries/three.js-master/examples/jsm/loaders/GLTFLoader.js';
-import { OrbitControls } from '../../libraries/three.js-master/examples/jsm/controls/OrbitControls.js';
+//import { OrbitControls } from '../../libraries/three.js-master/examples/jsm/controls/OrbitControls.js';
 import { Sky } from '../../libraries/three.js-master/examples/jsm/objects/Sky.js';
 import  Stats  from '../../libraries/three.js-master/examples/jsm/libs/stats.module.js';
 
@@ -33,7 +33,7 @@ init();
 function init() {
 
     camera = new THREE.PerspectiveCamera( 70, containerWidth / containerHeight, 1, 1000000000 );
-    camera.position.set( 80, -100, 500 );
+    camera.position.set(0, 0 ,0);
     scene = new THREE.Scene();
 
     ground = createPhongMaterial( '../media/webgl/assets_low/sand.jpg', 70, 70 );
@@ -45,10 +45,11 @@ function init() {
     window.addEventListener( 'resize', onWindowResize, false );
 
     //	Controls & light
-    createControls();
-    createLight();
 
-    //  Environnement
+    createLight();
+    //createControls()
+
+    //Environnement
     createPlane();
     initSky();
 
@@ -78,7 +79,7 @@ function onMouseMove( event ) {
   event.preventDefault();
 
   mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1 ;
 
 }
 
@@ -114,24 +115,30 @@ function animate() {
     }
     render()
     renderer.render( scene, camera );
-    controls.update();
+
 }
 
 function moveTruck () {
     let speedCoeff = 15;
-
+    camera.position.y = 250
+    camera.rotation.x = 50
     switch (direction) {
         case 'forward':
             truck.position.x -= speedCoeff * Math.cos(truck.rotation.y);
+            camera.position.x = truck.position.x;
             truck.position.z += speedCoeff * Math.sin(truck.rotation.y);
+            camera.position.z = truck.position.z + 300;
             break;
         case 'backward':
             truck.position.x += speedCoeff * Math.cos(truck.rotation.y);
+            camera.position.x = truck.position.x;
             truck.position.z -= speedCoeff * Math.sin(truck.rotation.y);
+            camera.position.z = truck.position.z + 300;
             break;
         case 'right':
             truck.rotation.y -= 0.05;
             truck.rotation.y %= (2 * Math.PI);
+
             break;
         case 'left':
             truck.rotation.y += 0.05;
@@ -185,7 +192,7 @@ function createControls(){
     controls.maxDistance = 10000000000000000;
 
     controls.maxPolarAngle = Math.PI / 2 ;
-    controls.target = new THREE.Vector3( 0,0,0);
+
 
 }
 
@@ -434,7 +441,6 @@ function createRoad (i) {
         road[i].position.x = -1000;
         road[i].position.z = 0 - i * 1100;
         road[i].scale.set(100, 100, 100);
-
         //shadow
         road[i].traverse( function(child){
             if( child.isMesh ) {

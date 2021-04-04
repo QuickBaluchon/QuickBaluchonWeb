@@ -138,7 +138,6 @@ function moveTruck () {
         case 'right':
             truck.rotation.y -= 0.05;
             truck.rotation.y %= (2 * Math.PI);
-
             break;
         case 'left':
             truck.rotation.y += 0.05;
@@ -337,7 +336,8 @@ function createTruck(){
         truck.rotation.y = -Math.PI / 2;
         truck.position.set(-1000, -30, 0);
         truck.scale.set(0.1, 0.1, 0.1);
-
+        camera.position.set(-1000, 250, 300)
+        camera.rotation.x = 50
         //shadow
         truck.traverse( function(child){
             if( child.isMesh ) {

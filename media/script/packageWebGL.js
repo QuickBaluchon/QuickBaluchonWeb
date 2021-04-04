@@ -19,6 +19,8 @@ let sky, sun, effectController;
 let ground ;
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2( 1, 1 );
+const truckStartPosition = new THREE.Vector3(-1000, -30, 0);
+const truckStartRotationY = -Math.PI / 2;
 
 clock = new THREE.Clock();
 container = document.getElementById('webgl');
@@ -28,7 +30,6 @@ window.addEventListener('keydown', onkeydownAnimation);
 window.addEventListener('keyup', onkeyupAnimation)
 
 init();
-
 
 function init() {
 
@@ -113,9 +114,12 @@ function animate() {
             moveTruck();
         } else action.paused = true;
     }
+    if (truck && monsters) {
+        checkCollision();
+        //checkRoadExit();
+    }
     render()
     renderer.render( scene, camera );
-
 }
 
 function moveTruck () {
@@ -147,12 +151,30 @@ function moveTruck () {
     }
 }
 
+function checkCollision () {
+    let xRange = [];
+    let zRange = [];
+    let offsetX = 200;
+    let offsetZ = 100;
+    for (i = 0 ; i < monsterNb ; ++i) {
+        xRange['left'] = monsters[i].position.x - offsetX;
+        xRange['right'] = monsters[i].position.x + offsetX;
+        zRange['front'] = monsters[i].position.z + offsetZ;
+        zRange['back'] = monsters[i].position.z - offsetZ;
+        if (xRange['left'] < truck.position.x && truck.position.x < xRange['right'])
+            if (zRange['back'] < truck.position.z && truck.position.z < zRange['front']) {
+                truck.position.set(truckStartPosition.x, truckStartPosition.y, truckStartPosition.z);
+                truck.rotation.y = truckStartRotationY;
+            }
+    }
+}
+
+
+
 function setRenderer(){
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( containerWidth, containerHeight );
-
-
 
     // Shadow management
     renderer.shadowMap.enabled = true ;
@@ -333,11 +355,11 @@ function createTruck(){
         action.play();
 
         truck = obj.scene;
-        truck.rotation.y = -Math.PI / 2;
-        truck.position.set(-1000, -30, 0);
+        truck.rotation.y = truckStartRotationY;
+        truck.position.set(truckStartPosition.x, truckStartPosition.y, truckStartPosition.z);
         truck.scale.set(0.1, 0.1, 0.1);
-        camera.position.set(-1000, 250, 300)
-        camera.rotation.x = 50
+        camera.position.set(-1000, 250, 300);
+        camera.rotation.x = 50;
         //shadow
         truck.traverse( function(child){
             if( child.isMesh ) {
@@ -437,7 +459,7 @@ function createRoad (i) {
         //animation
         roadMixers[i] = new THREE.AnimationMixer( obj.scene );
         road[i] = obj.scene;
-        road[i].position.y = -35;
+        road[i].position.y = -33;
         road[i].position.x = -1000;
         road[i].position.z = 0 - i * 1100;
         road[i].scale.set(100, 100, 100);

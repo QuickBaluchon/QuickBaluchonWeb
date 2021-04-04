@@ -12,7 +12,7 @@ let loadingManager, mixer, houseMixer, warehouseMixer, monsterMixers = [];
 let roadMixers = [], road = [], roadNb = 8;
 let truck, action, house, warehouse, monsters = [], monsterActions = [];
 let i, monsterNb = 15, intersection;
-let clock;
+let clock, animationState = true;
 let spotLight, lightHelper, shadowCameraHelper;
 let controls, direction;
 let sky, sun, effectController;
@@ -106,20 +106,23 @@ function animate() {
     const delta = clock.getDelta();
     requestAnimationFrame( animate );
 
-    if ( mixer ) mixer.update(delta);
+    if (animationState) {
+        if ( mixer ) mixer.update(delta);
 
-    if (action) {
-        if(direction != null) {
-            action.paused = false;
-            moveTruck();
-        } else action.paused = true;
+        if (action) {
+            if(direction != null) {
+                action.paused = false;
+                moveTruck();
+            } else action.paused = true;
+        }
+        if (truck && monsters) {
+            checkCollision();
+            checkRoadExit();
+            checkRoadWin();
+        }
+        render()
+        renderer.render( scene, camera );
     }
-    if (truck && monsters) {
-        checkCollision();
-        checkRoadExit();
-    }
-    render()
-    renderer.render( scene, camera );
 }
 
 function moveTruck () {
@@ -175,6 +178,19 @@ function checkRoadExit () {
         console.log("ok");
         resetTruck();
     }
+}
+
+function checkRoadWin () {
+    let roadOffset = 400;
+    if (truck.position.z < -8100) {
+        animationState = false;
+        alert("Vous avez gagné !");
+        setTimeout(relaunchGame, 5000);
+    }
+}
+
+function relaunchGame () {
+    document.location.reload();
 }
 
 function resetTruck () {

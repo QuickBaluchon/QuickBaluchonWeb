@@ -38,10 +38,10 @@ class ControllerDeliveryman
     private function payslip($url) {
         $this->_view = new View('Back');
         $this->_PayslipManager = new PayslipManager;
-        $payslips = $this->_PayslipManager->getPayslip(["id", "grossAmount", "bonus", "netAmount", "datePay", "paid"], $this->_id);
+        $payslips = $this->_PayslipManager->getPayslip(["id", "grossAmount", "bonus", "netAmount", "datePay", "paid", "pdfPath"], $this->_id);
 
         $buttonsValues = [
-            'visualiser' => 'visualiser',
+            'package' => 'visualiser',
 
         ];
 
@@ -49,8 +49,10 @@ class ControllerDeliveryman
             foreach ($payslips as $payslip) {
                 $payslip['paid'] = $payslip['paid'] == 1 ? "&#x2713" : "&#x10102" ;
                 foreach($buttonsValues as $link => $inner){
-                $buttons[] = '<a href="'. WEB_ROOT . "deliveryman/$link/" . $payslip['id'] .'"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
-
+                    if($payslip["pdfPath"] != NULL)
+                        $buttons[] = '<a href="'. WEB_ROOT . "payslip/" . $payslip['id'] .'.pdf"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
+                    else
+                        $buttons[] = '<span> mois non terminé</span';
               }
               $rows[] = array_merge($payslip, $buttons);
               $buttons = [];

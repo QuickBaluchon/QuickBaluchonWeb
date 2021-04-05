@@ -103,6 +103,8 @@ class ApiRoadmap extends Api
         return [] ;
     }
 
+    public function updateRoadmap ()
+
     public function getTodayRoadmapFromPkgDate (int $pkg, ?string $date) :array {
         $columns = ['id'] ;
         if (isset($date) && !empty($date)) {
@@ -172,7 +174,7 @@ class ApiRoadmap extends Api
         }
     }
 
-    private function dispatchPackages ($packages, $deliverymen, $warehouseAddress) {
+    private function dispatchPackages (array $packages, array $deliverymen, string $warehouseAddress) {
         $nbDeliverymen = count($deliverymen);
         $nbPackages = count($packages);
         $roadmaps = [];
@@ -189,7 +191,7 @@ class ApiRoadmap extends Api
         return $this->recursiveRoadmaps($roadmaps, 0, $packages, $nbDeliverymen, $nbPackages, $warehouseAddress) ;
     }
 
-    private function recursiveRoadmaps ($roadmaps, $iter, $packages, $nbDeliverymen, $nbPackages, $warehouseAddress) {
+    private function recursiveRoadmaps (array $roadmaps, int $iter, array $packages, int $nbDeliverymen, int $nbPackages, string $warehouseAddress) {
         if ($iter > 2 || count($packages) == 0)
             return $roadmaps;
 
@@ -207,6 +209,7 @@ class ApiRoadmap extends Api
                         $roadmaps[$r]['roadTime'] += 2 * $dtFromWarehouse['time'];
                         $roadmaps[$r]['roadDistance'] += 2 * $dtFromWarehouse['distance'];
                         $roadmaps[$r]['packages'][] = $packages[$p]['id'];
+                        //mail to recipient
                         unset($packages[$p]);
                     }
                 }
@@ -217,8 +220,7 @@ class ApiRoadmap extends Api
         return $roadmaps;
     }
 
-    private function insertRoadmapDB ($r) {
-        var_dump($r);
+    private function insertRoadmapDB (array $r) {
         self::$_columns = ['kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'deliveryman', 'dateRoute', 'finished'];
         self::$_params = [
             $r['roadDistance'],
@@ -234,7 +236,7 @@ class ApiRoadmap extends Api
         return $id;
     }
 
-    private function createSteps ($roadmapID, $packages) {
+    private function createSteps (int $roadmapID, array $packages) {
         $i = 0;
         foreach ($packages as $pID) {
             self::$_columns = ['roadmap', 'package', 'step'];
@@ -249,7 +251,7 @@ class ApiRoadmap extends Api
         $this->resetParams();
     }
 
-    private function computeDistance ($address1, $address2) {
+    private function computeDistance (string $address1, string $address2) {
         $googleData = $this->curlGoogle($address1, $address2);
 
         $distanceAndTime = [];
@@ -268,7 +270,7 @@ class ApiRoadmap extends Api
         return $distanceAndTime;
     }
 
-    private function curlGoogle ($address1, $address2) {
+    private function curlGoogle (string $address1, string $address2) {
         $params = $this->urlEncode('origins=' . $address1 . '&destinations=' . $address2);
         $url = 'https://maps.googleapis.com/maps/api/distancematrix/json?' . $params;
 
@@ -289,7 +291,7 @@ class ApiRoadmap extends Api
         return $googleResponse;
     }
 
-    private function urlEncode ($string) {
+    private function urlEncode (string $string) {
         $str = $string;
         $encodingMap = [
             ' ' => '%20',
@@ -307,7 +309,7 @@ class ApiRoadmap extends Api
         return $str;
     }
 
-    private function getExternData ($api, $get, $function) {
+    private function getExternData (string $api, array $get, $function) {
         require_once($api . '.php') ;
         $_GET = [
             'limit' => 50,

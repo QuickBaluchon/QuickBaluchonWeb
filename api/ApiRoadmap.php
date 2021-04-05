@@ -27,7 +27,8 @@ class ApiRoadmap extends Api
         elseif (($id = intval($url[0])) !== 0)      // details one roadmap - /api/roadmap/{id}
             switch ($method) {
                 case 'GET':$this->_data = $this->getRoadmap($id);break;
-                case 'PATCH': $this->_data = $this->cancelRound($url); break ;
+                case 'PATCH': $this->_data = $this->updateRoadmap($id); break ;
+                case 'DELETE': $this->_data = $this->cancelRound($url); break ;
                 default: $this->catError(405); break ;
             }
 
@@ -103,7 +104,24 @@ class ApiRoadmap extends Api
         return [] ;
     }
 
-    public function updateRoadmap ()
+    public function updateRoadmap ($roadmapID, ?array $data = null) {
+        if ($data == null)
+            $data = $this->getJsonArray();
+
+        $allowed = ['kmTotal', 'timeTotal', 'currentStop', 'finished'];
+        if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
+            http_response_code(400);
+            exit(0);
+        }
+
+        foreach ($data as $key => $value) {
+            self::$_set[] = "$key = ?";
+            self::$_params[] = $value;
+        }
+
+        $this->patch('ROADMAP', $roadmapID);
+        $this->resetParams();
+    }
 
     public function getTodayRoadmapFromPkgDate (int $pkg, ?string $date) :array {
         $columns = ['id'] ;

@@ -10,6 +10,7 @@ class ApiRoadmap extends Api
     private $_data = [];
     private $_maxDistanceByDeliveryman = 200;
     private $_maxTimeByDeliveryman = 4;
+    private $_apiKey = 'AIzaSyC-zvNlWXpliMZE78i21qC5abdjGenv6AQ';
 
     public function __construct($url, $method)
     {
@@ -142,9 +143,31 @@ class ApiRoadmap extends Api
             echo "START DISPATCHING";
 
             if ($w['active'] == 1) {
-                $dailyRoadmaps = $this->dispatchPackages($packages, $deliverymen, $w['address']);
+                /*$dailyRoadmaps = $this->dispatchPackages($packages, $deliverymen, $w['address']);
                 echo "ROADMAPS";
-                var_dump($dailyRoadmaps);
+                var_dump($dailyRoadmaps);*/
+
+                $roadmaps[] = [
+                        "deliverymanID" => "4",
+                        "availableVolume" => 799.79932,
+                        "deliveryRadius" => "50",
+                        "roadTime" => 4.7672222222222,
+                        "roadDistance" => 245.094,
+                        "packages" => ["4","6","9","11","15","17","19","21","24","26","28","30"]
+                    ];
+                $roadmaps[] = [
+                        "deliverymanID" => "18",
+                        "availableVolume" => 1.826,
+                        "deliveryRadius" => "5",
+                        "roadTime" => 1.1177777777778,
+                        "roadDistance" => 18.732,
+                        "packages" => ["5","7","10","12","16","18","20","22"]
+                    ];
+
+                foreach ($roadmaps as $r) {
+                    $id = $this->insertRoadmapDB($r);
+                    $this->createSteps($id, $r['packages']);
+                }
             }
         }
     }
@@ -194,8 +217,36 @@ class ApiRoadmap extends Api
         return $roadmaps;
     }
 
-    private function createStep ($stepNb, $packageID, $roadmapID) {
-        echo "$stepNb";
+    private function insertRoadmapDB ($r) {
+        var_dump($r);
+        self::$_columns = ['kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'deliveryman', 'dateRoute', 'finished'];
+        self::$_params = [
+            $r['roadDistance'],
+            $r['roadTime'],
+            count($r['packages']),
+            0,
+            $r['deliverymanID'],
+            date("Y-m-d"),
+            0
+        ];
+        $id = $this->add('ROADMAP') ;
+        $this->resetParams();
+        return $id;
+    }
+
+    private function createSteps ($roadmapID, $packages) {
+        $i = 0;
+        foreach ($packages as $pID) {
+            self::$_columns = ['roadmap', 'package', 'step'];
+            self::$_params = [
+                $roadmapID,
+                $pID,
+                $i
+            ];
+            $this->add('STOP');
+            $i++;
+        }
+        $this->resetParams();
     }
 
     private function computeDistance ($address1, $address2) {
@@ -221,8 +272,7 @@ class ApiRoadmap extends Api
         $params = $this->urlEncode('origins=' . $address1 . '&destinations=' . $address2);
         $url = 'https://maps.googleapis.com/maps/api/distancematrix/json?' . $params;
 
-        $apiKey = 'AIzaSyC-zvNlWXpliMZE78i21qC5abdjGenv6AQ';
-        $url .= '&key=' . $apiKey;
+        $url .= '&key=' . $this->_apiKey;
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);

@@ -8,10 +8,11 @@ class ApiRoadmap extends Api
 
     private $_method;
     private $_data = [];
+    private $_maxDistanceByDeliveryman = 200;
+    private $_maxTimeByDeliveryman = 4;
 
     public function __construct($url, $method)
     {
-        $this->computeDistance('242 rue du Faubourg Saint Antoine, Paris', '114 avenue Michelet, 93400 Saint Ouen');
         $this->_method = $method;
 
         if (count($url) == 0) {
@@ -135,31 +136,93 @@ class ApiRoadmap extends Api
             $deliverymen = $this->getExternData('ApiDeliveryMan', [
                 'employed' => 1,
                 'warehouse' => $w['id'],
-                'order' => 'radius desc'
+                'order' => 'dateDelivery, radius desc'
             ], 'getListDelivery') ;
 
-            if ($w['active'] == 1)
-                $this->dispatchPackages($packages, $deliverymen) ;
-        }
-    }
+            echo "START DISPATCHING";
 
-    private function dispatchPackages ($packages, $deliverymen) {
-        $avg = count($packages) / count($deliverymen);
-        $d = 0;
-        for (; $d < count($deliverymen) ; ++$d) {
-            for($nb = 0 ; $nb < $avg ; ++$nb) {
-                print_r($deliverymen[$d]);
-                $packages[$d * $avg + $nb]['distance'] = random_int(1, $deliverymen[$d]['radius']);
-                echo "DISTANCE " . $packages[$d * $avg + $nb]['distance'] . '<hr>' ;
+            if ($w['active'] == 1) {
+                $dailyRoadmaps = $this->dispatchPackages($packages, $deliverymen, $w['address']);
+                echo "ROADMAPS";
+                var_dump($dailyRoadmaps);
             }
         }
     }
 
+    private function dispatchPackages ($packages, $deliverymen, $warehouseAddress) {
+        $nbDeliverymen = count($deliverymen);
+        $nbPackages = count($packages);
+        $roadmaps = [];
+        foreach ($deliverymen as $d) {
+            $roadmaps[] = [
+                'deliverymanID' => $d['id'],
+                'availableVolume' => $d['volumeCar'],
+                'deliveryRadius' => $d['radius'],
+                'roadTime' => 0.0,
+                'roadDistance' => 0.0,
+                'packages' => []
+            ];
+        }
+        return $this->recursiveRoadmaps($roadmaps, 0, $packages, $nbDeliverymen, $nbPackages, $warehouseAddress) ;
+    }
+
+    private function recursiveRoadmaps ($roadmaps, $iter, $packages, $nbDeliverymen, $nbPackages, $warehouseAddress) {
+        if ($iter > 2 || count($packages) == 0)
+            return $roadmaps;
+
+        $r = 0;
+        for ($p = 0 ; $p < $nbPackages ; ++$p) {
+            if (isset($packages[$p])) {
+                $dtFromWarehouse = $this->computeDistance($warehouseAddress, $packages[$p]['address']);
+                if ($dtFromWarehouse != null) {
+                    $volumeM3 = $packages[$p]['volume'] / 1000;
+                    if ($dtFromWarehouse['distance'] < $roadmaps[$r]['deliveryRadius'] &&
+                        $roadmaps[$r]['availableVolume'] - $volumeM3 >= 0 &&
+                        $roadmaps[$r]['roadTime'] < $this->_maxTimeByDeliveryman &&
+                        $roadmaps[$r]['roadDistance'] < $this->_maxDistanceByDeliveryman) {
+                        $roadmaps[$r]['availableVolume'] -= $volumeM3;
+                        $roadmaps[$r]['roadTime'] += 2 * $dtFromWarehouse['time'];
+                        $roadmaps[$r]['roadDistance'] += 2 * $dtFromWarehouse['distance'];
+                        $roadmaps[$r]['packages'][] = $packages[$p]['id'];
+                        unset($packages[$p]);
+                    }
+                }
+                $r = $r + 1 >= $nbDeliverymen ? ($r + 1) % $nbDeliverymen : $r + 1;
+            }
+        }
+        $roadmaps = $this->recursiveRoadmaps($roadmaps, $iter + 1, $packages, $nbDeliverymen, $nbPackages, $warehouseAddress);
+        return $roadmaps;
+    }
+
+    private function createStep ($stepNb, $packageID, $roadmapID) {
+        echo "$stepNb";
+    }
+
     private function computeDistance ($address1, $address2) {
-        $url = $address1 . '|' . $address2;
-        $url = $this->urlEncode($url);
-        $url = 'https://maps.googleapis.com/maps/api/distancematrix/json?origins=' . $url;
-        echo $url;
+        $googleData = $this->curlGoogle($address1, $address2);
+
+        $distanceAndTime = [];
+        if ($googleData != null) {
+            if (count($googleData['rows']) > 0) {
+                if (count($googleData['rows'][0]['elements']) > 0) {
+                    if ($googleData['rows'][0]['elements'][0]['status'] == 'OK') {
+                        $distanceAndTime = [
+                            'distance' => $googleData['rows'][0]['elements'][0]['distance']['value'] / 1000,
+                            'time' => $googleData['rows'][0]['elements'][0]['duration']['value'] / 3600
+                        ];
+                    }
+                }
+            }
+        }
+        return $distanceAndTime;
+    }
+
+    private function curlGoogle ($address1, $address2) {
+        $params = $this->urlEncode('origins=' . $address1 . '&destinations=' . $address2);
+        $url = 'https://maps.googleapis.com/maps/api/distancematrix/json?' . $params;
+
+        $apiKey = 'AIzaSyC-zvNlWXpliMZE78i21qC5abdjGenv6AQ';
+        $url .= '&key=' . $apiKey;
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -167,9 +230,13 @@ class ApiRoadmap extends Api
         curl_setopt($curl, CURLOPT_HEADER, FALSE);
         curl_setopt($curl, CURLOPT_POST, TRUE);
 
-        $response = curl_exec($curl);
+        $googleResponse = curl_exec($curl);
         curl_close($curl);
-        echo $response;
+        $googleResponse = json_decode($googleResponse, TRUE);
+
+        if ($googleResponse['status'] != 'OK')
+            return [];
+        return $googleResponse;
     }
 
     private function urlEncode ($string) {
@@ -188,10 +255,6 @@ class ApiRoadmap extends Api
         foreach ($encodingMap as $character => $replacement)
             $str = str_replace($character, $replacement, $str);
         return $str;
-    }
-
-    private function createStep ($stepNb, $packageID, $roadmapID) {
-        echo "$stepNb";
     }
 
     private function getExternData ($api, $get, $function) {

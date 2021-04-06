@@ -182,10 +182,13 @@ class ApiRoadmap extends Api
                         "packages" => ["5","7","10","12","16","18","20","22"]
                     ];*/
 
-                foreach ($dailyRoadmaps as $r) {
+                echo "ROADMAPS // ";
+                var_dump($dailyRoadmaps);
+
+                /*foreach ($dailyRoadmaps as $r) {
                     $id = $this->insertRoadmapDB($r);
                     $this->createSteps($id, $r['packages']);
-                }
+                }*/
             }
         }
     }
@@ -215,21 +218,22 @@ class ApiRoadmap extends Api
         $r = 0;
         for ($p = 0 ; $p < $nbPackages ; ++$p) {
             if (isset($packages[$p])) {
-                /*$dtFromWarehouse = $this->computeDistance($warehouseAddress, $packages[$p]['address']);
-                if ($dtFromWarehouse != null) {*/
+                $dtFromWarehouse = $this->computeDistance([$warehouseAddress], [$packages[$p]['address']]);
+                if ($dtFromWarehouse != null) {
                     $volumeM3 = $packages[$p]['volume'] / 1000;
-                    /*if ($dtFromWarehouse['distance'] < $roadmaps[$r]['deliveryRadius'] &&
+                    if ($dtFromWarehouse['distance'] < $roadmaps[$r]['deliveryRadius'] &&
                         $roadmaps[$r]['availableVolume'] - $volumeM3 >= 0 &&
                         $roadmaps[$r]['roadTime'] < $this->_maxTimeByDeliveryman &&
-                        $roadmaps[$r]['roadDistance'] < $this->_maxDistanceByDeliveryman) {*/
+                        $roadmaps[$r]['roadDistance'] < $this->_maxDistanceByDeliveryman)
+                    {
                         $roadmaps[$r]['availableVolume'] -= $volumeM3;
-                        //$roadmaps[$r]['roadTime'] += 2 * $dtFromWarehouse['time'];
-                        //$roadmaps[$r]['roadDistance'] += 2 * $dtFromWarehouse['distance'];
+                        $roadmaps[$r]['roadTime'] += 2 * $dtFromWarehouse['time'];
+                        $roadmaps[$r]['roadDistance'] += 2 * $dtFromWarehouse['distance'];
                         $roadmaps[$r]['packages'][] = $packages[$p];
                         //mail to recipient
                         unset($packages[$p]);
-                /*    }
-                }*/
+                    }
+                }
                 $countGoogle++;
                 $r = $r + 1 >= $nbDeliverymen ? ($r + 1) % $nbDeliverymen : $r + 1;
             }
@@ -301,27 +305,37 @@ class ApiRoadmap extends Api
         return $packages;
     }
 
-    private function computeDistance (string $address1, string $address2) :array {
-        $googleData = $this->curlGoogle($address1, $address2);
+    private function computeDistance (array $origins, array $destinations) :array {
+        $googleData = $this->curlGoogle($origins, $destinations);
 
         $distanceAndTime = [];
+        $o = 0;
         if ($googleData != null) {
-            if (count($googleData['rows']) > 0) {
-                if (count($googleData['rows'][0]['elements']) > 0) {
-                    if ($googleData['rows'][0]['elements'][0]['status'] == 'OK') {
-                        $distanceAndTime = [
-                            'distance' => $googleData['rows'][0]['elements'][0]['distance']['value'] / 1000,
-                            'time' => $googleData['rows'][0]['elements'][0]['duration']['value'] / 3600
+            foreach ($googleData as $elements) {
+                $d = 0;
+                foreach ($elements as $road) {
+                    if ($road['status'] == 'OK') {
+                        $distanceAndTime[$o][] = [
+                            'origin' => $origins[$o],
+                            'destination' => $destinations[$d],
+                            'distance' => $road['distance']['value'] / 1000,
+                            'time' => $road['duration']['value'] / 3600
                         ];
                     }
+                    $d++;
                 }
+                $o++;
             }
         }
         return $distanceAndTime;
     }
 
-    private function curlGoogle (string $address1, string $address2) :array {
-        $params = $this->urlEncode('origins=' . $address1 . '&destinations=' . $address2);
+    private function curlGoogle (array $origins, array $destinations) :array {
+        var_dump( $origins);
+        var_dump( $destinations);
+        $origins = $this->urlEncode(join('|', $origins));
+        $destinations = $this->urlEncode(join('|', $destinations));
+        $params = $this->urlEncode('origins=' . $origins . '&destinations=' . $destinations);
         $url = 'https://maps.googleapis.com/maps/api/distancematrix/json?' . $params;
 
         $url .= '&key=' . $this->_apiKey;
@@ -338,7 +352,7 @@ class ApiRoadmap extends Api
 
         if ($googleResponse['status'] != 'OK')
             return [];
-        return $googleResponse;
+        return $googleResponse['rows'];
     }
 
     private function urlEncode (string $string) :string {

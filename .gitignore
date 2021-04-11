@@ -2,3 +2,4 @@
 *.sql
 *.xls
 *.env
+conf.json

@@ -1,4 +1,5 @@
 <?php
+echo "coucou";
 $protocol = strpos($_SERVER['HTTP_HOST'], 'heroku') === false ? 'http' : 'https';
 define('WEB_ROOT', str_replace('index.php', '', $protocol . "://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]"));
 define('ROOT', str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']));

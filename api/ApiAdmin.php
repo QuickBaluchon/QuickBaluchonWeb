@@ -9,7 +9,9 @@ class ApiAdmin extends Api {
     public function __construct($url, $method) {
 
         $this->_method = $method;
-        if (method_exists($this, $url[0])) {
+        if (count($url) == 0) {
+                $this->_data = $this->catError(401);
+        } elseif (method_exists($this, $url[0])) {
             $function = $url[0];
             $this->_data = $this->$function(array_slice($url, 2));
         } else

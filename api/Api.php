@@ -14,20 +14,12 @@ abstract class Api {
     private static $_jwtKey = 'key';
 
     private function setDb() {
-        if( strpos(WEB_ROOT, 'heroku') !== false ){ // HEROKY VAR ENV
-            $url = getenv('JAWSDB_URL');
-            $dbparts = parse_url($url);
-            $host = $dbparts['host'];
-            $dbn = ltrim($dbparts['path'],'/');
-            $port = $dbparts['port'];
-            $usr = $dbparts['user'];
-            $pwd = $dbparts['pass'];
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/conf.json')) {
+            $json = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/conf.json'), true);
+            extract($json);
         } else {
-            $host = 'localhost';
-            $dbn = 'hedwige';
-            $port = 8889;
-            $usr = 'root';
-            $pwd = 'root';
+            echo "Conf file not found";
+            return;
         }
         try {
             self::$_Db = $pdo = new PDO("mysql:host=$host;dbname=$dbn;port=$port", $usr, $pwd);

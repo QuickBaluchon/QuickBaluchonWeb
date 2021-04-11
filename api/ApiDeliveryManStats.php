@@ -63,7 +63,6 @@ class ApiDeliveryManStats extends Api
         $this->_data = $this->getStats($url[0], $method);
 
         echo json_encode($this->_data, JSON_PRETTY_PRINT);
-
     }
 
     private function getStats ($nb, $method) {

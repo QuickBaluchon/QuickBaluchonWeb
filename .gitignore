@@ -2,3 +2,5 @@
 *.sql
 *.xls
 *.env
+conf*
+*.conf

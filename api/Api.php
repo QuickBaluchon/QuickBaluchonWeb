@@ -14,8 +14,8 @@ abstract class Api {
     private static $_jwtKey = 'key';
 
     private function setDb() {
-        if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/conf.json')) {
-            $json = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/conf.json'), true);
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/.conf')) {
+            $json = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/.conf'), true);
             extract($json);
         } else {
             echo "Conf file not found";

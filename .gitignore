@@ -3,3 +3,4 @@
 *.xls
 *.env
 conf*
+*.conf

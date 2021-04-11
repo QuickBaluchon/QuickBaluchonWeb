@@ -4,7 +4,7 @@
       "itemName": "Données personnnelles",
       "svg": "user"
     },
-    "bills": {
+    "payslip": {
       "itemName": "Fiche de paie",
       "svg": "invoice"
     },
@@ -18,7 +18,7 @@
       "itemName": "Personal data",
       "svg": "user"
     },
-    "bills": {
+    "payslip": {
       "itemName": "Invoices",
       "svg": "invoice"
     },

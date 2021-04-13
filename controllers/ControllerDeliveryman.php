@@ -100,6 +100,37 @@ class ControllerDeliveryman
         $this->_view->generateView(["warehouses" => $warehouses]);
     }
 
-    
+    private function roadmap($url) {
+        $this->_view = new View('Back');
+        $this->_roadmapManager = new RoadmapManager();
+        $roadmap = $this->_roadmapManager->getRoadmap(null, ["id", "kmTotal", "timeTotal", "nbPackages", "datePay", "currentStop"], null, date("Y-m-d"));
+
+        var_dump($roadmap);
+        /*$buttonsValues = [
+            'package' => 'visualiser',
+
+        ];
+
+        if($payslips != null){
+            foreach ($payslips as $payslip) {
+                $payslip['paid'] = $payslip['paid'] == 1 ? "&#x2713" : "&#x10102" ;
+                foreach($buttonsValues as $link => $inner){
+                    if($payslip["pdfPath"] != NULL)
+                        $buttons[] = '<a href="'. WEB_ROOT . "payslip/" . $payslip['id'] .'.pdf"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
+                    else
+                        $buttons[] = '<span> mois non terminé</span';
+                }
+                $rows[] = array_merge($payslip, $buttons);
+                $buttons = [];
+
+            }
+        }else {
+            $rows = [];
+        }
+
+        $cols = ["id", "grossAmount", "bonus", "datePay", "paid", "visualiser"];
+        $paySlip = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
+        $this->_view->generateView(['content' => $paySlip, 'name' => 'QuickBaluchon']);*/
+    }
 
 }

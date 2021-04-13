@@ -7,6 +7,7 @@ abstract class Model {
     $url = API_ROOT . $collection;
     $params = $this->strCond($cond);
     $url = $params === '' ? $url : $url . '&' . $params;
+    echo $url;
     return $this->curl($url);
   }
 

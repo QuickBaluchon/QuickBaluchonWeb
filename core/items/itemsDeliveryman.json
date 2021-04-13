@@ -11,6 +11,10 @@
     "statistics": {
       "itemName": "Statistiques",
       "svg": "speedometer"
+    },
+    "roadmap": {
+      "itemName": "Livraisons",
+      "svg": "speedometer"
     }
   },
   "EN": {
@@ -24,6 +28,10 @@
     },
     "statistics": {
       "itemName": "Statistics",
+      "svg": "speedometer"
+    },
+    "roadmap": {
+      "itemName": "Deliveries",
       "svg": "speedometer"
     }
   }

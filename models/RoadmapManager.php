@@ -9,10 +9,10 @@ class RoadmapManager extends Model{
             return $this->getCollection('roadmap', ["fields" => join(',',$fields), "client" => $client, "date" => $date]);
     }
 
-    public function getRoadmap($id ,$fields, $inner = NULL, $date = NULL) {
+    public function getRoadmap($id, $fields, $inner = NULL, $date = NULL) {
         if($inner != NULL)
             return $this->getCollection('roadmap',$id , ["fields" => join(',',$fields), "inner" => join(',',$inner), "date" => $date]);
         else
-            return $this->getRessource('roadmap', $id , ["fields" => join(',',$fields)]);
+            return $this->getRessource('roadmap', $id , ["date" => $date, 'deliveryman' => $_SESSION['id']]);
     }
 }

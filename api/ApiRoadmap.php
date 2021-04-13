@@ -24,17 +24,20 @@ class ApiRoadmap extends Api
             }
         }
 
-        elseif (($id = intval($url[0])) !== 0)      // details one roadmap - /api/roadmap/{id}
-            switch ($method) {
-                case 'GET':$this->_data = $this->getRoadmap($id);break;
-                case 'PATCH': $this->_data = $this->updateRoadmap($id); break ;
-                case 'DELETE': $this->_data = $this->cancelRound($url); break ;
-                default: $this->catError(405); break ;
-            }
+        elseif (($id = intval($url[0])) !== 0) {     // details one roadmap - /api/roadmap/{id}
+            if ($method == 'GET' || $method == 'PATCH' || $method == 'DELETE') {
+                $method = strtolower($method) . 'Roadmap';
+                $this->_data = $this->$method($id);
+            } else
+               $this->catError(405);
+
+        }
+        else {
+            $this->_data = $this->getRoadmap(null);
+        }
 
 
         echo json_encode($this->_data, JSON_PRETTY_PRINT);
-
     }
 
     public function getListRoadmaps(): array {
@@ -74,27 +77,80 @@ class ApiRoadmap extends Api
         return $bills;
     }
 
-    public function getRoadmap($id): array {
+    /*
+     * SELECT ROADMAP.dateRoute, ROADMAP.deliveryman, STOP.roadmap, STOP.package, PACKAGE.address, STOP.step, STOP.timeNextHop, STOP.distanceNextHop FROM ROADMAP
+     * LEFT JOIN STOP ON STOP.roadmap = ROADMAP.id
+     * INNER JOIN PACKAGE ON PACKAGE.id = STOP.package
+     * ORDER BY STOP.roadmap, STOP.step;
+     */
+    public function getRoadmap(int $id): array {
         //$this->authentication(['admin'], [$id]);
-        self::$_where[] = 'id = ?';
-        self::$_params[] = $id;
-        $columns = ['id', 'kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'dateRoute', 'deliveryman'];
-        $client = $this->get('ROADMAP', $columns);
-        if (count($client) == 1)
-            return $client[0];
+        if (isset($id)) {
+            self::$_where[] = 'ROADMAP.id = ?';
+            self::$_params[] = $id;
+        } else {
+            if (isset($_GET['date'])) {
+                self::$_where[] = 'dateRoute = ?';
+                self::$_params[] = $_GET['date'];
+            }
+            if (isset($_GET['deliveryman'])) {
+                self::$_where[] = 'deliveryman = ?';
+                self::$_params[] = $_GET['deliveryman'];
+            }
+        }
+        $columns = ['ROADMAP.id', 'STOP.package', 'step', 'address', 'email', 'kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'dateRoute', 'deliveryman', 'finished'];
+        self::$_join[] = [
+            'type' => 'LEFT',
+            'table' => 'STOP',
+            'onT1' => 'ROADMAP.id',
+            'onT2' => 'STOP.roadmap'
+        ];
+        self::$_join[] = [
+            'type' => 'INNER',
+            'table' => 'PACKAGE',
+            'onT1' => 'PACKAGE.id',
+            'onT2' => 'STOP.package'
+            ];
+
+        self::$_order = 'step';
+
+        $roadmaps = $this->get('ROADMAP', $columns);
+        if (count($roadmaps) > 0)
+            return $this->rewriteRoadmap($roadmaps);
         else
             return [];
     }
 
-    public function cancelRound (array $url) {
-        $pkg = $url[0] ;
-        $date = isset($url[1]) ? $url[1] : null ;
-        $roadmap = $this->getTodayRoadmapFromPkgDate($pkg, $date) ;
+    private function rewriteRoadmap (array $roadmap) {
+        $stops = [];
+        foreach ($roadmap as $stop) {
+            $stops[$stop['step']] = [
+                'package' => $stop['package'],
+                'address' => $stop['address'],
+                'email' => $stop['email']
+            ];
+        }
+
+        return [
+            'id' => $roadmap[0]['id'],
+            'dateRoute' => $roadmap[0]['dateRoute'],
+            'deliveryman' => $roadmap[0]['deliveryman'],
+            'finished' => $roadmap[0]['finished'],
+            'kmTotal' => $roadmap[0]['kmTotal'],
+            'timeTotal' => $roadmap[0]['timeTotal'],
+            'currentStop' => $roadmap[0]['currentStop'],
+            'stops' => $stops
+        ];
+    }
+
+    public function deleteRoadmap (int $id) {
+        $roadmap = $this->getRoadmap($id);
 
         if ($roadmap == null) {
             http_response_code(404) ;
             return ;
         }
+        var_dump($roadmap);
 
         //get sum of km by for undelivered packages
         //update the roadmap
@@ -102,7 +158,7 @@ class ApiRoadmap extends Api
         return [] ;
     }
 
-    public function updateRoadmap ($roadmapID, ?array $data = null) {
+    public function patchRoadmap ($roadmapID, ?array $data = null) {
         if ($data == null)
             $data = $this->getJsonArray();
 
@@ -151,13 +207,14 @@ class ApiRoadmap extends Api
             $packages = $this->getExternData('ApiPackage', [
                 'dateDelivery' => 'now',
                 'status' => 2,
-                'warehouse' => $w['id']
+                'warehouse' => $w['id'],
+                'order' => 'dateDelivery'
             ], 'getListPackages') ;
 
             $deliverymen = $this->getExternData('ApiDeliveryMan', [
                 'employed' => 1,
                 'warehouse' => $w['id'],
-                'order' => 'dateDelivery, radius desc'
+                'order' => 'radius desc'
             ], 'getListDelivery') ;
 
             echo "START DISPATCHING // ";
@@ -165,11 +222,14 @@ class ApiRoadmap extends Api
             if ($w['active'] == 1) {
                 $dailyRoadmaps = $this->dispatchPackages($packages, $deliverymen, $w['address']);
 
-                echo "ROADMAPS // ";
+                echo "ROADMAPS FOR WAREHOUSE " . $w['id'] . " // ";
+                var_dump($dailyRoadmaps);
 
                 foreach ($dailyRoadmaps as $r) {
-                    $id = $this->insertRoadmapDB($r);
-                    $this->createSteps($id, $r['packages']);
+                    if ($r['roadDistance'] != 0) {
+                        $id = $this->insertRoadmapDB($r);
+                        $this->createSteps($id, $r['packages']);
+                    }
                 }
             }
         }
@@ -199,6 +259,7 @@ class ApiRoadmap extends Api
         $countGoogle = 0;
         $r = 0;
         for ($p = 0 ; $p < $nbPackages ; ++$p) {
+            var_dump($p);
             if (isset($packages[$p])) {
                 $dtFromWarehouse = $this->computeRoute([$warehouseAddress], [$packages[$p]['address']]);
                 if ($dtFromWarehouse != null) {
@@ -227,16 +288,16 @@ class ApiRoadmap extends Api
     }
 
     private function insertRoadmapDB (array $r) :int {
-        self::$_columns = ['kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'deliveryman', 'dateRoute', 'finished'];
-        self::$_params = [
-            $r['roadDistance'],
-            $r['roadTime'],
-            count($r['packages']),
-            0,
-            $r['deliverymanID'],
-            date("Y-m-d"),
-            0
-        ];
+            self::$_columns = ['kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'deliveryman', 'dateRoute', 'finished'];
+            self::$_params = [
+                $r['roadDistance'],
+                $r['roadTime'],
+                count($r['packages']),
+                0,
+                $r['deliverymanID'],
+                date("Y-m-d"),
+                0
+            ];
         $id = $this->add('ROADMAP') ;
         $this->resetParams();
         return $id;
@@ -264,13 +325,15 @@ class ApiRoadmap extends Api
     //to do if opti
     private function sortPackagesByDistance (array $packages) {
         $count = 0 ;
-        for ($i = 0 ; $i < count($packages) - 1 ; ++$i) {
+        for ($i = 0 ; $i < count($packages) ; ++$i) {
             $destinations = [];
             for ($j = $i + 1 ; $j < count($packages) ; ++$j)
                 $destinations[] = $packages[$j]['address'];
 
             if ($destinations != null) {
                 $routes = $this->computeRoute([$packages[$i]['address']], $destinations);
+                echo "ROUTES SORTING // ";
+                var_dump($routes);
                 $closestStopIndex = $this->findClosestStop($routes[0]);
 
                 //Switching order of packages if necessary
@@ -286,8 +349,10 @@ class ApiRoadmap extends Api
                 $packages[$i]['distanceNextHop'] = 0.0;
             }
             $count ++;
+            echo "PACKAGES SORTING // ";
 
         }
+        var_dump($packages);
         echo "TOTAL ITER FOR SORTING : $count / " . count($packages) ;
         return $packages;
     }

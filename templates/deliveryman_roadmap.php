@@ -23,32 +23,31 @@ extract($data);
                 ?>
                     <div class="card mb-3">
                         <div class="card-header <?= $style ?>">
-                            Etape <?= $stopNb + 1 ?>
+                            <?= $CardHeader ?> <?= $stopNb + 1 ?>
                         </div>
                         <div class="card-body">
-                            <p>
-                                Paquet n° <?= $stop['package'] ?><br>
-                                Adresse : <?= $stop['address'] ?>
-                            </p>
+                            <p><?= $TextPackage ?> <?= $stop['package'] ?></p>
+                            <p><?= $stop['address'] ?></p>
                             <?php
                             if ($stopNb == $roadmap['currentStop']):
                                 $hours = intval($stop['timeNextHop']) == 0 ? null : intval($stop['timeNextHop']);
                                 $minutes = intval($stop['timeNextHop'] * 60) ;
                             ?>
                                 <p>
-                                    Distance jusqu'à la prochaine livraison : <?= $stop['distanceNextHop'] ?> km<br>
-                                    Temps jusqu'à la prochaine livraison : <?php isset($hours) ? $hours . " heures " : "" ; echo $minutes . " minutes" ; ?>
+                                    <?= $TextDistanceToNext ?> <?= $stop['distanceNextHop'] ?> km<br>
+                                    <?= $TextTimeToNext ?> <?php isset($hours) ? $hours . " heures " : "" ; echo $minutes . " minutes" ; ?>
                                 </p>
                             <?php endif ; ?>
                         </div>
                         <div class="card-footer">
-                            <?php if ($stop['delivery'] != null): ?>
-                            Date et heure de livraison :  <?= $stop['delivery'] ?>
-                            <?php elseif ($stopNb == $roadmap['currentStop']): ?>
-                            En cours de livraison
-                            <?php else: ?>
-                            Non livré
-                            <?php endif; ?>
+                            <?php
+                            if ($stop['delivery'] != null):
+                                echo $TextDateTimeDelivery  . " " . $stop['delivery'] ;
+                            elseif ($stopNb == $roadmap['currentStop']):
+                                echo $TextDelivering ;
+                            else:
+                                echo $TextNotDelivered ;
+                            endif; ?>
                         </div>
                     </div>
                 <?php endforeach; ?>

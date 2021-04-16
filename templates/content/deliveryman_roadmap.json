@@ -1,5 +1,22 @@
 {
   "FR": {
-    "Title": "Livraisons du "
+    "Title": "Livraisons du ",
+    "CardHeader": "Étape",
+    "TextPackage": "Paquet n° ",
+    "TextDistanceToNext" : "Distance jusqu'à la prochaine livraison :",
+    "TextTimeToNext": "Temps jusqu'à la prochaine livraison :",
+    "TextDateTimeDelivery": "Date et heure de livraison :",
+    "TextNotDelivered": "Non livré",
+    "TextDelivering": "En cours de livraison…"
+  },
+  "EN": {
+    "Title": "Deliveries for day ",
+    "CardHeader": "Stop",
+    "TextPackage": "Package number : ",
+    "TextDistanceToNext" : "Distance to next delivery:",
+    "TextTimeToNext": "Time to next delivery:",
+    "TextDateTimeDelivery": "Date and time of delivery:",
+    "TextNotDelivered": "Not delivered",
+    "TextDelivering": "Delivering…"
   }
 }

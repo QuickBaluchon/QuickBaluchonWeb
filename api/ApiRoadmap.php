@@ -98,7 +98,7 @@ class ApiRoadmap extends Api
                 self::$_params[] = $_GET['deliveryman'];
             }
         }
-        $columns = ['ROADMAP.id', 'STOP.package', 'step', 'address', 'email', 'kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'dateRoute', 'deliveryman', 'finished'];
+        $columns = ['ROADMAP.id', 'STOP.package', 'step', 'address', 'email', 'timeNextHop', 'distanceNextHop', 'kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'dateRoute', 'deliveryman', 'finished'];
         self::$_join[] = [
             'type' => 'LEFT',
             'table' => 'STOP',
@@ -127,7 +127,9 @@ class ApiRoadmap extends Api
             $stops[$stop['step']] = [
                 'package' => $stop['package'],
                 'address' => $stop['address'],
-                'email' => $stop['email']
+                'email' => $stop['email'],
+                'timeNextHop' => $stop['timeNextHop'],
+                'distanceNextHop' => $stop['distanceNextHop']
             ];
         }
 
@@ -150,10 +152,23 @@ class ApiRoadmap extends Api
             http_response_code(404) ;
             return ;
         }
-        var_dump($roadmap);
 
-        //get sum of km by for undelivered packages
-        //update the roadmap
+        $kmNotDone = 0.0;
+        $timeNotDone = 0.0;
+        for ($i = $roadmap['currentStop'] ; $i < count($roadmap['stops']) ; ++$i) {
+            $kmNotDone += $roadmap['stops'][$i]['distanceNextHop'] ;
+            $timeNotDone += $roadmap['stops'][$i]['timeNextHop'] ;
+        }
+
+        self::$_set[] = 'kmTotal = kmTotal - ?';
+        self::$_params[] = $kmNotDone ;
+
+        self::$_set[] = 'timeTotal = timeTotal - ?';
+        self::$_params[] = $timeNotDone ;
+
+        self::$_set[] = 'finished = 1';
+
+        $this->patch('ROADMAP', $id);
 
         return [] ;
     }

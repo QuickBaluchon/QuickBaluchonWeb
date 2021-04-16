@@ -192,30 +192,6 @@ class ApiRoadmap extends Api
         $this->resetParams();
     }
 
-    public function getTodayRoadmapFromPkgDate (int $pkg, ?string $date) :array {
-        $columns = ['id'] ;
-        if (isset($date) && !empty($date)) {
-            self::$_where[] = "dateRoute = ?" ;
-            self::$_params[] = "STR_TO_DATE($date, %d-%m-%Y)" ;
-        } else {
-            self::$_where[] = "dateRoute = CURDATE()" ;
-        }
-
-        self::$_where[] = "package = ?" ;
-        self::$_params[] = $pkg ;
-
-        self::$_join[] = [
-            'type' => 'INNER',
-            'table' => 'STOP',
-            'onT1' => 'STOP.roadmap',
-            'onT2' => 'ROADMAP.id'
-        ] ;
-
-        $roadmap = $this->get('ROADMAP', $columns) ;
-        $this->resetParams();
-        return $roadmap;
-    }
-
     public function createDailyRoadmaps () {
         $warehouses = $this->getExternData('ApiWarehouse', [], 'getListWarehouse') ;
         foreach ($warehouses as $w) {

@@ -83,7 +83,7 @@ class ApiRoadmap extends Api
      * INNER JOIN PACKAGE ON PACKAGE.id = STOP.package
      * ORDER BY STOP.roadmap, STOP.step;
      */
-    public function getRoadmap(int $id): array {
+    public function getRoadmap (?int $id): array {
         //$this->authentication(['admin'], [$id]);
         if (isset($id)) {
             self::$_where[] = 'ROADMAP.id = ?';
@@ -98,7 +98,7 @@ class ApiRoadmap extends Api
                 self::$_params[] = $_GET['deliveryman'];
             }
         }
-        $columns = ['ROADMAP.id', 'STOP.package', 'step', 'address', 'email', 'timeNextHop', 'distanceNextHop', 'kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'dateRoute', 'deliveryman', 'finished'];
+        $columns = ['ROADMAP.id', 'STOP.package', 'step', 'delivery', 'address', 'email', 'timeNextHop', 'distanceNextHop', 'kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'dateRoute', 'deliveryman', 'finished'];
         self::$_join[] = [
             'type' => 'LEFT',
             'table' => 'STOP',
@@ -115,6 +115,7 @@ class ApiRoadmap extends Api
         self::$_order = 'step';
 
         $roadmaps = $this->get('ROADMAP', $columns);
+
         if (count($roadmaps) > 0)
             return $this->rewriteRoadmap($roadmaps);
         else
@@ -129,7 +130,8 @@ class ApiRoadmap extends Api
                 'address' => $stop['address'],
                 'email' => $stop['email'],
                 'timeNextHop' => $stop['timeNextHop'],
-                'distanceNextHop' => $stop['distanceNextHop']
+                'distanceNextHop' => $stop['distanceNextHop'],
+                'delivery' => $stop['delivery']
             ];
         }
 

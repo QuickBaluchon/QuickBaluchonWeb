@@ -160,15 +160,11 @@ class ApiRoadmap extends Api
             $timeNotDone += $roadmap['stops'][$i]['timeNextHop'] ;
         }
 
-        self::$_set[] = 'kmTotal = kmTotal - ?';
-        self::$_params[] = $kmNotDone ;
-
-        self::$_set[] = 'timeTotal = timeTotal - ?';
-        self::$_params[] = $timeNotDone ;
-
-        self::$_set[] = 'finished = 1';
-
-        $this->patch('ROADMAP', $id);
+        $this->patchRoadmap($id, [
+            'kmTotal' => $roadmap['kmTotal'] - $kmNotDone,
+            'timeTotal' => $roadmap['timeTotal'] - $timeNotDone,
+            'finished' => 1
+        ]);
 
         return [] ;
     }
@@ -177,7 +173,7 @@ class ApiRoadmap extends Api
         if ($data == null)
             $data = $this->getJsonArray();
 
-        $allowed = ['kmTotal', 'timeTotal', 'currentStop', 'finished', 'timeNextHop', 'distanceNextHop'];
+        $allowed = ['kmTotal', 'timeTotal', 'currentStop', 'finished'];
         if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
             http_response_code(400);
             exit(0);

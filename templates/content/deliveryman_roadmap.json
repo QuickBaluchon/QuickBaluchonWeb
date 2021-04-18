@@ -10,6 +10,8 @@
     "TextNotDelivered": "Non livré",
     "TextDelivering": "En cours de livraison…",
 
+    "TextNoRoadmap": "Il n'y a pas de livraison prévue aujourd'hui",
+
     "TitleDanger": "Danger Zone",
     "LabelDelete": "Arrêter la tournée",
     "WarningDelete": "L'arrêt de la tournée est définitif et impactera vos revenus. Êtes-vous certain ?",
@@ -25,6 +27,8 @@
     "TextDateTimeDelivery": "Date and time of delivery:",
     "TextNotDelivered": "Not delivered",
     "TextDelivering": "Delivering…",
+
+    "TextNoRoadmap": "There are no deliveries today",
 
     "TitleDanger": "Danger Zone",
     "LabelDelete": "Stop daily deliveries",

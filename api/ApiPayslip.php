@@ -18,6 +18,7 @@ class ApiPayslip extends Api {
         switch ($method) {
             case 'GET': $this->_data = $this->getListPayslip();break;
             case 'POST': $this->addPayslip();break;
+            case 'PATCH': $this->updatePayslip();break;
             default: $this->catError(405); break ;
         }
     }
@@ -48,7 +49,7 @@ class ApiPayslip extends Api {
       self::$_params[] = intval($_GET['id']);
     }
 
-    self::$_columns = ["id", "grossAmount", "bonus", "datePay", "pdfPath",	"paid"];
+    self::$_columns = ["id", "grossAmount", "bonus", "datePay", "pdfPath",	"paid", "deliveryman"];
     self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
     self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
@@ -124,6 +125,20 @@ class ApiPayslip extends Api {
         self::$_set[] = 'pdfPath = ?' ;
         self::$_params[] =  "payslip/$id.pdf" ;
         $this->patch('PAYSLIP', $id) ;
+    }
+
+    private function updatePayslip(){
+        $data = $this->getJsonArray();
+        $allowed = ["id",'grossAmount', 'paid'];
+
+        if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
+            http_response_code(400);
+            exit(0);
+        }
+
+        self::$_set[] = 'paid = ?' ;
+        self::$_params[] =  $data["paid"] ;
+        $this->patch('PAYSLIP', $data["id"]) ;
     }
 
   }

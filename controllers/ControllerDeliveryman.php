@@ -96,6 +96,7 @@ class ControllerDeliveryman
 
     private function roadmap ($url) {
         $this->_view = new View('Back');
+        $this->_view->_js[] = 'package';
         $this->_roadmapManager = new RoadmapManager();
         $roadmap = $this->_roadmapManager->getRoadmap(null, ["id", "kmTotal", "timeTotal", "nbPackages", "datePay", "currentStop", 'delivery'], null, date("Y-m-d"));
 

@@ -71,7 +71,7 @@ extract($data);
                             <p class="mb-0"><?= $WarningDelete ?></p>
                         </div>
                         <div>
-                            <button type='button' onclick='updateWarehouse(<?= $id ?>)' class='btn btn-outline-danger'><?= $ButtonDelete ?></button>
+                            <button type='button' onclick='stopDeliveries(<?= $roadmap['id'] ?>)' class='btn btn-outline-danger'><?= $ButtonDelete ?></button>
                         </div>
                     </div>
                 </section>

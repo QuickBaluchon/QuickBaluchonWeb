@@ -14,7 +14,7 @@
     },
     "roadmap": {
       "itemName": "Livraisons",
-      "svg": "speedometer"
+      "svg": "box-seam"
     }
   },
   "EN": {
@@ -32,7 +32,7 @@
     },
     "roadmap": {
       "itemName": "Deliveries",
-      "svg": "speedometer"
+      "svg": "box-seam"
     }
   }
 }

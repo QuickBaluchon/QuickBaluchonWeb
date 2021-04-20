@@ -14,10 +14,14 @@
     },
     "employ": {
       "itemName": "Candidatures",
-      "svg": "truck"
+      "svg": "candidate"
     },
     "warehouses": {
       "itemName": "Entrepôts",
+      "svg": "home"
+    },
+    "deliveries": {
+      "itemName": "Livraisons",
       "svg": "box-seam"
     },
     "languages": {
@@ -40,10 +44,14 @@
     },
     "employ": {
       "itemName": "Candidates",
-      "svg": "truck"
+      "svg": "candidate"
     },
     "warehouses": {
       "itemName": "Warehouses",
+      "svg": "home"
+    },
+    "deliveries": {
+      "itemName": "Deliveries",
       "svg": "box-seam"
     },
     "languages": {

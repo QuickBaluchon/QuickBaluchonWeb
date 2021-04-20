@@ -44,9 +44,11 @@ class ApiRoadmap extends Api
         if($this->_method != 'GET') $this->catError(405);
 
         //$this->authentication(['admin']);
-        $columns = ['ROADMAP.id', 'kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'dateRoute', 'deliveryman'];
+        if (!isset($_GET['fields']))
+            $columns = ['ROADMAP.id', 'kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'dateRoute', 'deliveryman'];
+        else
+            $columns = explode(',', $_GET['fields']);
         if(isset($_GET['inner'])) {
-            $columns[] = 'ROADMAP.kmTotal';
             $inner = explode(',',$_GET['inner']);
             self::$_join[] = [
                 'type' => 'inner',
@@ -66,6 +68,8 @@ class ApiRoadmap extends Api
             self::$_where[] = 'MONTH(dateRoute) = ?';
             self::$_params[] = $date[1];
         }
+
+        self::$_order = 'dateRoute DESC';
 
         $list = $this->get('ROADMAP', $columns);
         $bills = [];
@@ -98,7 +102,10 @@ class ApiRoadmap extends Api
                 self::$_params[] = $_GET['deliveryman'];
             }
         }
-        $columns = ['ROADMAP.id', 'STOP.package', 'step', 'delivery', 'address', 'email', 'timeNextHop', 'distanceNextHop', 'kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'dateRoute', 'deliveryman', 'finished'];
+        if (!isset($_GET['fields']))
+            $columns = ['ROADMAP.id', 'STOP.package', 'step', 'delivery', 'address', 'email', 'timeNextHop', 'distanceNextHop', 'kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'dateRoute', 'deliveryman', 'finished'];
+        else
+            $columns = explode(',', $_GET['fields']);
         self::$_join[] = [
             'type' => 'LEFT',
             'table' => 'STOP',

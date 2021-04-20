@@ -2,7 +2,7 @@
 extract($this->_template) ;
 extract($data);
 ?>
-<h1 class="mb-4">Roadmaps</h1>
+<h1 class="mb-4"><?= $Title ?></h1>
 <?php
 if ($roadmaps !== null)
     foreach ($roadmaps as $id => $roadmap):
@@ -15,14 +15,14 @@ if ($roadmaps !== null)
         $min = intval(($roadmap['timeTotal'] - $hours) * 60) ;
 ?>
     <div>
-        <h5><?= $roadmap['dateRoute'] ?> by <?= $roadmap['firstname'] . " " . $roadmap['lastname'] ?></h5>
+        <h5><?= $roadmap['dateRoute'] . " $HeaderBy " . $roadmap['firstname'] . " " . $roadmap['lastname'] ?></h5>
         <p>
-            <?= 'Total : ' ?>
-            <?= $hours !== 0 ? $hours . ' hours ' : ' ' ?>
-            <?= $min . ' minutes / ' . number_format($roadmap['kmTotal'], 2) . ' km'?>
+            <?= $TextTotal ?> :
+            <?= $hours !== 0 ? "$hours $TextHours" : ' ' ?>
+            <?= "$min $TextMinutes / " . number_format($roadmap['kmTotal'], 2) . ' km'?>
         </p>
         <p>
-            <?= 'Packages delivered : ' ?>
+            <?= $TextPackages ?> :
             <?= $roadmap['currentStop'] . ' / ' . $roadmap['nbPackages'] ?>
         </p>
         <div class="progress">
@@ -36,7 +36,7 @@ if ($roadmaps !== null)
         </div>
         <?php if ($roadmap['finished'] == 1 && $percentage === 0): ?>
         <br>
-        <div class="alert alert-danger">Abandonned</div>
+        <div class="alert alert-danger"><?= $TextAbandonned ?></div>
         <?php endif; ?>
     </div>
    <hr>
@@ -44,6 +44,6 @@ if ($roadmaps !== null)
     endforeach;
 else {
 ?>
-    <div class="alert alert-info">No deliveries were found</div>
+    <div class="alert alert-info"><?= $TextNotFound ?></div>
 <?php
 }

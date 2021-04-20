@@ -2,11 +2,11 @@
 
 class RoadmapManager extends Model{
 
-    public function getRoadmaps($fields, $inner = NULL, $date = NULL, $client = NULL) {
+    public function getRoadmaps(array $fields, array $inner = NULL, string $date = NULL, int $deliveryman = NULL) {
         if($inner != NULL)
-            return $this->getCollection('roadmap', ["fields" => join(',',$fields), "inner" => join(',',$inner), "date" => $date, "client" => $client]);
+            return $this->getCollection('roadmap', ["fields" => join(',',$fields), "inner" => join(',',$inner), "date" => $date, "deliveryman" => $deliveryman]);
         else
-            return $this->getCollection('roadmap', ["fields" => join(',',$fields), "client" => $client, "date" => $date]);
+            return $this->getCollection('roadmap', ["fields" => join(',',$fields), "deliveryman" => $deliveryman, "date" => $date]);
     }
 
     public function getRoadmap($id, $fields, $inner = NULL, $date = NULL) {

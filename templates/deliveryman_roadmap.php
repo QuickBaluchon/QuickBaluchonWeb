@@ -33,7 +33,7 @@ extract($data);
                                 <?php
                                 if ($stopNb == $roadmap['currentStop']):
                                     $hours = intval($stop['timeNextHop']) == 0 ? null : intval($stop['timeNextHop']);
-                                    $minutes = intval($stop['timeNextHop'] * 60) ;
+                                    $minutes = intval(($stop['timeNextHop'] - $hours) * 60) ;
                                 ?>
                                     <p>
                                         <?= $TextDistanceToNext ?> <?= $stop['distanceNextHop'] ?> km<br>

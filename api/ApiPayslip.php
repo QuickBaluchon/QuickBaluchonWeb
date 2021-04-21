@@ -28,6 +28,7 @@ class ApiPayslip extends Api {
         switch ($method) {
             case 'POST': $this->_data = $this->getPayslip($id);break;
             case 'GET': $this->createPdfBill($id);break;
+
             default: $this->catError(405);break ;
         }
 
@@ -128,7 +129,7 @@ class ApiPayslip extends Api {
 
     private function updatePayslip(){
         $data = $this->getJsonArray();
-        $allowed = ["idPackage", "idAdmin" ,'paid'];
+        $allowed = ["idPayslip", "idAdmin" ,'paid'];
 
         if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
             http_response_code(400);
@@ -137,16 +138,19 @@ class ApiPayslip extends Api {
 
         self::$_set[] = 'paid = ?' ;
         self::$_params[] =  $data["paid"] ;
-        $this->patch('PAYSLIP', $data["idPackage"]) ;
+        $this->patch('PAYSLIP', $data["idPayslip"]) ;
 
         $this->createPdfPaidPayslip($data);
 
     }
 
     private function createPdfPaidPayslip($data){
-        $amount = $this->getPayslip($data["idPackage"]);
+        require_once('ApiAdmin.php') ;
+        $staff = new ApiAdmin([""], 'GET');
+        $staff = $staff->getStaffById($data["idAdmin"]);
+        $amount = $this->getPayslip($data["idPayslip"]);
         require_once($_SERVER['DOCUMENT_ROOT'] . "/media/fpdf/fpdf.php");
-        $cols = ['Montant', "bonus", 'date'];
+        $cols = ['Montant', "administrateur", 'date'];
         $pdf = new FPDF();
         $pdf->AddPage();
         $pdf->SetFont('Arial', '', 20);
@@ -159,7 +163,12 @@ class ApiPayslip extends Api {
         foreach ($cols as $key) {
             $pdf->Cell(40, 20, "$key");
         }
-        $pdf->Output("testPaidPayslip.pdf", 'F');
+        $pdf->Ln(10);
+        $pdf->Cell(40, 20, $amount["grossAmount"]);
+        $pdf->Cell(40, 20, $staff["username"]);
+        $pdf->Cell(40, 20, date("Y-n-j"));
+        $filename = $_SERVER['DOCUMENT_ROOT'] . '/paidPayslip/' . $data["idPayslip"] . '.pdf' ;
+        $pdf->Output($filename, 'F');
     }
 
   }

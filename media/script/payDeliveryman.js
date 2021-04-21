@@ -4,7 +4,7 @@ function pay(idPayslip) {
     idAdmin = getIdClient(token);
 
     let json = JSON.stringify( {
-        idPackage: idPayslip,
+        idPayslip: idPayslip,
         idAdmin: idAdmin,
         paid : 1
     } );

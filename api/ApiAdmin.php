@@ -13,11 +13,11 @@ class ApiAdmin extends Api {
                 $this->_data = $this->catError(401);
         } elseif (method_exists($this, $url[0])) {
             $function = $url[0];
-            $this->_data = $this->$function(array_slice($url, 2));
+            $this->_data = $this->$function(array_slice($url, 1));
         } else
             http_response_code(404);
-
-        echo json_encode($this->_data, JSON_PRETTY_PRINT);
+        if($this->_data != null)
+            echo json_encode($this->_data, JSON_PRETTY_PRINT);
     }
 
     public function addStaff() {
@@ -39,13 +39,27 @@ class ApiAdmin extends Api {
 
     }
 
-    public function getListStaff() {
+    public function getListStaff($id) {
+
         if($this->_method != 'GET') $this->catError(405);
 
         $columns = ["id", "lastname", "firstname", "sector", "username", "employed"];
         $list = $this->get('STAFF', $columns);
 
         return $list;
+    }
+
+    public function getStaffById($id) {
+        if($this->_method != 'GET') $this->catError(405);
+        $columns = ["id", "lastname", "firstname", "sector", "username", "employed"];
+        self::$_where[] = 'id = ?';
+        self::$_params[] = $id;
+
+        $staff = $this->get('STAFF', $columns);
+        if( count($staff) == 1 )
+          return $staff[0];
+        else
+          return [];
     }
 
     public function login() {

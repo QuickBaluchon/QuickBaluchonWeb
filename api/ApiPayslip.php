@@ -169,6 +169,10 @@ class ApiPayslip extends Api {
         $pdf->Cell(40, 20, date("Y-n-j"));
         $filename = $_SERVER['DOCUMENT_ROOT'] . '/paidPayslip/' . $data["idPayslip"] . '.pdf' ;
         $pdf->Output($filename, 'F');
+
+        self::$_set[] = 'pdfPaidPayslipPath = ?' ;
+        self::$_params[] =  'paidPayslip/' . $data["idPayslip"] . '.pdf' ;
+        $this->patch('PAYSLIP', $data["idPayslip"]) ;
     }
 
   }

@@ -50,7 +50,7 @@ class ApiPayslip extends Api {
       self::$_params[] = intval($_GET['id']);
     }
 
-    self::$_columns = ["id", "grossAmount", "bonus", "datePay", "pdfPath",	"paid", "deliveryman"];
+    self::$_columns = ["id", "grossAmount", "bonus", "datePay", "pdfPath",	"paid", "deliveryman", "pdfPaidPayslipPath"];
     self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
     self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 

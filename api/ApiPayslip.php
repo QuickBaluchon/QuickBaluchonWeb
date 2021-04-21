@@ -62,7 +62,7 @@ class ApiPayslip extends Api {
   public function getPayslip($id): array {
     //if($this->_method != 'GET') $this->catError(405);
     //$this->authentication(['admin'], [$id]);
-    $columns = ["grossAmount", "bonus", "datePay" ];
+    $columns = ["grossAmount", "bonus", "datePay", "deliveryman"];
     self::$_where[] = 'id = ?';
     self::$_params[] = $id;
     $Payslip = $this->get('PAYSLIP', $columns);
@@ -129,7 +129,7 @@ class ApiPayslip extends Api {
 
     private function updatePayslip(){
         $data = $this->getJsonArray();
-        $allowed = ["idPayslip", "idAdmin" ,'paid'];
+        $allowed = ["idPayslip", "idAdmin" ,'paid', "idDeliveryman"];
 
         if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
             http_response_code(400);
@@ -173,6 +173,11 @@ class ApiPayslip extends Api {
         self::$_set[] = 'pdfPaidPayslipPath = ?' ;
         self::$_params[] =  'paidPayslip/' . $data["idPayslip"] . '.pdf' ;
         $this->patch('PAYSLIP', $data["idPayslip"]) ;
+        require_once("ApiDeliveryman.php");
+        $email = new ApiDeliveryMan([$data["idDeliveryman"]], "GET");
+        $email = $email->getDelivery($data["idDeliveryman"]);
+        require_once("ApiMail.php");
+        new ApiMail($email['email'], "Paiement du " . date("Y-n-j"), "Vous avez été payer pour un montant de: " . $amount["grossAmount"] . "Bonne journée");
     }
 
   }

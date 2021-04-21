@@ -350,7 +350,7 @@ class ControllerAdmin {
                 foreach($buttonsValues as $link => $inner){
                     $id = $payslips['id'];
                     if($payslips['paid'] == 0){
-                        $buttons[] = '<button onclick="'. $link .'('.$payslips["id"].')" id="'.$payslips["id"].'" type="button" class="btn btn-primary btn-sm">' . $inner . '</button>';
+                        $buttons[] = '<button onclick="'. $link .'('.$payslips["id"] . ',' . $payslips["deliveryman"] .')" id="'.$payslips["id"].'" type="button" class="btn btn-primary btn-sm">' . $inner . '</button>';
                     }else{
                         $buttons[] = '<span>déjà payé</span>';
                     }

@@ -56,7 +56,7 @@ class ApiDeliveryMan extends Api {
         return $list;
     }
 
-    private function getDelivery($id): array {
+    public function getDelivery($id): array {
 
         if ($this->_method != 'GET') $this->catError(405);
         $columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG"];
@@ -259,7 +259,7 @@ class ApiDeliveryMan extends Api {
         }
     }
 
-    
+
 
 
 }

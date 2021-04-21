@@ -60,7 +60,6 @@ class ApiPayslip extends Api {
 
   public function getPayslip($id): array {
     //if($this->_method != 'GET') $this->catError(405);
-
     //$this->authentication(['admin'], [$id]);
     $columns = ["grossAmount", "bonus", "datePay" ];
     self::$_where[] = 'id = ?';
@@ -129,7 +128,7 @@ class ApiPayslip extends Api {
 
     private function updatePayslip(){
         $data = $this->getJsonArray();
-        $allowed = ["id",'grossAmount', 'paid'];
+        $allowed = ["idPackage", "idAdmin" ,'paid'];
 
         if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
             http_response_code(400);
@@ -138,7 +137,29 @@ class ApiPayslip extends Api {
 
         self::$_set[] = 'paid = ?' ;
         self::$_params[] =  $data["paid"] ;
-        $this->patch('PAYSLIP', $data["id"]) ;
+        $this->patch('PAYSLIP', $data["idPackage"]) ;
+
+        $this->createPdfPaidPayslip($data);
+
+    }
+
+    private function createPdfPaidPayslip($data){
+        $amount = $this->getPayslip($data["idPackage"]);
+        require_once($_SERVER['DOCUMENT_ROOT'] . "/media/fpdf/fpdf.php");
+        $cols = ['Montant', "bonus", 'date'];
+        $pdf = new FPDF();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', '', 20);
+        $pdf->Cell(160, 20, "Quick Baluchon");
+        $pdf->Ln(10);
+        $pdf->SetFont('Arial', '', 12);
+        $pdf->Cell(160, 20, "Attestation de paiement");
+        $pdf->Ln(30);
+        $pdf->SetFont('Arial', '', 14);
+        foreach ($cols as $key) {
+            $pdf->Cell(40, 20, "$key");
+        }
+        $pdf->Output("testPaidPayslip.pdf", 'F');
     }
 
   }

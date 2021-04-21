@@ -1,20 +1,16 @@
 
 function pay(idPayslip) {
-    ajax('../api/payslip&id=' + idPayslip, null, 'GET', updated);
-}
+    token = getCookie("access_token");
+    idAdmin = getIdClient(token);
 
-function updated(response) {
-
-    result = JSON.parse(response);
-    console.log(response);
     let json = JSON.stringify( {
-        id: result[0]["id"],
-        grossAmount : result[0]["grossAmount"],
+        idPackage: idPayslip,
+        idAdmin: idAdmin,
         paid : 1
     } );
     ajax('/api/payslip', json, 'PATCH', reload);
-
 }
+
 
 function reload(){
     document.location.reload();

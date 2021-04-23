@@ -155,12 +155,16 @@ class ControllerAdmin {
         $this->_view = new View('Back');
 
         $this->_DeliveryManager = new DeliveryManager;
-        $list = $this->_DeliveryManager->getDeliverys([], NULL);
+        $list = $this->_DeliveryManager->getDeliverys(["id", 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'employed', 'warehouse', 'licence', 'registration', 'employEnd'], NULL);
 
         if ($list != null) {
             foreach ($list as $d) {
-                $buttons[] = '<button type="button" class="btn btn-danger btn-sm" onclick="dismissDeliveryman(' . $d['id'] . ')">Licensier</button>';
+                if($d['employed'] == 1)
+                    $buttons[] = '<button type="button" class="btn btn-danger btn-sm" onclick="dismissDeliveryman(' . $d['id'] . ')">Licensier</button>';
+                else
+                    $buttons[] = "<spann>" . $d['employEnd'] . "</span>";
                 unset($d['id']);
+                unset($d['employEnd']);
                 $d['employed'] = $d['employed'] == 1 ? "&#x2713" : "&#x10102" ;
                 $rows[] = array_merge($d, $buttons);
                 $buttons = [];
@@ -168,7 +172,7 @@ class ControllerAdmin {
         } else
             $rows = [];
 
-        $cols = ['firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licence', 'registration', 'contract start', 'contract end', 'dismiss'];
+        $cols = ['firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'employed', 'warehouse', 'licence'];
 
         $deliveryman = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->_js[] = 'deliveryman/dismiss';

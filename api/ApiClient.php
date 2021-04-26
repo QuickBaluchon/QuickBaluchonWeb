@@ -173,7 +173,7 @@ class ApiClient extends Api
             $exec = "./main $filepath $userID $nbPkg";
             exec($exec, $outputs, $rescode);
             print_r( $outputs );
-            //echo '  rescode: ' . $rescode ;
+            echo '  rescode: ' . $rescode ;
 
         } else {
             echo 'Error with the Excel file';

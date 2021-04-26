@@ -10,8 +10,11 @@
 
     "TitleDanger": "Danger Zone",
     "LabelDelete": "Supprimer cet entrepôt",
-    "WarningDelete": "La suppression d'un entrepôt est définitive. Soyez certain.",
-    "ButtonDelete": "Supprimer cet entrepôt"
+    "WarningDelete": "La suppression n'est possible que si l'entrepôt est vide.",
+    "ButtonDelete": "Supprimer cet entrepôt",
+    "LabelReactivate": "Réactiver cet entrepôt",
+    "WarningReactivate": "Cet entrepôt sera de nouveau actif",
+    "ButtonReactivate": "Réactiver cet entrepôt"
   },
   "EN": {
     "Title": "Warehouse",
@@ -24,7 +27,10 @@
 
     "TitleDanger": "Danger Zone",
     "LabelDelete": "Delete this warehouse",
-    "WarningDelete": "The deletion of a warehouse is permanent. Beware.",
-    "ButtonDelete": "Delete this warehouse"
+    "WarningDelete": "The deletion of a warehouse is only possible if it's empty.",
+    "ButtonDelete": "Delete this warehouse",
+    "LabelReactivate": "Reactivate this warehouse",
+    "WarningReactivate": "This warehouse will become active again",
+    "ButtonReactivate": "Reactivate this warehouse"
   }
 }

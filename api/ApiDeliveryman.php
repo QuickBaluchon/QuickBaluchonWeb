@@ -226,11 +226,18 @@ class ApiDeliveryMan extends Api {
             'image/png',
             'image/gif',
         ];
+        if(isset($_FILES['fileLicense']['type'])){
+            if(!in_array( $_FILES['fileLicense']['type'], $acceptable )){
+                header("Location:/deliveryman/signup");
+                exit;
+            }
+        }
 
-        if( !isset($_FILES['fileLicense']['type']) || !in_array( $_FILES['fileLicense']['type'], $acceptable ) &&
-        !isset($_FILES['fileRegistration']['type']) || !in_array( $_FILES['fileRegistration']['type'], $acceptable ) ){
-            header("Location:/deliveryman/signup");
-            exit;
+        if(isset($_FILES['fileRegistration']['type'])){
+            if(!in_array( $_FILES['fileRegistration']['type'], $acceptable ) ){
+                header("Location:/deliveryman/signup");
+                exit;
+            }
         }
 
         if (isset($_FILES) && !empty($_FILES)) {
@@ -252,14 +259,11 @@ class ApiDeliveryMan extends Api {
             $filename = $_FILES['fileRegistration']['name'] = $id . "." . $extension;
             $filepath = $registration . $_FILES['fileRegistration']['name'];
             move_uploaded_file($_FILES['fileRegistration']['tmp_name'], $filepath);
-            header("Location:/deliveryman/signup");
+            header("Location:/");
         } else {
             echo 'Error with the Excel file';
             echo '$_FILES:';
         }
     }
-
-    
-
 
 }

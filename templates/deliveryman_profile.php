@@ -64,7 +64,7 @@
             <form class="" action="../api/deliveryman/register&id=<?= $_SESSION["id"] ?>&file=License" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                   <label for="inputLicense"><?= $LabelLicense ; ?></label>
-                  <img style="max-width:100px" src="../license/<?= $licenseImg ; ?>"/>
+                  <img style="max-width:100px" src="/uploads/license/<?= $licenseImg ?>"/>
                   <input type="file" name="fileLicense" class="form-control" id="inputLicense">
                   <input class="btn btn-primary" type="submit" value="envoyer">
                 </div>
@@ -72,7 +72,7 @@
             <form class="" action="../api/deliveryman/register&id=<?= $_SESSION["id"] ?>&file=Registration" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                   <label for="inputRegistration"><?= $LabelRegistration ; ?></label>
-                  <img style="max-width:100px" src="../registration/<?= $_SESSION["id"] ; ?>"/>
+                  <img style="max-width:100px" src="/uploads/registration/<?= $registrationIMG ?>"/>
                   <input type="file" name="fileRegistration" class="form-control" id="fileRegistration">
                   <input class="btn btn-primary" type="submit" value="envoyer">
                 </div>

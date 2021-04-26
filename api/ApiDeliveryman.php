@@ -135,12 +135,14 @@ class ApiDeliveryMan extends Api {
 
     }
 
-    private function updateDelivery($id) {
-        $data = $this->getJsonArray();
-        $allowed = ['email', 'phone', 'volumeCar', 'radius', 'password', 'oldpassword'];
-        if (count(array_diff(array_keys($data), $allowed)) > 0) {
-            http_response_code(400);
-            exit();
+    private function updateDelivery($id, $data = null) {
+        if ($data == null) {
+            $data = $this->getJsonArray();
+            $allowed = ['email', 'phone', 'volumeCar', 'radius', 'password', 'oldpassword', 'licenseIMG', 'registrationIMG'];
+            if (count(array_diff(array_keys($data), $allowed)) > 0) {
+                http_response_code(400);
+                exit();
+            }
         }
 
         // check volume >= 0.1 and radius >= 1
@@ -217,9 +219,44 @@ class ApiDeliveryMan extends Api {
         }
         $id = $_GET["id"];
 
-        $license = "license/";
-        $registration = "registration/";
+        $license = "uploads/license/";
+        $registration = "uploads/registration/";
 
+        if (isset($_FILES) && !empty($_FILES)) {
+            $this->checkFolder($license);
+            $this->checkFolder($registration);
+            $_POST = [] ;
+
+            if (isset($_GET['file']) && ($_GET['file'] == 'License' || $_GET['file'] == 'Registration')) {
+                $folder = 'uploads/' . strtolower($_GET['file']) . '/';
+                $file = $this->saveFileFolder($id, $_GET['file'], $folder);
+                if ($file) {
+                    $_POST[strtolower($_GET['file']) . 'IMG'] = $file;
+                    $this->updateDelivery($id, $_POST);
+                }
+            } else {
+                $licence = $this->saveFileFolder($id, 'License', $license);
+                $registration = $this->saveFileFolder($id, 'Registration', $registration);
+                $_POST['licenseIMG'] = $licence ;
+                $_POST['registrationIMG'] = $registration ;
+                $this->updateDelivery($id, $_POST);
+            }
+
+            header("Location:/");
+        } else {
+            echo 'Error with the files';
+            echo '$_FILES:';
+        }
+    }
+
+    private function checkFolder ($folder) {
+        if (!file_exists($folder)) {
+            mkdir($folder, 0777, true);
+        }
+    }
+
+    private function saveFileFolder (int $id, string $fileName, string $folder) {
+        $fileName = 'file' . $fileName;
         $acceptable = [
             'image/jpeg',
             'image/jpg',
@@ -227,39 +264,20 @@ class ApiDeliveryMan extends Api {
             'image/gif',
         ];
 
-        if( !isset($_FILES['fileLicense']['type']) || !in_array( $_FILES['fileLicense']['type'], $acceptable ) &&
-        !isset($_FILES['fileRegistration']['type']) || !in_array( $_FILES['fileRegistration']['type'], $acceptable ) ){
-            header("Location:/deliveryman/signup");
-            exit;
+        if(isset($_FILES[$fileName]['type'])){
+            if(!in_array( $_FILES[$fileName]['type'], $acceptable ) ){
+                header("Location:/deliveryman/signup");
+                exit;
+            }
         }
 
-        if (isset($_FILES) && !empty($_FILES)) {
-             if (!file_exists($license) || !file_exists($registration)) {
-                 mkdir($license, 0777, true);
-                 mkdir($registration, 0777, true);
-             }
-
-            $fileName = $_FILES['fileLicense']['name'];
-            $temp = explode('.', $fileName);
-            $extension = end($temp);
-            $filename = $_FILES['fileLicense']['name'] = $id . "." . $extension;
-            $filepath = $license . $_FILES['fileLicense']['name'];
-            move_uploaded_file($_FILES['fileLicense']['tmp_name'], $filepath);
-
-            $fileName = $_FILES['fileRegistration']['name'];
-            $temp = explode('.', $fileName);
-            $extension = end($temp);
-            $filename = $_FILES['fileRegistration']['name'] = $id . "." . $extension;
-            $filepath = $registration . $_FILES['fileRegistration']['name'];
-            move_uploaded_file($_FILES['fileRegistration']['tmp_name'], $filepath);
-            header("Location:/deliveryman/signup");
-        } else {
-            echo 'Error with the Excel file';
-            echo '$_FILES:';
-        }
+        $name = $_FILES[$fileName]['name'];
+        $array = explode('.', $name);
+        $extension = end($array);
+        $_FILES[$fileName]['name'] = $id . "." . $extension;
+        $filepath = $folder . $_FILES[$fileName]['name'];
+        move_uploaded_file($_FILES[$fileName]['tmp_name'], $filepath);
+        return $_FILES[$fileName]['name'] ;
     }
-
-    
-
 
 }

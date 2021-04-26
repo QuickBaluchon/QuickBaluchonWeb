@@ -107,11 +107,13 @@ class ControllerClient
                 foreach($buttonsValues as $link => $inner){
                     $id = $bill['id'];
                     if($bill['paid'] == 0){
-                         $_SESSION["price"][] = ["price$id" => $bill['netAmount']];
-
-                        $buttons[] = '<a href="'. WEB_ROOT . "client/$link/" . $id .'"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
+                        $_SESSION["price"][] = ["price$id" => $bill['netAmount']];
+                        if ($_SESSION['role'] == 'client')
+                            $buttons[] = '<a href="'. WEB_ROOT . "client/$link/" . $id .'"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
+                        else
+                            $buttons[] = '<span>&#x10102</span>' ;
                     }else{
-                        $buttons[] = '<span>déjà payé</span>';
+                        $buttons[] = '<span>&#x2713</span>';
                     }
                     $buttons[] = '<a href="'. WEB_ROOT . $bill['pdfPath'] .'"><button type="button" class="btn btn-primary btn-sm">visualiser</button></a>';
                     unset($bill['pdfPath']) ;

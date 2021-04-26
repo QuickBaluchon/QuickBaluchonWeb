@@ -135,12 +135,14 @@ class ApiDeliveryMan extends Api {
 
     }
 
-    private function updateDelivery($id) {
-        $data = $this->getJsonArray();
-        $allowed = ['email', 'phone', 'volumeCar', 'radius', 'password', 'oldpassword'];
-        if (count(array_diff(array_keys($data), $allowed)) > 0) {
-            http_response_code(400);
-            exit();
+    private function updateDelivery($id, $data = null) {
+        if ($data == null) {
+            $data = $this->getJsonArray();
+            $allowed = ['email', 'phone', 'volumeCar', 'radius', 'password', 'oldpassword', 'licenseIMG', 'registrationIMG'];
+            if (count(array_diff(array_keys($data), $allowed)) > 0) {
+                http_response_code(400);
+                exit();
+            }
         }
 
         // check volume >= 0.1 and radius >= 1
@@ -223,13 +225,21 @@ class ApiDeliveryMan extends Api {
         if (isset($_FILES) && !empty($_FILES)) {
             $this->checkFolder($license);
             $this->checkFolder($registration);
+            $_POST = [] ;
 
             if (isset($_GET['file']) && ($_GET['file'] == 'License' || $_GET['file'] == 'Registration')) {
                 $folder = 'uploads/' . strtolower($_GET['file']) . '/';
-                $this->saveFileFolder($id, $_GET['file'], $folder);
+                $file = $this->saveFileFolder($id, $_GET['file'], $folder);
+                if ($file) {
+                    $_POST[strtolower($_GET['file']) . 'IMG'] = $file;
+                    $this->updateDelivery($id, $_POST);
+                }
             } else {
-                $this->saveFileFolder($id, 'License', $license);
-                $this->saveFileFolder($id, 'Registration', $registration);
+                $licence = $this->saveFileFolder($id, 'License', $license);
+                $registration = $this->saveFileFolder($id, 'Registration', $registration);
+                $_POST['licenseIMG'] = $licence ;
+                $_POST['registrationIMG'] = $registration ;
+                $this->updateDelivery($id, $_POST);
             }
 
             header("Location:/");
@@ -267,6 +277,7 @@ class ApiDeliveryMan extends Api {
         $_FILES[$fileName]['name'] = $id . "." . $extension;
         $filepath = $folder . $_FILES[$fileName]['name'];
         move_uploaded_file($_FILES[$fileName]['tmp_name'], $filepath);
+        return $_FILES[$fileName]['name'] ;
     }
 
 }

@@ -64,10 +64,12 @@
           <form onsubmit="return false" class="form-round col-lg">
             <div class="form-group">
               <label for="inputLicense"><?= $LabelLicense ; ?></label>
+              <img style="max-width:100px" src="../license/<?= $licenseImg ; ?>"/>
               <input type="text" class="form-control" id="inputLicense" value="license: <?= $licenseImg ?>" disabled="true">
             </div>
             <div class="form-group">
               <label for="inputRegistration"><?= $LabelRegistration ; ?></label>
+              <img style="max-width:100px" src="../registration/<?= $registrationIMG ; ?>"/>
               <input type="text" class="form-control" id="inputRegistration" value="registration: <?= $registrationIMG ?>" disabled="true">
             </div>
             <div class="form-group">

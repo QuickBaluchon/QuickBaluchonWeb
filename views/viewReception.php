@@ -26,6 +26,10 @@ if (isset($data['status']) && $data['status'] != 0) {
 
                     <form>
                         <div class="input-group mb-3">
+                            <span class="input-group-text"><?= $LabelName ?></span>
+                            <input type="text" class="form-control" id="weight" value="<?= $data['nameRecipient'] ; ?>">
+                        </div>
+                        <div class="input-group mb-3">
                             <span class="input-group-text"><?= $LabelWeight ?></span>
                             <input type="number" class="form-control" id="weight" value="<?= $data['weight'] ; ?>">
                             <span class="input-group-text">kg</span>

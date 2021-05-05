@@ -50,9 +50,9 @@ function absented (text) {
 }
 
 function stopDeliveries (id) {
-    ajax(`/api/stop/${id}`, '', 'DELETE', ended) ;
+    ajax(`/api/roadmap/${id}`, '', 'DELETE', ended) ;
 }
+
 function ended (text) {
-    let jb = document.getElementById('jumbotron') ;
-    jb.innerHTML = '<h1 class="display-4">Tournée arrêtée</h1>' ;
+    window.location.href= "/deliveryman/roadmap";
 }

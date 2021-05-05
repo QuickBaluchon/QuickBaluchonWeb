@@ -107,6 +107,8 @@ class ApiWarehouse extends Api {
 
         $data = $this->getJsonArray();
         $allowed = ['address', 'volume'];
+        if ($data == null)
+            return;
         if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
             http_response_code(400);
             exit(0);

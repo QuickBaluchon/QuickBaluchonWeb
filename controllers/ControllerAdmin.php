@@ -10,6 +10,7 @@ class ControllerAdmin {
     private $_deliveryManager;
     private $_pricelistManager;
     private $_languagesManager ;
+    private $_roadmapsManager;
     private $_view;
     private $_notif;
 
@@ -52,14 +53,14 @@ class ControllerAdmin {
             $json = json_decode(file_get_contents('php://input'), true);
             if( isset( $json['username'], $json['password'] )) {
 
-                 $admin = $this->_adminManager->login( $json['username'], $json['password']);
-                 if( isset($admin['id'], $admin['role'], $admin['access_token']) ) {
-                     $_SESSION['id'] = $admin['id'];
-                     $_SESSION['role'] = $admin['role'];
-                     $_SESSION['warehouse'] = $admin['warehouse'] ;
-                     echo json_encode($admin, JSON_PRETTY_PRINT);
-                 } else
-                     http_response_code(401);
+                $admin = $this->_adminManager->login( $json['username'], $json['password']);
+                if( isset($admin['id'], $admin['role'], $admin['access_token']) ) {
+                    $_SESSION['id'] = $admin['id'];
+                    $_SESSION['role'] = $admin['role'];
+                    $_SESSION['warehouse'] = $admin['warehouse'] ;
+                    echo json_encode($admin, JSON_PRETTY_PRINT);
+                } else
+                    http_response_code(401);
             } else
                 http_response_code(400);
         } else
@@ -154,12 +155,16 @@ class ControllerAdmin {
         $this->_view = new View('Back');
 
         $this->_DeliveryManager = new DeliveryManager;
-        $list = $this->_DeliveryManager->getDeliverys([], NULL);
+        $list = $this->_DeliveryManager->getDeliverys(["id", 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'employed', 'warehouse', 'licence', 'registration', 'employEnd'], NULL);
 
         if ($list != null) {
             foreach ($list as $d) {
-                $buttons[] = '<button type="button" class="btn btn-danger btn-sm" onclick="dismissDeliveryman(' . $d['id'] . ')">Licensier</button>';
+                if($d['employed'] == 1)
+                    $buttons[] = '<button type="button" class="btn btn-danger btn-sm" onclick="dismissDeliveryman(' . $d['id'] . ')">Licensier</button>';
+                else
+                    $buttons[] = "<spann>" . $d['employEnd'] . "</span>";
                 unset($d['id']);
+                unset($d['employEnd']);
                 $d['employed'] = $d['employed'] == 1 ? "&#x2713" : "&#x10102" ;
                 $rows[] = array_merge($d, $buttons);
                 $buttons = [];
@@ -167,7 +172,7 @@ class ControllerAdmin {
         } else
             $rows = [];
 
-        $cols = ['firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licence', 'registration', 'contract start', 'contract end', 'dismiss'];
+        $cols = ['firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'employed', 'warehouse', 'licence'];
 
         $deliveryman = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->_js[] = 'deliveryman/dismiss';
@@ -255,10 +260,10 @@ class ControllerAdmin {
         $this->_deliveryManager = new DeliveryManager;
         $list = $this->_deliveryManager->getDeliveryNotEmployed(["id","firstname","lastname","phone","email","volumeCar","radius","IBAN","employed", "warehouse"]);
 
-         $buttonsValues = [
-             'employ' => 'employer',
-             'refuse' => 'refuser',
-         ];
+        $buttonsValues = [
+            'employ' => 'employer',
+            'refuse' => 'refuser',
+        ];
 
         foreach ($list as $delivery) {
             foreach($buttonsValues as $link => $inner){
@@ -273,7 +278,7 @@ class ControllerAdmin {
         $cols = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'employer', 'refuser'];
         $delivery = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->generateView(['content' => $delivery, 'name' => 'QuickBaluchon']);
-  }
+    }
 
     private function updatePricelist($url) {
         $this->_view = new View('back');
@@ -324,13 +329,25 @@ class ControllerAdmin {
         $details = $this->_WarehousesManager->getWarehouse($url[0], ["address", "volume", 'AvailableVolume', 'active']);
         $deliveryman = $this->_DeliveryManager->getDeliverys(["id"], $url[0]);
 
-            $template =  $this->_view->generateTemplate('warehouse', [
-                "warehouse" => $url[0],
-                "details" => $details,
-                "id" => $url[0], "deliveryman" => count($deliveryman)
-            ]);
+        $template =  $this->_view->generateTemplate('warehouse', [
+            "warehouse" => $url[0],
+            "details" => $details,
+            "id" => $url[0], "deliveryman" => count($deliveryman)
+        ]);
 
 
+        $this->_view->generateView(['content' => $template, 'name' => 'QuickBaluchon']);
+    }
+
+    public function deliveries ($url) {
+        $this->_view = new View('Back');
+
+        $this->_roadmapsManager = new RoadmapManager ;
+        $join = ['deliveryman', 'DELIVERYMAN.id', 'ROADMAP.deliveryman'];
+        $fields = ['firstname', 'lastname', 'kmTotal', 'timeTotal', 'finished', 'nbPackages','currentStop', 'dateRoute'];
+        $roadmaps = $this->_roadmapsManager->getRoadmaps($fields, $join, date("Y-m-d"));
+
+        $template = $this->_view->generateTemplate('admin_roadmaps', ['roadmaps' => $roadmaps]) ;
         $this->_view->generateView(['content' => $template, 'name' => 'QuickBaluchon']);
     }
 

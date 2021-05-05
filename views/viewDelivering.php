@@ -94,7 +94,6 @@ extract($this->_content) ;
                     image.src = dataUrl;
 
                   }
-
                 </script>
             </div>
 
@@ -103,19 +102,7 @@ extract($this->_content) ;
             </div>
         </div>
 
-
         <hr>
         <button type="button" class="btn btn-warning btn-lg btn-block" onclick="absent(<?= $id ; ?>)"><?= $ButtonAbsent ?></button>
-        <hr>
-        <hr>
-        <div class="card">
-            <div class="card-header">
-                <h2><?= $TitleStop ?></h2>
-            </div>
-            <div class="card-body">
-                <p><?= $WarningStop ?></p>
-                <button type="button" class="btn btn-danger btn-lg btn-block mt-3" onclick="stopDeliveries(<?= $id ; ?>)"><?= $ButtonStop ?></button>
-            </div>
-        </div>
     </div>
 </div>

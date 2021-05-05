@@ -42,6 +42,9 @@ class ApiPackage extends Api {
             ] ;
         }
 
+        if (isset($_GET['order']))
+            self::$_order = $_GET['order'];
+
         if(isset($_GET['client'])) {
             self::$_where[] = 'client = ?';
             self::$_params[] = intval($_GET['client']);
@@ -63,11 +66,11 @@ class ApiPackage extends Api {
         }
         if(isset($_GET['status'])) {
             self::$_where[] = 'status = ?';
-            self::$_params[] = $_GET['status'] ;
+            self::$_params[] = intval($_GET['status']) ;
         }
         if(isset($_GET['warehouse'])) {
             self::$_where[] = 'warehouse = ?';
-            self::$_params[] = $_GET['warehouse'] ;
+            self::$_params[] = intval($_GET['warehouse']) ;
         }
 
         $list = $this->get('PACKAGE', $columns);

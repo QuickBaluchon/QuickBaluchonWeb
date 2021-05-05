@@ -1,6 +1,6 @@
-function updateWarehouse(id) {
+function updateWarehouse(id, active) {
     let json = JSON.stringify({
-        active: 0,
+        active: active,
     });
     ajax('../../api/warehouse/' + id, json, 'DELETE', redirect);
 }

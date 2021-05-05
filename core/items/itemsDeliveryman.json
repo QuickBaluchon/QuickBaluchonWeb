@@ -4,13 +4,17 @@
       "itemName": "Données personnnelles",
       "svg": "user"
     },
-    "bills": {
+    "payslip": {
       "itemName": "Fiche de paie",
       "svg": "invoice"
     },
     "statistics": {
       "itemName": "Statistiques",
       "svg": "speedometer"
+    },
+    "roadmap": {
+      "itemName": "Livraisons",
+      "svg": "box-seam"
     }
   },
   "EN": {
@@ -18,13 +22,17 @@
       "itemName": "Personal data",
       "svg": "user"
     },
-    "bills": {
+    "payslip": {
       "itemName": "Invoices",
       "svg": "invoice"
     },
     "statistics": {
       "itemName": "Statistics",
       "svg": "speedometer"
+    },
+    "roadmap": {
+      "itemName": "Deliveries",
+      "svg": "box-seam"
     }
   }
 }

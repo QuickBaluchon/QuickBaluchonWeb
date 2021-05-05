@@ -21,15 +21,12 @@ class ControllerDeliveryman
 
         $actions = ['payslip', 'profile', 'statistics', "signup"];
         if (method_exists($this, $url[1])) {
-            if ($_SESSION['role'] == 'deliveryman')
+            if (isset($_SESSION['role']) && $_SESSION['role'] == 'deliveryman') {
                 $this->_id = $_SESSION['id'];
-            else {
-                $this->_view = new View('Error');
-                $this->_view->generateView(['cat' => 403]);
-                return;
-            }
-            $method = $url[1];
-            $this->$method(array_slice($url, 2));
+                $method = $url[1];
+                $this->$method(array_slice($url, 2));
+            } else
+                $this->signup($url);
         } else {
             http_response_code(404);
         }
@@ -38,26 +35,31 @@ class ControllerDeliveryman
     private function payslip($url) {
         $this->_view = new View('Back');
         $this->_PayslipManager = new PayslipManager;
-        $payslips = $this->_PayslipManager->getPayslip(["id", "grossAmount", "bonus", "netAmount", "datePay", "paid"], $this->_id);
+        $payslips = $this->_PayslipManager->getPayslip(["id", "grossAmount", "bonus", "netAmount", "datePay", "paid", "pdfPath"], $this->_id);
 
         $buttonsValues = [
-            'visualiser' => 'visualiser',
+            'package' => 'visualiser',
 
         ];
 
         if($payslips != null){
             foreach ($payslips as $payslip) {
+                $payslip['paid'] = $payslip['paid'] == 1 ? "&#x2713" : "&#x10102" ;
                 foreach($buttonsValues as $link => $inner){
-                $buttons[] = '<a href="'. WEB_ROOT . "deliveryman/$link/" . $payslip['id'] .'"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
+                    if($payslip["pdfPath"] != NULL)
+                        $buttons[] = '<a href="'. WEB_ROOT . "payslip/" . $payslip['id'] .'.pdf"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
+                    else
+                        $buttons[] = '<span> mois non terminé</span';
               }
               $rows[] = array_merge($payslip, $buttons);
               $buttons = [];
+
             }
         }else {
             $rows = [];
         }
 
-        $cols = ["id", "grossAmount", "bonus", "netAmount", "datePay", "paid", "visualiser"];
+        $cols = ["id", "grossAmount", "bonus", "datePay", "paid", "visualiser"];
         $paySlip = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->generateView(['content' => $paySlip, 'name' => 'QuickBaluchon']);
     }
@@ -71,20 +73,18 @@ class ControllerDeliveryman
         $this->_view->generateView(['content' => $profile, 'name' => $delivery['lastname']]);
     }
 
+
     private function statistics($url) {
         $this->_view = new View('Back');
 
         $this->_DeliverymanManager = new DeliveryManager();
         $delivery = $this->_DeliverymanManager->getDelivery($this->_id, ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
-        $profile = $this->_view->generateTemplate('deliveryman_stats', $delivery);
-        $this->_view->generateView(['content' => $profile, 'name' => $delivery['lastname']]);
+        $stats = $this->_view->generateTemplate('deliveryman_stats', $delivery);
+        $this->_view->generateView(['content' => $stats, 'name' => $delivery['lastname']]);
     }
 
     private function signup($url) {
         $this->_view = new View('SignupDeliveryman');
-
-        $this->_DeliverymanManager = new DeliveryManager();
-        $delivery = $this->_DeliverymanManager->getDelivery($this->_id, ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
 
         $this->_warehouseManager = new WarehouseManager;
         $queryWarehouses = $this->_warehouseManager->getWarehouses(["id", "address"]);
@@ -94,92 +94,17 @@ class ControllerDeliveryman
         $this->_view->generateView(["warehouses" => $warehouses]);
     }
 
-    public function visualiser($id){
-        $this->_roadmapManager = new RoadmapManager;
-        $this->_PayslipManager = new PayslipManager;
-        $this->_DeliverymanManager = new DeliveryManager;
+    private function roadmap ($url) {
+        $this->_view = new View('Back');
+        $this->_view->_js[] = 'deliveryman/deliveries';
+        $this->_roadmapManager = new RoadmapManager();
+        $roadmap = $this->_roadmapManager->getRoadmap(null, ["id", "kmTotal", "timeTotal", "nbPackages", "datePay", "currentStop", 'delivery'], null, date("Y-m-d"));
 
-        $payslips = $this->_PayslipManager->getPayslip(["datePay"], NULL, $id[0]);
+        $this->_DeliverymanManager = new DeliveryManager();
+        $delivery = $this->_DeliverymanManager->getDelivery($this->_id, ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
+        $roadmap = $this->_view->generateTemplate('deliveryman_roadmap', ['roadmap' => $roadmap, 'deliveryman' => $delivery]);
 
-        $km = $this->_roadmapManager->getRoadmaps(["kmTotal"], NULL, $payslips[0]["datePay"], $this->_id);
-        $priceKm = $this->calculKm($km);
-
-        $date = explode("-", $payslips[0]["datePay"]);
-
-        $nbTotalColisDelivered = $this->_DeliverymanManager->getNbTotalColisDelivered($this->_id, $date[1], $date[0]);
-        $primeDelivered = $this->calculPrimeColisDelivered($nbTotalColisDelivered);
-
-        $heavyPackages = $this->_DeliverymanManager->getHeavyPackage($this->_id, $date[1], $date[0]);
-        $primeHeavy = $this->calculPrimeHeavy($heavyPackages);
-
-        $nbTotalColis = $this->_DeliverymanManager->getNbTotalColis($this->_id, $date[1], $date[0]);
-        $percent = $this->calculPrimePercentDelivered($nbTotalColisDelivered, $nbTotalColis);
-
-        $salair = $this->calculTotal($priceKm,$primeDelivered,$primeHeavy,$percent);
-        echo $salair;
-    }
-
-    public function calculKm($kmTotal){
-        $total = 0;
-        foreach ($kmTotal as $km) {
-            $total += $km['kmTotal'];
-        }
-        return $total * 0.36;
-    }
-
-    public function calculPrimeColisDelivered($nbTotalColis){
-        $total = 0;
-
-        foreach ($nbTotalColis[0] as $date => $nb) {
-                $total += $nb*1.90;
-        }
-        return $total;
-
-    }
-
-    public function calculPrimeHeavy($heavyPackages){
-        $total = 0;
-        foreach ($heavyPackages as $heavyPackage) {
-            $total += (intval(($heavyPackage['weight']-30)/22)+1)*3 ;
-        }
-
-        return $total;
-    }
-
-    public function calculPrimePercentDelivered($nbTotalColisDelivered, $nbTotalColis){
-        $total = 0;
-
-        foreach ($nbTotalColisDelivered[0] as $key => $nbTotal) {
-                foreach ($nbTotalColis[0] as $key => $nb) {
-                        $total = 100*($nbTotal/$nb);
-                }
-        }
-        switch ($total) {
-            case $total > 87:return 10;break;
-            case $total >= 72 && $total <= 87:return 120;break;
-            case $total >= 60 && $total < 72:return 50;break;
-            case $total < 60:return 0;break;
-            case $total < 10:return 15;break;
-        }
-    }
-
-    public function calculTotal($priceKm,$primeDelivered,$primeHeavy,$percent){
-        echo $priceKm . " ";
-        echo $primeDelivered . " ";
-        echo $primeHeavy . " ";
-        echo $percent . " ";
-        $salair = $priceKm + $primeDelivered + $primeHeavy;
-        switch ($percent) {
-            case 10: $salair *= 1.10; break;
-            case 120:$salair += 120; break;
-            case 50:$salair += 50; break;
-            case 0:$salair += 0; break;
-            case 15:$salair *= 0.85; break;
-        }
-        echo $salair;
-        die();
-        return $salair;
-
+        $this->_view->generateView(['content' => $roadmap, 'name' => $delivery['lastname']]);
     }
 
 }

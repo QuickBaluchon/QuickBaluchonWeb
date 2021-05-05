@@ -19,7 +19,7 @@ class ControllerPrices {
                 if ($list[$i]['status'] == 0) unset($list[$i]);
                 else {
                     unset($list[$i]['id']);
-                    $list[$i]['status'] = $list[$i]['status'] == 1 ? "&#x2713" : "&#x10102" ;
+                    unset($list[$i]['status']);
                 }
             }
 

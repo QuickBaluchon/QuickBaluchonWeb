@@ -231,15 +231,17 @@ class ControllerAdmin {
         ];
 
         $rows = [];
-        foreach ($list as $package) {
+        foreach ($list as $price) {
             foreach ($buttonsValues as $link => $inner) {
-                $buttons[] = '<a href="' . WEB_ROOT . "admin/$link/" . $package['id'] . '"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
+                $buttons[] = '<a href="' . WEB_ROOT . "admin/$link/" . $price['id'] . '"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
             }
+            $price['status'] = $price['status'] == 1 ? "&#x2713" : "&#x10102" ;
 
-            $rows[] = array_merge($package, $buttons);
+            $rows[] = array_merge($price, $buttons);
             $buttons = [];
         }
         $rows[] = [
+            '',
             '<input type="text" class="form-control" id="maxWeight" placeholder="Max Weight">',
             '<input type="number" class="form-control" id="ExpressPrice" placeholder="Express Price">',
             '<input type="number" class="form-control" id="StandardPrice" placeholder="Standrad Price">',
@@ -248,7 +250,7 @@ class ControllerAdmin {
             '<button type="button" class="btn btn-success btn-sm" onclick="addPrice()">Ajouter</button>'
         ] ;
 
-        $cols = ['#', 'Max weight', 'Express price', 'Standard price', 'application date'];
+        $cols = ['#', 'Max weight', 'Express price', 'Standard price', 'application date', 'status'];
         $pricelist = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->generateView(['content' => $pricelist, 'name' => 'QuickBaluchon']);
     }

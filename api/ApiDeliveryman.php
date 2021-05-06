@@ -56,7 +56,7 @@ class ApiDeliveryMan extends Api {
         return $list;
     }
 
-    private function getDelivery($id): array {
+    public function getDelivery($id): array {
 
         if ($this->_method != 'GET') $this->catError(405);
         $columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG"];
@@ -94,7 +94,7 @@ class ApiDeliveryMan extends Api {
         $content = "Bonjour, votre candidature a été enregistrée. Nous reviendrons vers vous ultérieurement. Cordialement, l'équipe de Quick Baluchon." ;
 
         require_once('ApiMail.php') ;
-        $mail = new ApiMail($subject, $email, $content) ;
+        $mail = new ApiMail($email, $subject, $content) ;
     }
 
     private function login() {
@@ -207,7 +207,7 @@ class ApiDeliveryMan extends Api {
             $content = "Bonjour, nous sommes navrés de vous annoncer que votre candidature chez Quick Baluchon a été refusée. Bonne continuation dans vos recherches." ;
 
         require_once('ApiMail.php') ;
-        $mail = new ApiMail($subject, $email, $content) ;
+        $mail = new ApiMail($email, $subject, $content) ;
     }
 
     public function registerFile(){
@@ -258,7 +258,4 @@ class ApiDeliveryMan extends Api {
             echo '$_FILES:';
         }
     }
-
-
-
 }

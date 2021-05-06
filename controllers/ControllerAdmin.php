@@ -11,6 +11,7 @@ class ControllerAdmin {
     private $_pricelistManager;
     private $_languagesManager ;
     private $_roadmapsManager;
+    private $_payslipManager;
     private $_view;
     private $_notif;
 
@@ -349,6 +350,41 @@ class ControllerAdmin {
 
         $template = $this->_view->generateTemplate('admin_roadmaps', ['roadmaps' => $roadmaps]) ;
         $this->_view->generateView(['content' => $template, 'name' => 'QuickBaluchon']);
+    }
+
+    private function paidPayslip($url) {
+        $this->_view = new View('back');
+        $this->_payslipManager = new PayslipManager;
+        $payslip = $this->_payslipManager->getPayslip(['id','grossAmount', 'bonus', 'datePay', 'paid', 'deliveryman']);
+
+        $buttonsValues = [
+            'pay' => 'payer',
+        ];
+
+        if($payslip != null){
+            $i = 0;
+            foreach ($payslip as $payslips) {
+                foreach($buttonsValues as $link => $inner){
+                    $id = $payslips['id'];
+                    if($payslips['paid'] == 0){
+                        $buttons[] = '<button onclick="'. $link .'('.$payslips["id"] . ',' . $payslips["deliveryman"] .')" id="'.$payslips["id"].'" type="button" class="btn btn-primary btn-sm">' . $inner . '</button>';
+                    }else{
+                        $buttons[] = '<span>déjà payé</span>';
+                    }
+                }
+                if(isset($buttons))
+                  $rows[] = array_merge($payslips, $buttons);
+                else
+                  $rows[] = $payslips;
+                $buttons = [];
+            }
+        }
+
+        $cols = ['#', 'Amount', 'Bonus', 'Date pay', 'Paid', 'Deliveryman', 'Payer'];
+        $this->_view->_js = ["payDeliveryman"];
+        $payslips = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
+        $this->_view->generateView(['content' => $payslips, 'name' => 'QuickBaluchon']);
+
     }
 
 }

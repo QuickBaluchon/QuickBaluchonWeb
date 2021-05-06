@@ -262,11 +262,8 @@ abstract class Api {
             $playload['sub'] = intval($playload['sub']);
             $status = true;
 
-
-
             if( $allowedRoles && !$allowedId )
                 $status = in_array($playload['role'], $allowedRoles);
-
             elseif ( !$allowedRoles && $allowedId )
                 $status = in_array($playload['sub'], $allowedId);
 
@@ -306,5 +303,11 @@ abstract class Api {
             $clients = $this->get($table);
             return count($clients) > 0;
         } else return -1;
+    }
+
+    protected function getJwtFromHeader(){
+        $header = getallheaders();
+        $jwt=explode(" ", $header["Authorization"]);
+        return $this->decodeJWT($jwt[1]);
     }
 }

@@ -9,9 +9,11 @@ class ApiBill extends Api
     private $_method;
     private $_data = [];
     private $_tva = 1.2;
+    private $_jwt;
 
     public function __construct($url, $method)
     {
+        $this->_jwt = $this->getJwtFromHeader();
 
         $this->_method = $method;
 
@@ -35,6 +37,7 @@ class ApiBill extends Api
     }
 
     public function getListBills(): array {
+        var_dump($this->_jwt);
         if($this->_method != 'GET') $this->catError(405);
 
         if(isset($_GET['client'])) {
@@ -59,7 +62,6 @@ class ApiBill extends Api
 
     public function getBill($id): array
     {
-        //$this->authentication(['admin'], [$id]);
         self::$_where[] = 'id = ?';
         self::$_params[] = $id;
         $columns = ['id', 'client', 'grossAmount', 'netAmount', 'dateBill', 'pdfPath', 'paid'];

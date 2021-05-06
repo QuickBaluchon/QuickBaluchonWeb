@@ -7,19 +7,26 @@ abstract class Model {
         $url = API_ROOT . $collection;
         $params = $this->strCond($cond);
         $url = $params === '' ? $url : $url . '&' . $params;
-        return $this->curl($url);
+        if(isset($_COOKIE["access_token"]))
+            return $this->curl($url, null, ["Autorisation:" . $_COOKIE["access_token"]]);
+        else
+            return $this->curl($url);
     }
 
     protected function getRessource($collection, $id, $cond) {
         return $this->getCollection($collection. '/' . $id, $cond);
     }
 
-    protected function curl(string $url, array $data = null): ?array {
+    protected function curl(string $url, array $data = null, array $headers = null): ?array {
         $curl = curl_init($url);
         if( $data != null ) {
             $payload = json_encode($data);
             curl_setopt( $curl, CURLOPT_POSTFIELDS, $payload );
-            curl_setopt( $curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
+            $headers[] = 'Content-Type:application/json';
+            //curl_setopt( $curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
+        }
+        if($headers != null){
+            curl_setopt( $curl, CURLOPT_HTTPHEADER, $headers);
         }
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HEADER, 0);
@@ -27,8 +34,6 @@ abstract class Model {
         curl_close($curl);
         return $result;
     }
-
-
 
     private function strCond($cond) {
         $params = [];

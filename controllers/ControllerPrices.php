@@ -15,7 +15,8 @@ class ControllerPrices {
             $this->_pricelistManager = new PricelistManager;
             $list = $this->_pricelistManager->getPricelists([]);
 
-            for ($i = 0 ; $i < count($list) ; ++$i) {
+            $count = count($list) ;
+            for ($i = 0 ; $i < $count ; ++$i) {
                 if ($list[$i]['status'] == 0) unset($list[$i]);
                 else {
                     unset($list[$i]['id']);

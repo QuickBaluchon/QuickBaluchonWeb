@@ -96,13 +96,28 @@ extract($this->_content) ;
                   }
                 </script>
             </div>
+            <form action="/OneSignal/ControllerOneSignal.php" method="post" onsubmit="return false" id="formOneSignal">
+                <input type="hidden" name="app_id" value="aae49060-185a-416a-ac6a-2564915dd8c6">
+                <input type="hidden" id="user" name="send">
+                <input type="hidden" name="message" value="Vous avez bien livré le colis">
+                <div class="card-footer">
+                    <button type="button" class="btn btn-primary btn-lg btn-block" onclick="deliver(<?= $id ; ?>)"><?= $ButtonDelivered ?></button>
+                </div>
+            </form>
 
-            <div class="card-footer">
-                <button type="button" class="btn btn-primary btn-lg btn-block" onclick="deliver(<?= $id ; ?>)"><?= $ButtonDelivered ?></button>
-            </div>
         </div>
 
         <hr>
         <button type="button" class="btn btn-warning btn-lg btn-block" onclick="absent(<?= $id ; ?>)"><?= $ButtonAbsent ?></button>
     </div>
 </div>
+<script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+<script>
+  window.OneSignal = window.OneSignal || [];
+  OneSignal.push(function() {
+    OneSignal.init({
+      appId: "aae49060-185a-416a-ac6a-2564915dd8c6",
+    });
+  });
+</script>
+<script type="text/javascript" src="/media/script/oneSignal.js"></script>

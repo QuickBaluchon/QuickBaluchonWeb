@@ -20,18 +20,20 @@ function recieved (text) {
 }
 
 function deliver (id) {
+    let form = document.getElementById('formOneSignal')
     let img = document.getElementById('signature').toDataURL() ;
     let json = JSON.stringify( { status: 3, signature: img } );
 
     ajax(`/api/stop/${id}`, '', 'PATCH', delivered) ;
     ajax(`/api/package/${id}`, json, 'PATCH', delivered) ;
-
+    form.submit();
 }
 
 
 function delivered (text) {
     let jb = document.getElementById('jumbotron') ;
     jb.innerHTML = '<h1 class="display-4">Colis livré</h1>' ;
+
 }
 
 function absent (id) {

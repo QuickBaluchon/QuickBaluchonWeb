@@ -13,18 +13,25 @@ class ControllerPrices {
         else{
             $this->_view = new View('Prices');
             $this->_pricelistManager = new PricelistManager;
-            $list = $this->_pricelistManager->getPricelists([]);
+            $list = $this->_pricelistManager->getPricelists(['maxWeight', 'ExpressPrice', 'StandardPrice'], ['status=1']);
 
             $count = count($list) ;
             for ($i = 0 ; $i < $count ; ++$i) {
-                if ($list[$i]['status'] == 0) unset($list[$i]);
-                else {
-                    unset($list[$i]['id']);
-                    unset($list[$i]['status']);
+                $j = $i - 1 ;
+                $prevWeight = $list[$i]['maxWeight'];
+                while ($j >= 0 && $prevWeight == $list[$i]['maxWeight']) {
+                    if (isset($list[$j])) {
+                        $prevWeight = $list[$j]['maxWeight'] ;
+                        if ($prevWeight == $list[$i]['maxWeight']) {
+                            unset($list[$i]);
+                            break;
+                        }
+                    }
+                    $j--;
                 }
             }
 
-            $cols = ['Max weight', 'Express price', 'Standard price', 'application date'];
+            $cols = ['Max weight', 'Express price', 'Standard price'];
             $pricelist = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $list]);
             $this->_view->generateView(["content" => $pricelist]);
         }

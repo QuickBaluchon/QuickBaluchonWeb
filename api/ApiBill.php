@@ -37,7 +37,12 @@ class ApiBill extends Api
     }
 
     public function getListBills(): array {
-        var_dump($this->_jwt);
+        $access = $this->checkRole(["admin", "deliveryman"], $this->_jwt);
+        if($access == 0){
+            http_response_code(401);
+            exit();
+        }
+
         if($this->_method != 'GET') $this->catError(405);
 
         if(isset($_GET['client'])) {

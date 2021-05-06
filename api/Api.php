@@ -310,4 +310,13 @@ abstract class Api {
         $jwt=explode(" ", $header["Authorization"]);
         return $this->decodeJWT($jwt[1]);
     }
+
+    protected function checkRole($allowedRole, $jwt){
+        $role = json_decode($jwt["playload"], true);
+        foreach ($allowedRole as $value) {
+            if($value == $role["role"])
+                return (int) true;
+        }
+        return (int) false;
+    }
 }

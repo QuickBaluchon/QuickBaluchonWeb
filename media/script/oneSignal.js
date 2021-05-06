@@ -1,5 +1,5 @@
 let userid = document.getElementById('user')
-
+let userAbsent = document.getElementById('userAbsent')
 OneSignal.push(function() {
 
   /* These examples are all valid */
@@ -11,6 +11,7 @@ OneSignal.push(function() {
           OneSignal.getUserId(function(userId) {
               console.log("OneSignal User ID:", userId);
               userid.value = userId;
+              userAbsent.value = userId
             });
         } else {
           console.log("Push notifications are not enabled yet.");

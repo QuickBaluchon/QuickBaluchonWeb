@@ -1,15 +1,24 @@
 <?PHP
-    if(isset($_POST["send"]) && isset($_POST["app_id"]) && isset($_POST["message"])){
-        $response = sendMessage($_POST["message"]);
+    if(isset($_POST["send"]) && isset($_POST["app_id"])){
+        if(isset($_POST["message"]))
+            $response = sendMessage($_POST["message"]);
+        else
+            $response = sendMessage();
         $return["allresponses"] = $response;
         $return = json_encode( $return);
         header('Location:https://quickbaluchon.ovh/deliveryman/roadmap');
     }
 
-    function sendMessage($message){
-        $content = array(
-            "en" => $message
+    function sendMessage($message = null){
+        if($message != null){
+            $content = array(
+                "en" => $message
             );
+        }else{
+            $content = array(
+                "en" => "le client n'étais pas là"
+            );
+        }
 
         $fields = array(
             'app_id' => $_POST["app_id"],

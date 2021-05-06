@@ -94,7 +94,7 @@ class ApiDeliveryMan extends Api {
         $content = "Bonjour, votre candidature a été enregistrée. Nous reviendrons vers vous ultérieurement. Cordialement, l'équipe de Quick Baluchon." ;
 
         require_once('ApiMail.php') ;
-        $mail = new ApiMail($subject, $email, $content) ;
+        $mail = new ApiMail($email, $subject, $content) ;
     }
 
     private function login() {

@@ -47,12 +47,16 @@ class ApiPricelist extends Api {
             self::$_params[] = intval($ExpressPrice);
         }
 
-        $_columns = ["id", "maxWeight", "ExpressPrice", "StandardPrice", "applicationDate", 'status'];
+        if (isset($_GET['fields'])) $columns = explode(',', $_GET['fields']);
+        else $columns = ["id", "maxWeight", "ExpressPrice", "StandardPrice", "applicationDate", 'status'];
+
+        if (isset($_GET['where'])) self::$_where = explode(',', $_GET['where']);
+
         self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
         self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
         self::$_order = 'maxWeight, applicationDate DESC';
 
-        $payslip = $this->get('PRICELIST', $_columns);
+        $payslip = $this->get('PRICELIST', $columns);
 
         return $payslip;
     }

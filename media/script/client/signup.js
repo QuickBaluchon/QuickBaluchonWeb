@@ -1,5 +1,5 @@
 function trySignup() {
-    let ids = ['inputName', 'inputUrl', 'inputPaymentMethod', 'inputPassword1', 'inputPassword2'];
+    let ids = ['inputName', 'inputUrl', 'inputPassword1', 'inputPassword2'];
     let values = getInputsValue(ids, true);
     if( values < 0 ) // error codes
         return false;
@@ -15,7 +15,6 @@ function trySignup() {
         let json = JSON.stringify( {
             name: values['inputName'],
             website : values['inputUrl'],
-            paymentMethod : values['inputPaymentMethod'],
             password: values['inputPassword2']
         } );
         ajax('../api/client/signup', json, 'POST', signup);

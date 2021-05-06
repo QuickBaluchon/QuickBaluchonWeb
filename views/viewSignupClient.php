@@ -28,11 +28,6 @@ extract($this->_content) ;
             </div>
             <div class="form-group row">
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputPaymentMethod" placeholder="<?= $InputPayment ?>">
-              </div>
-            </div>
-            <div class="form-group row">
-              <div class="col-sm-10">
                 <input type="password" class="form-control" id="inputPassword1" placeholder="<?= $InputPassword ?>">
               </div>
             </div>

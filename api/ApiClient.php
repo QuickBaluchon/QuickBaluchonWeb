@@ -135,12 +135,12 @@ class ApiClient extends Api
     public function signup()
     {
         $data = $this->getJsonArray();
-        if (isset($data['name'], $data['website'], $data['paymentMethod'], $data['password'])) {
+        if (isset($data['name'], $data['website'], $data['password'])) {
 
             if ( $this->valueExists('CLIENT', 'name', $data['name'])  === false ) {
                 extract($data);
-                self::$_columns = ['name', 'website', 'paymentMethod', 'password'];
-                self::$_params = [$name, $website, $paymentMethod, hash('sha256', $password)];
+                self::$_columns = ['name', 'website', 'password'];
+                self::$_params = [$name, $website, hash('sha256', $password)];
                 $this->add('CLIENT');
                 $this->login();
             } else {

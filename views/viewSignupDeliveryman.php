@@ -62,7 +62,7 @@ extract($this->_content) ;
 
 
                                 <hr class="my-4">
-                                <!-- BANKING INFORMATIONS -->
+                                
                                 <h2 class="h3"><?= $TitleDelivery ?></h1>
                                     <div class="form-row">
                                         <div class="form-group col-md-4">

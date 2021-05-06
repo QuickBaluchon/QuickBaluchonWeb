@@ -207,7 +207,7 @@ class ApiRoadmap extends Api
                 'order' => 'dateDelivery'
             ], 'getListPackages') ;
 
-            $deliverymen = $this->getExternData('ApiDeliveryMan', [
+            $deliverymen = $this->getExternData('ApiDeliveryman', [
                 'employed' => 1,
                 'warehouse' => $w['id'],
                 'order' => 'radius desc'
@@ -433,24 +433,6 @@ class ApiRoadmap extends Api
         foreach ($encodingMap as $character => $replacement)
             $str = str_replace($character, $replacement, $str);
         return $str;
-    }
-
-    private function getExternData (string $api, array $get, $function) :array {
-        require_once($api . '.php') ;
-        $_GET = [
-            'limit' => 50,
-            'offset' => 0
-        ] ;
-        $_GET = array_merge($_GET, $get) ;
-
-        $class = new $api([], 'GET') ;
-        $i = 0 ;
-        $data = [] ;
-        while (!empty($rows = $class->$function())) {
-            $data = array_merge($data, $rows) ;
-            $_GET['offset'] = ++$i * $_GET['limit'];
-        }
-        return $data ;
     }
 
 }

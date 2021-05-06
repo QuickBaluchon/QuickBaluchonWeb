@@ -1,7 +1,7 @@
 <?php
 require_once('Api.php');
 
-class ApiDeliveryManStats extends Api
+class ApiDeliverymanstats extends Api
 {
 
     private $_method;

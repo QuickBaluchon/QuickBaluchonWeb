@@ -279,8 +279,4 @@ class ApiDeliveryMan extends Api {
         move_uploaded_file($_FILES[$fileName]['tmp_name'], $filepath);
         return $_FILES[$fileName]['name'] ;
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> ed7ebc834e61dd4c7374b91be73def67a0256b59
 }

@@ -259,7 +259,6 @@ class ApiDeliveryMan extends Api {
         }
     }
 
-    
 
 
 }

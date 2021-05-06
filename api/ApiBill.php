@@ -12,17 +12,18 @@ class ApiBill extends Api
 
     public function __construct($url, $method)
     {
-
         $this->_method = $method;
 
-        if (count($url) == 0)
-            $this->_data = $this->getListBills();     // list of bills - /api/bill
+        if (count($url) == 0) {
+            switch($method) {
+                case 'GET': $this->_data = $this->getListBills();     // list of bills - /api/bill
+                case 'POST': $this->addBills(); break;
+                default: $this->catError(405); break;
+            }
 
-
-        elseif (($id = intval($url[0])) !== 0)      // details one bills - /api/bill/{id}
+        } elseif (($id = intval($url[0])) !== 0)      // details one bills - /api/bill/{id}
             switch ($method) {
-                case 'GET':$this->_data = $this->getBill($id);break;
-                case 'POST': $this->addBill($url); break;
+                case 'GET': $this->_data = $this->getBill($id);break;
                 case 'PATCH':$this->patchBill($id);break;
                 default: $this->catError(405); break;
             }
@@ -85,42 +86,42 @@ class ApiBill extends Api
         $this->patch('MONTHLYBILL', $id);
     }
 
-    public function addBill ($url)
+    public function addBills ()
     {
-        if (count($url) != 2 || empty($url[0]) || empty($url[1])) {
-            http_response_code(400);
-            return;
-        }
-
+        $clients = $this->getExternData('ApiClient', [], 'getListClients');
         require_once('ApiPackage.php');
-        $_GET['inner'] = 'PRICELIST, PRICELIST.id, PACKAGE.pricelist' ;
-        $_GET['client'] = $url[0] ;
-        $_GET['date'] = $url[1] ;
+        foreach ($clients as $c) {
+            $_GET = [];
+            $_GET['inner'] = 'PRICELIST, PRICELIST.id, PACKAGE.pricelist' ;
+            $_GET['client'] = $c['id'] ;
+            $date = date_create(date("Y-m"));
+            date_sub($date, date_interval_create_from_date_string("1 month"));
+            $_GET['date'] = date_format($date,"Y-m");
 
-        $packages = new ApiPackage([], 'GET');
-        $packages->resetParams();
-        $pkgs = $packages->getListPackages(['PACKAGE.id', 'weight', 'volume', 'delay', 'dateDeposit']) ;
+            $pkgs = $this->getExternData('ApiPackage', $_GET, 'getListPackages');
 
-        if ($pkgs != null) {
-            $total = $this->calculTotal($pkgs);
+            if ($pkgs != null) {
+                $total = $this->calculTotal($pkgs);
+                $date = date("Y-m");
+
+                $id = $this->insertBillDB($total, $date, $c['id']);
+                $this->createBillPdf($id, $pkgs, $total) ;
+            }
         }
+    }
 
+    private function insertBillDB ($total, $date, $client) {
         self::$_columns = ['grossAmount', 'netAmount', 'tva', 'dateBill', 'paid', 'client'] ;
         self::$_params = [
             $total * $this->_tva,
             $total,
             20,
-            $url[1] . '-01',
+            $date . '-01',
             0,
-            $url[0]
+            $client
         ] ;
-        $id = $this->add('MONTHLYBILL') ;
-        $this->createBillPdf($id, $pkgs, $total) ;
-        $this->resetParams();
+        return $this->add('MONTHLYBILL') ;
 
-        self::$_set[] = 'pdfPath = ?' ;
-        self::$_params[] =  "bills/$id.pdf" ;
-        $this->patch('MONTHLYBILL', $id) ;
     }
 
     public function createBillPdf($id, $packages, $total){
@@ -171,7 +172,7 @@ class ApiBill extends Api
         $pdf->Cell(160, 20, "Total TTC");
         $pdf->Cell(40, 20, $total * $this->_tva . " EUR");
         $pdf->Ln(10);
-        $filename = $_SERVER['DOCUMENT_ROOT'] . "/bills/$id.pdf" ;
+        $filename = $_SERVER['DOCUMENT_ROOT'] . "/uploads/bills/$id.pdf" ;
         $pdf->Output($filename, 'F');
     }
 

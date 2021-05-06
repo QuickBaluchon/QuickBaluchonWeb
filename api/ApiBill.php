@@ -14,7 +14,6 @@ class ApiBill extends Api
     public function __construct($url, $method)
     {
         $this->_jwt = $this->getJwtFromHeader();
-
         $this->_method = $method;
 
         if (count($url) == 0)
@@ -37,7 +36,7 @@ class ApiBill extends Api
     }
 
     public function getListBills(): array {
-        $access = $this->checkRole(["admin", "deliveryman"], $this->_jwt);
+        $access = $this->checkRole(["admin", "client"], $this->_jwt);
         if($access == 0){
             http_response_code(401);
             exit();
@@ -67,6 +66,12 @@ class ApiBill extends Api
 
     public function getBill($id): array
     {
+        $access = $this->checkRole(["admin", "client"], $this->_jwt);
+        if($access == 0){
+            http_response_code(401);
+            exit();
+        }
+
         self::$_where[] = 'id = ?';
         self::$_params[] = $id;
         $columns = ['id', 'client', 'grossAmount', 'netAmount', 'dateBill', 'pdfPath', 'paid'];
@@ -78,6 +83,12 @@ class ApiBill extends Api
     }
 
     public function patchBill($id){
+        $access = $this->checkRole(["client"], $this->_jwt);
+        if($access == 0){
+            http_response_code(401);
+            exit();
+        }
+
         $data = $this->getJsonArray();
         $allowed = ['paid'];
 
@@ -94,6 +105,11 @@ class ApiBill extends Api
 
     public function addBill ($url)
     {
+        $access = $this->checkRole(["system"], $this->_jwt);
+        if($access == 0){
+            http_response_code(401);
+            exit();
+        }
         if (count($url) != 2 || empty($url[0]) || empty($url[1])) {
             http_response_code(400);
             return;

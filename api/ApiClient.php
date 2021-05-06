@@ -96,7 +96,7 @@ class ApiClient extends Api
             $client = $this->get('CLIENT');
             if (count($client) == 1) {
                 $id = $client[0]['id'];
-                $expire = 3600 * 24 * 15; // 20 min
+                $expire = 60 * 20;
                 $response = [
                     'id' => $id,
                     'role' => 'client',

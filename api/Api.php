@@ -242,6 +242,7 @@ abstract class Api {
     }
 
     private function checkJWT($header, $playload, $signature): bool {
+
         if( intval(json_decode($playload, true)['exp']) < time() )
             self::catError(401); // Unauthorized -> token expired
 
@@ -314,9 +315,11 @@ abstract class Api {
     protected function checkRole($allowedRole, $jwt){
         $role = json_decode($jwt["playload"], true);
         foreach ($allowedRole as $value) {
+            echo $value;
             if($value == $role["role"])
                 return (int) true;
         }
         return (int) false;
     }
+
 }

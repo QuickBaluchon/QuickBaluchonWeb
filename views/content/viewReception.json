@@ -2,6 +2,7 @@
   "FR": {
     "Title": "Colis",
     "Sender": "Voir l'expéditeur",
+    "LabelName": "Destinataire",
     "LabelWeight": "Poids",
     "LabelVolume": "Volume",
     "LabelAddress": "Adresse de livraison",
@@ -18,6 +19,7 @@
   "EN": {
     "Title": "Package",
     "Sender": "To the sender",
+    "LabelName": "Recipient",
     "LabelWeight": "Weight",
     "LabelVolume": "Volume",
     "LabelAddress": "Recipient's address",

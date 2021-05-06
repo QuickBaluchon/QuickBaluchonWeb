@@ -50,7 +50,7 @@ class ApiPricelist extends Api {
     self::$_where[] = 'status = 1';
 
 
-    $_columns = ["id", "maxWeight", "ExpressPrice", "StandardPrice", "applicationDate"];
+    $_columns = ["id", "maxWeight", "ExpressPrice", "StandardPrice", "applicationDate", 'status'];
     self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
     self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 

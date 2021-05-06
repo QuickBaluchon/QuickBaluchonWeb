@@ -159,7 +159,7 @@ class ApiClient extends Api
         $url = array_slice($url, 1);
         $userID = $url[0] ;
         $nbPkg = $url[1] ;
-        $path = 'uploads/';
+        $path = 'uploads/excel/';
 
         if (isset($_FILES) && !empty($_FILES) && isset($url[0]) && !empty($url[0])) {
 

@@ -61,15 +61,23 @@
         </div>
 
         <div class="tab-pane fade" id="pills-car" role="tabpanel" aria-labelledby="pills-password-tab">
+            <form class="" action="../api/deliveryman/register&id=<?= $_SESSION["id"] ?>&file=License" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                  <label for="inputLicense"><?= $LabelLicense ; ?></label>
+                  <img style="max-width:100px" src="/uploads/license/<?= $licenseImg ?>"/>
+                  <input type="file" name="fileLicense" class="form-control" id="inputLicense">
+                  <input class="btn btn-primary" type="submit" value="envoyer">
+                </div>
+            </form>
+            <form class="" action="../api/deliveryman/register&id=<?= $_SESSION["id"] ?>&file=Registration" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                  <label for="inputRegistration"><?= $LabelRegistration ; ?></label>
+                  <img style="max-width:100px" src="/uploads/registration/<?= $registrationIMG ?>"/>
+                  <input type="file" name="fileRegistration" class="form-control" id="fileRegistration">
+                  <input class="btn btn-primary" type="submit" value="envoyer">
+                </div>
+            </form>
           <form onsubmit="return false" class="form-round col-lg">
-            <div class="form-group">
-              <label for="inputLicense"><?= $LabelLicense ; ?></label>
-              <input type="text" class="form-control" id="inputLicense" value="license: <?= $licenseImg ?>" disabled="true">
-            </div>
-            <div class="form-group">
-              <label for="inputRegistration"><?= $LabelRegistration ; ?></label>
-              <input type="text" class="form-control" id="inputRegistration" value="registration: <?= $registrationIMG ?>" disabled="true">
-            </div>
             <div class="form-group">
               <label for="inputVolumeCar"><?= $LabelVolume ; ?></label>
               <input type="number" min="0.1" step="0.1" class="form-control" id="inputVolumeCar" value="<?= $volumeCar ?>">

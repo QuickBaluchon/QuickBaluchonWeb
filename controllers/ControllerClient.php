@@ -145,7 +145,7 @@ class ControllerClient
         $package = $this->_packageManager->getClientPackages($this->_id, ['id', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'status', 'dateDeposit']);
         $client = $this->_clientManager->getClient($this->_id, ['website']);
 
-        $cols = ['#', 'Poids', 'Volume', 'Adresse', 'E-mail', 'Délais', 'Date de livraison', 'Déposé le'];
+        $cols = ['Poids', 'Volume', 'Adresse', 'E-mail', 'Délais', 'Date de livraison', 'Déposé le'];
         $package = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $package]);
         $this->_view->generateView(['content' => $package, 'name' => $client['website']]);
     }

@@ -207,7 +207,7 @@ class ApiDeliveryMan extends Api {
             $content = "Bonjour, nous sommes navrés de vous annoncer que votre candidature chez Quick Baluchon a été refusée. Bonne continuation dans vos recherches." ;
 
         require_once('ApiMail.php') ;
-        $mail = new ApiMail($subject, $email, $content) ;
+        $mail = new ApiMail($email, $subject, $content) ;
     }
 
     public function registerFile(){

@@ -201,7 +201,14 @@ abstract class Api {
     }
 
     protected function getJsonArray() {
-        return json_decode(file_get_contents('php://input'), true);
+        $array = json_decode(file_get_contents('php://input'), true);
+        array_walk_recursive($array, "self::escapeSpecialChars");
+        return $array;
+    }
+
+    private function escapeSpecialChars(&$value){
+        if(is_string($value))
+            $value = htmlspecialchars($value);
     }
 
     // AUTH

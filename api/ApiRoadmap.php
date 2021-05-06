@@ -207,7 +207,7 @@ class ApiRoadmap extends Api
                 'order' => 'dateDelivery'
             ], 'getListPackages') ;
 
-            $deliverymen = $this->getExternData('ApiDeliveryMan', [
+            $deliverymen = $this->getExternData('ApiDeliveryman', [
                 'employed' => 1,
                 'warehouse' => $w['id'],
                 'order' => 'radius desc'

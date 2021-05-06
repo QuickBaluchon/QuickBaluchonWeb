@@ -4,86 +4,86 @@ require_once('Api.php');
 
 class ApiPayslip extends Api {
 
-  private $_method;
-  private $_data = [];
-  private $id = 5;
-  private $_apiPayslip;
-  public function __construct($url, $method) {
+    private $_method;
+    private $_data = [];
+    private $id = 5;
+    private $_apiPayslip;
+    public function __construct($url, $method) {
 
 
-    $this->_method = $method;
+        $this->_method = $method;
 
 
-    if (count($url) == 0){
-        switch ($method) {
-            case 'GET': $this->_data = $this->getListPayslip();break;
-            case 'POST': $this->addPayslip();break;
-            default: $this->catError(405); break ;
-        }
-    }
-
-
-    elseif ( ($id = intval($url[0])) !== 0 ){     // details one packages - /api/package/{id}
-        switch ($method) {
-            case 'POST': $this->_data = $this->getPayslip($id);break;
-            case 'GET': $this->createPdfBill($id);break;
-            default: $this->catError(405);break ;
+        if (count($url) == 0){
+            switch ($method) {
+                case 'GET': $this->_data = $this->getListPayslip();break;
+                case 'POST': $this->addPayslip();break;
+                default: $this->catError(405); break ;
+            }
         }
 
-    }
-    echo json_encode( $this->_data, JSON_PRETTY_PRINT );
 
-  }
+        elseif ( ($id = intval($url[0])) !== 0 ){     // details one packages - /api/package/{id}
+            switch ($method) {
+                case 'POST': $this->_data = $this->getPayslip($id);break;
+                case 'GET': $this->createPdfBill($id);break;
+                default: $this->catError(405);break ;
+            }
 
-  public function getListPayslip (): array  {
-    $packages = [];
-    if($this->_method != 'GET') $this->catError(405);
+        }
+        echo json_encode( $this->_data, JSON_PRETTY_PRINT );
 
-    if(isset($_GET['deliveryman']) && $_GET['deliveryman'] != NULL) {
-      self::$_where[] = 'deliveryman = ?';
-      self::$_params[] = intval($_GET['deliveryman']);
-    }
-    if(isset($_GET['id']) && $_GET['id'] != NULL) {
-      self::$_where[] = 'id = ?';
-      self::$_params[] = intval($_GET['id']);
     }
 
-    self::$_columns = ["id", "grossAmount", "bonus", "datePay", "pdfPath",	"paid"];
-    self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
-    self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
+    public function getListPayslip (): array  {
+        $packages = [];
+        if($this->_method != 'GET') $this->catError(405);
 
-    $Payslip = $this->get('PAYSLIP', self::$_columns);
+        if(isset($_GET['deliveryman']) && $_GET['deliveryman'] != NULL) {
+            self::$_where[] = 'deliveryman = ?';
+            self::$_params[] = intval($_GET['deliveryman']);
+        }
+        if(isset($_GET['id']) && $_GET['id'] != NULL) {
+            self::$_where[] = 'id = ?';
+            self::$_params[] = intval($_GET['id']);
+        }
 
-    return $Payslip;
-  }
+        self::$_columns = ["id", "grossAmount", "bonus", "datePay", "pdfPath",	"paid"];
+        self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+        self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-  public function getPayslip($id): array {
-    //if($this->_method != 'GET') $this->catError(405);
+        $Payslip = $this->get('PAYSLIP', self::$_columns);
 
-    //$this->authentication(['admin'], [$id]);
-    $columns = ["grossAmount", "bonus", "datePay" ];
-    self::$_where[] = 'id = ?';
-    self::$_params[] = $id;
-    $Payslip = $this->get('PAYSLIP', $columns);
-    if( count($Payslip) == 1 )
-      return $Payslip[0];
-    else
-      return [];
-  }
+        return $Payslip;
+    }
 
-  public function addPayslip(){
-      $data = $this->getJsonArray();
-      $allowed = ["grossAmount",'bonus', 'datePay', 'paid', 'deliveryman'];
+    public function getPayslip($id): array {
+        //if($this->_method != 'GET') $this->catError(405);
 
-      if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
-          http_response_code(400);
-          exit(0);
-      }
+        //$this->authentication(['admin'], [$id]);
+        $columns = ["grossAmount", "bonus", "datePay" ];
+        self::$_where[] = 'id = ?';
+        self::$_params[] = $id;
+        $Payslip = $this->get('PAYSLIP', $columns);
+        if( count($Payslip) == 1 )
+            return $Payslip[0];
+        else
+            return [];
+    }
 
-      self::$_columns = ["grossAmount",'bonus', 'datePay', 'paid', 'deliveryman'];
-      self::$_params = [$data["grossAmount"], $data["bonus"], $data["datePay"], $data["paid"], $data["deliveryman"]];
+    public function addPayslip(){
+        $data = $this->getJsonArray();
+        $allowed = ["grossAmount",'bonus', 'datePay', 'paid', 'deliveryman'];
 
-      $this->add('PAYSLIP');
+        if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
+            http_response_code(400);
+            exit(0);
+        }
+
+        self::$_columns = ["grossAmount",'bonus', 'datePay', 'paid', 'deliveryman'];
+        self::$_params = [$data["grossAmount"], $data["bonus"], $data["datePay"], $data["paid"], $data["deliveryman"]];
+
+        $this->add('PAYSLIP');
     }
 
     public function createPdfBill($id){
@@ -126,4 +126,4 @@ class ApiPayslip extends Api {
         $this->patch('PAYSLIP', $id) ;
     }
 
-  }
+}

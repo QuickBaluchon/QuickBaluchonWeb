@@ -20,7 +20,7 @@ function recieved (text) {
 }
 
 function deliver (id) {
-    let form = document.getElementById('formOneSignal')
+    let form = document.getElementById('formOneSignalDeliver')
     let img = document.getElementById('signature').toDataURL() ;
     let json = JSON.stringify( { status: 3, signature: img } );
 
@@ -37,7 +37,9 @@ function delivered (text) {
 }
 
 function absent (id) {
+    let form = document.getElementById('formOneSignalAbsent')
     ajax(`/api/package/${id}&fields=volume,warehouse`, '', 'GET', getVolume) ;
+    form.submit();
 }
 
 function getVolume (text) {

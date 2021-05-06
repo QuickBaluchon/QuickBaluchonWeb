@@ -96,7 +96,7 @@ extract($this->_content) ;
                   }
                 </script>
             </div>
-            <form action="/OneSignal/ControllerOneSignal.php" method="post" onsubmit="return false" id="formOneSignal">
+            <form action="/OneSignal/ControllerOneSignal.php" method="post" onsubmit="return false" id="formOneSignalDeliver">
                 <input type="hidden" name="app_id" value="aae49060-185a-416a-ac6a-2564915dd8c6">
                 <input type="hidden" id="user" name="send">
                 <input type="hidden" name="message" value="Vous avez bien livré le colis">
@@ -108,7 +108,11 @@ extract($this->_content) ;
         </div>
 
         <hr>
-        <button type="button" class="btn btn-warning btn-lg btn-block" onclick="absent(<?= $id ; ?>)"><?= $ButtonAbsent ?></button>
+        <form action="/OneSignal/ControllerOneSignal.php" method="post" onsubmit="return false" id="formOneSignalAbsent">
+            <input type="hidden" name="app_id" value="aae49060-185a-416a-ac6a-2564915dd8c6">
+            <input type="hidden" id="user" name="send">
+            <button type="button" class="btn btn-warning btn-lg btn-block" onclick="absent(<?= $id ; ?>)"><?= $ButtonAbsent ?></button>
+        </form>
     </div>
 </div>
 <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>

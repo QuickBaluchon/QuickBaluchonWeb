@@ -37,9 +37,10 @@ function delivered (text) {
 }
 
 function absent (id) {
-    let form = document.getElementById('formOneSignalAbsent')
-    ajax(`/api/package/${id}&fields=volume,warehouse`, '', 'GET', getVolume) ;
+    let form = document.getElementById('formOneSignalAbsent');
     form.submit();
+    ajax(`/api/package/${id}&fields=volume,warehouse`, '', 'GET', getVolume) ;
+
 }
 
 function getVolume (text) {

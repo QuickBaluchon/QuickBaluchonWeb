@@ -281,6 +281,7 @@ abstract class Api {
     }
 
     protected function catError($code){
+        header("Content-Type: text/html; charset=utf-8");
         http_response_code($code);
         echo '<img src="https://http.cat/'.$code.'.jpg" alt="'.$code.'">';
         exit(0);
@@ -308,18 +309,24 @@ abstract class Api {
 
     protected function getJwtFromHeader(){
         $header = getallheaders();
-        $jwt=explode(" ", $header["Authorization"]);
-        return $this->decodeJWT($jwt[1]);
+        if(isset($header["Authorization"])){
+            $jwt=explode(" ", $header["Authorization"]);
+            return $this->decodeJWT($jwt[1]);
+        }else{
+            $this->catError(403);
+        }
+
     }
 
     protected function checkRole($allowedRole, $jwt){
         $role = json_decode($jwt["playload"], true);
         foreach ($allowedRole as $value) {
-            echo $value;
             if($value == $role["role"])
                 return (int) true;
         }
-        return (int) false;
+
+        http_response_code(401);
+        exit();
     }
 
 }

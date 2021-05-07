@@ -16,9 +16,10 @@ class ApiBill extends Api
         $this->_jwt = $this->getJwtFromHeader();
         $this->_method = $method;
 
-        if (count($url) == 0)
+        if (count($url) == 0) {
+            $this->checkRole(["admin", "client"], $this->_jwt);
             $this->_data = $this->getListBills();     // list of bills - /api/bill
-
+        }
 
         elseif (($id = intval($url[0])) !== 0)      // details one bills - /api/bill/{id}
             switch ($method) {
@@ -36,11 +37,7 @@ class ApiBill extends Api
     }
 
     public function getListBills(): array {
-        $access = $this->checkRole(["admin", "client"], $this->_jwt);
-        if($access == 0){
-            http_response_code(401);
-            exit();
-        }
+        $this->checkRole(["admin", "client"], $this->_jwt);
 
         if($this->_method != 'GET') $this->catError(405);
 
@@ -64,13 +61,8 @@ class ApiBill extends Api
         return $bills;
     }
 
-    public function getBill($id): array
-    {
-        $access = $this->checkRole(["admin", "client"], $this->_jwt);
-        if($access == 0){
-            http_response_code(401);
-            exit();
-        }
+    public function getBill($id): array {
+        $this->checkRole(["admin", "client"], $this->_jwt);
 
         self::$_where[] = 'id = ?';
         self::$_params[] = $id;
@@ -83,11 +75,7 @@ class ApiBill extends Api
     }
 
     public function patchBill($id){
-        $access = $this->checkRole(["client"], $this->_jwt);
-        if($access == 0){
-            http_response_code(401);
-            exit();
-        }
+        $this->checkRole(["admin", "client"], $this->_jwt);
 
         $data = $this->getJsonArray();
         $allowed = ['paid'];
@@ -105,11 +93,7 @@ class ApiBill extends Api
 
     public function addBill ($url)
     {
-        $access = $this->checkRole(["system"], $this->_jwt);
-        if($access == 0){
-            http_response_code(401);
-            exit();
-        }
+        $this->checkRole(["system"], $this->_jwt);
         if (count($url) != 2 || empty($url[0]) || empty($url[1])) {
             http_response_code(400);
             return;

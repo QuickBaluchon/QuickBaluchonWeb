@@ -49,8 +49,10 @@ char **argv : array containing the name of the excel file and the number of pack
 void readData (char **argv) {
     Data *datas = malloc(sizeof(Data) * atoi(argv[3]));
     BookHandle book = xlCreateBook();
+    char bookLocation[70] = "/var/www/html/uploads/excel/";
+    strcat(bookLocation, argv[1]);
     if (book) {
-        if (xlBookLoad(book, argv[1])) {
+        if (xlBookLoad(book, bookLocation)) {
             SheetHandle sheet = xlBookGetSheet(book, 0);
             if (sheet) {
                 for (size_t lin = 1; lin <= atoi(argv[3]); lin++) {
@@ -108,6 +110,7 @@ uint8_t saveData (Data *datas, char **argv) {
             argv[1],
             datas[i].nameRecipient
         );
+printf("%s\n", insert);
         strcat(strcat(strcpy(json,"{ \"insert\": \""), insert), "\"}");
 
         curl = curl_easy_init();
@@ -122,7 +125,7 @@ uint8_t saveData (Data *datas, char **argv) {
           curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, -1L);
 
           /* what URL that receives this POST */
-          curl_easy_setopt(curl, CURLOPT_URL, "https://quickbaluchon.ovh/api/package/");
+          curl_easy_setopt(curl, CURLOPT_URL, "http://localhost/api/package/");
           //curl_easy_setopt(curl, CURLOPT_MIMEPOST, form);
 
 

@@ -7,7 +7,7 @@ else
   LIBPATH = lib64
 endif
 
-CFLAGS = -I ../../include_c -L $(LIBPATH) -lxl -Wl,-rpath,$(LIBPATH)
+CFLAGS = -I include_c -L $(LIBPATH) -lxl -Wl,-rpath,$(LIBPATH)
 
 # all: generate extract edit custom format invoice performance
 # 
@@ -33,7 +33,7 @@ CFLAGS = -I ../../include_c -L $(LIBPATH) -lxl -Wl,-rpath,$(LIBPATH)
 # 	$(CC) -o performance performance.c $(CFLAGS)
 
 serverC: main.c
-	$(CC) -o main main.c $(CFLAGS) -l curl
+	$(CC) -o ../../main main.c $(CFLAGS) -l curl
 
 clean:
 	rm -f generate extract edit custom format invoice performance *.xls *.xlsx

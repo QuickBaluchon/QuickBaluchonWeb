@@ -312,6 +312,10 @@ class ApiRoadmap extends Api
                 $pkg['distanceNextHop']
             ];
             $this->add('STOP');
+            $this->resetParams();
+            self::$_set[] = 'status = ?';
+            self::$_params[] = 2;
+            $this->patch('PACKAGE', $pkg['id']);
             $i++;
         }
         $this->resetParams();

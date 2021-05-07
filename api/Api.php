@@ -187,8 +187,6 @@ abstract class Api {
 
     }
 
-
-
     protected function resetParams() {
         self::$_columns = [];
         self::$_where = [];

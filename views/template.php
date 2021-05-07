@@ -23,7 +23,7 @@
 
     <!-------------------------------->
     <title>QuickBaluchon</title>
-      <link rel="icon" type="image/png" href="media/assets/hedwigeWhite.png" />
+      <link rel="icon" type="image/png" href="<?= WEB_ROOT ?>media/assets/hedwigeWhite.png" />
       <!-- /------------------------------>
   </head>
 

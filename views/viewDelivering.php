@@ -18,7 +18,7 @@ extract($this->_content) ;
         <div class="card">
             <div class="card-header">
                 <h2><?= $TitleDelivering ?></h2>
-                <button type="button" class="btn btn-danger btn-sm btn-block"><?= $ButtonClear ?></button>
+                <button onclick="clearCanvas()" type="button" class="btn btn-danger btn-sm btn-block"><?= $ButtonClear ?></button>
             </div>
             <div class="card-body" id="canvas">
                 <canvas class="myCanvas" id="signature">
@@ -35,54 +35,47 @@ extract($this->_content) ;
                   ctx.fillStyle = 'rgb(255,255,255)';
                   ctx.fillRect(0,0,width,height);
 
-                  const colorPicker = document.querySelector('input[type="color"]');
-                  const sizePicker = document.querySelector('input[type="range"]');
-                  const clearBtn = document.querySelector('button');
-
-                  // covert degrees to radians
-                  function degToRad(degrees) {
-                    return degrees * Math.PI / 180;
-                  };
 
                   // store mouse pointer coordinates, and whether the button is pressed
-                  let curX;
-                  let curY;
-                  let pressed = true;
+                  let curX, curY;
+                  let x, y;
+                  let lastX, lastY;
+                  let pressed = false;
 
                   // update mouse pointer coordinates
-                  document.addEventListener("touchmove", move, false);
-                  document.addEventListener("touchstart", start, false);
+                  document.addEventListener("mousemove", move);
+                  document.addEventListener("mousedown", function(e){pressed = true});
+                  document.addEventListener("mouseup", up);
 
                   function move(e) {
-                    let change = e.changedTouches
-                    curX = change[0].pageX;
-                    curY = change[0].pageY;
-                    console.log(curX);
+                    curX = e.x;
+                    curY = e.y;
                   }
 
-                  function start() {
-                    pressed = true;
-                  }
-
-                  canvas.onmouseup = function() {
-                    pressed = false;
-                  }
-
-                  clearBtn.onclick = function() {
-                    ctx.fillStyle = 'rgb(255,255,255)';
-                    ctx.fillRect(0,0,width,height);
+                  function up(e) {
+                      pressed = false
+                      lastY = null
+                      lastX = null
                   }
 
                   function draw() {
-
-                    if(pressed) {
-                      ctx.fillStyle = colorPicker.value;
-                      ctx.beginPath();
-                      ctx.arc(curX, curY-85, sizePicker.value, degToRad(0), degToRad(360), false);
-                      ctx.fill();
-
-                    }
-
+                      offset = canvas.getBoundingClientRect();
+                      lastX = x
+                      lastY = y
+                      x = curX - offset.left
+                      y = curY - offset.top
+                      if(pressed) {
+                          ctx.fillStyle = 'black';
+                          ctx.lineWidth = 3;
+                          ctx.beginPath();
+                          ctx.moveTo(lastX, lastY);
+                          ctx.lineTo(x, y);
+                          ctx.stroke();
+                          ctx.fill();
+                    }else {
+                          lastX = curX
+                          lastY = curY
+                      }
                     requestAnimationFrame(draw)
                   }
 
@@ -93,6 +86,11 @@ extract($this->_content) ;
                     let dataUrl = canvas.toDataURL("image/jpeg");
                     image.src = dataUrl;
 
+                  }
+
+                  function clearCanvas() {
+                      ctx.fillStyle = 'rgb(255,255,255)';
+                      ctx.fillRect(0,0,width,height);
                   }
                 </script>
             </div>

@@ -1,0 +1,18 @@
+{
+  "FR":{
+    "0": "Poids maximal",
+    "1": "Prix express",
+    "2": "Prix standard",
+    "3": "Date d'application",
+    "4": "Statut",
+    "5": "Modifier"
+  },
+  "EN":{
+    "0": "Max weight",
+    "1": "Express price",
+    "2": "Standard price",
+    "3": "Application date",
+    "4": "Status",
+    "5": "Modify"
+  }
+}

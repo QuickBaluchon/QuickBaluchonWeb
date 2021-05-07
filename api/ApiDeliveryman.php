@@ -6,11 +6,13 @@ class ApiDeliveryMan extends Api {
 
     private $_method;
     private $_data = [];
+    private $_jwt;
 
 
     public function __construct($url, $method) {
 
         $this->_method = $method;
+        $this->_jwt = $this->getJwtFromHeader();
 
         if (count($url) == 0)
             $this->_data = $this->getListDelivery();     // list of deliveryman - /api/deliveryman
@@ -35,6 +37,7 @@ class ApiDeliveryMan extends Api {
     }
 
     public function getListDelivery(): array {
+        $this->checkRole(["admin", "deliveryman"], $this->_jwt);
         if ($this->_method != 'GET') $this->catError(405);
 
         if (isset($_GET['employed'])) {
@@ -57,8 +60,9 @@ class ApiDeliveryMan extends Api {
     }
 
     public function getDelivery($id): array {
-
         if ($this->_method != 'GET') $this->catError(405);
+        $this->checkRole(["admin", "deliveryman"], $this->_jwt);
+
         $columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG"];
         self::$_where[] = 'id = ?';
         self::$_params[] = $id;
@@ -136,6 +140,7 @@ class ApiDeliveryMan extends Api {
     }
 
     private function updateDelivery($id, $data = null) {
+        $this->checkRole(["admin", "deliveryman"], $this->_jwt);
         if ($data == null) {
             $data = $this->getJsonArray();
             $allowed = ['email', 'phone', 'volumeCar', 'radius', 'password', 'oldpassword', 'licenseIMG', 'registrationIMG'];
@@ -171,6 +176,7 @@ class ApiDeliveryMan extends Api {
     }
 
     public function employ(){
+        $this->checkRole(["admin"], $this->_jwt);
         $data = $this->getJsonArray();
         $allowed = ['id', 'employed'];
 

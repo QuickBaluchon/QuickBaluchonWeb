@@ -6,9 +6,12 @@ class ApiAdmin extends Api {
 
     private $_method;
     private $_data;
+    private $_jwt;
     public function __construct($url, $method) {
 
+        $this->_jwt = $this->getJwtFromHeader();
         $this->_method = $method;
+
         if (count($url) == 0) {
                 $this->_data = $this->catError(401);
         } elseif (method_exists($this, $url[0])) {
@@ -21,7 +24,7 @@ class ApiAdmin extends Api {
     }
 
     public function addStaff() {
-
+        $this->checkRole(["admin"], $this->_jwt);
         if ($this->_method != 'PUT') $this->catError(405);
         $data = $this->getJsonArray();
         $allowed = ["lastname",'firstname', 'username', 'warehouse'];
@@ -39,10 +42,9 @@ class ApiAdmin extends Api {
 
     }
 
-    public function getListStaff($id) {
-
+    public function getListStaff() {
         if($this->_method != 'GET') $this->catError(405);
-
+        $this->checkRole(["admin"], $this->_jwt);
         $columns = ["id", "lastname", "firstname", "sector", "username", "employed"];
         $list = $this->get('STAFF', $columns);
 
@@ -94,6 +96,7 @@ class ApiAdmin extends Api {
     }
 
     private function updateStaff() {
+        $this->checkRole(["admin"], $this->_jwt);
         $data = $this->getJsonArray();
         $allowed = ["id", "employed"];
         if (count(array_diff(array_keys($data), $allowed)) > 0) {

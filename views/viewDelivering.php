@@ -18,7 +18,7 @@ extract($this->_content) ;
         <div class="card">
             <div class="card-header">
                 <h2><?= $TitleDelivering ?></h2>
-                <button type="button" class="btn btn-danger btn-sm btn-block"><?= $ButtonClear ?></button>
+                <button onclick="clearCanvas()" type="button" class="btn btn-danger btn-sm btn-block"><?= $ButtonClear ?></button>
             </div>
             <div class="card-body" id="canvas">
                 <canvas class="myCanvas" id="signature">
@@ -35,14 +35,6 @@ extract($this->_content) ;
                   ctx.fillStyle = 'rgb(255,255,255)';
                   ctx.fillRect(0,0,width,height);
 
-                  const colorPicker = document.querySelector('input[type="color"]');
-                  const sizePicker = document.querySelector('input[type="range"]');
-                  const clearBtn = document.querySelector('button');
-
-                  // covert degrees to radians
-                  function degToRad(degrees) {
-                    return degrees * Math.PI / 180;
-                  };
 
                   // store mouse pointer coordinates, and whether the button is pressed
                   let curX, curY;
@@ -64,11 +56,6 @@ extract($this->_content) ;
                       pressed = false
                       lastY = null
                       lastX = null
-                  }
-
-                  clearBtn.onclick = function() {
-                    ctx.fillStyle = 'rgb(255,255,255)';
-                    ctx.fillRect(0,0,width,height);
                   }
 
                   function draw() {
@@ -99,6 +86,11 @@ extract($this->_content) ;
                     let dataUrl = canvas.toDataURL("image/jpeg");
                     image.src = dataUrl;
 
+                  }
+
+                  function clearCanvas() {
+                      ctx.fillStyle = 'rgb(255,255,255)';
+                      ctx.fillRect(0,0,width,height);
                   }
                 </script>
             </div>

@@ -72,23 +72,23 @@ extract($this->_content) ;
                   }
 
                   function draw() {
-                      //console.log(pressed)
+                      offset = canvas.getBoundingClientRect();
+                      lastX = x
+                      lastY = y
+                      x = curX - offset.left
+                      y = curY - offset.top
                       if(pressed) {
-                          offset = canvas.getBoundingClientRect();
-                          lastX = x
-                          lastY = y
-                          x = curX - offset.left
-                          y = curY - offset.top
-
                           ctx.fillStyle = 'black';
                           ctx.lineWidth = 3;
-
                           ctx.beginPath();
                           ctx.moveTo(lastX, lastY);
                           ctx.lineTo(x, y);
                           ctx.stroke();
                           ctx.fill();
-                    }
+                    }else {
+                          lastX = curX
+                          lastY = curY
+                      }
                     requestAnimationFrame(draw)
                   }
 

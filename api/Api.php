@@ -187,8 +187,6 @@ abstract class Api {
 
     }
 
-
-
     protected function resetParams() {
         self::$_columns = [];
         self::$_where = [];
@@ -313,5 +311,23 @@ abstract class Api {
             $clients = $this->get($table);
             return count($clients) > 0;
         } else return -1;
+    }
+
+    protected function getExternData (string $api, array $get, $function) :array {
+        require_once($api . '.php') ;
+        $_GET = [
+            'limit' => 50,
+            'offset' => 0
+        ] ;
+        $_GET = array_merge($_GET, $get) ;
+
+        $class = new $api([], 'GET') ;
+        $i = 0 ;
+        $data = [] ;
+        while (!empty($rows = $class->$function())) {
+            $data = array_merge($data, $rows) ;
+            $_GET['offset'] = ++$i * $_GET['limit'];
+        }
+        return $data ;
     }
 }

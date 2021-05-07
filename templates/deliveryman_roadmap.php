@@ -29,7 +29,11 @@ extract($data);
                             </div>
                             <div class="card-body">
                                 <p><?= $TextPackage ?> <?= $stop['package'] ?></p>
-                                <p><?= $stop['address'] ?></p>
+                                <p>
+                                    <?= $stop['recipient'] ?>
+                                    <br>
+                                    <?= $stop['address'] ?>
+                                </p>
                                 <?php
                                 if ($stopNb == $roadmap['currentStop']):
                                     $hours = intval($stop['timeNextHop']) == 0 ? null : intval($stop['timeNextHop']);

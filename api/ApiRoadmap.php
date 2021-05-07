@@ -11,6 +11,7 @@ class ApiRoadmap extends Api
     private $_maxDistanceByDeliveryman = 200;
     private $_maxTimeByDeliveryman = 4;
     private $_apiKey = 'AIzaSyC-zvNlWXpliMZE78i21qC5abdjGenv6AQ';
+    private $_mailDelivered = "Bonjour, votre colis vous sera livré aujourd'hui ! Cordialement, l'équipe QuickBaluchon";
 
     public function __construct($url, $method)
     {
@@ -71,14 +72,7 @@ class ApiRoadmap extends Api
 
         self::$_order = 'dateRoute DESC';
 
-        $list = $this->get('ROADMAP', $columns);
-        $bills = [];
-        if( $list != null ){
-            foreach ($list as $bill) {
-                $bills[] = $bill;
-            }
-        }
-        return $bills;
+        return $this->get('ROADMAP', $columns);
     }
 
     /*
@@ -103,7 +97,7 @@ class ApiRoadmap extends Api
             }
         }
         if (!isset($_GET['fields']))
-            $columns = ['ROADMAP.id', 'STOP.package', 'step', 'delivery', 'address', 'email', 'timeNextHop', 'distanceNextHop', 'kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'dateRoute', 'deliveryman', 'finished'];
+            $columns = ['ROADMAP.id', 'STOP.package', 'step', 'delivery', 'address', 'email', 'nameRecipient', 'timeNextHop', 'distanceNextHop', 'kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'dateRoute', 'deliveryman', 'finished'];
         else
             $columns = explode(',', $_GET['fields']);
         self::$_join[] = [
@@ -135,6 +129,7 @@ class ApiRoadmap extends Api
             $stops[$stop['step']] = [
                 'package' => $stop['package'],
                 'address' => $stop['address'],
+                'recipient' => $stop['nameRecipient'],
                 'email' => $stop['email'],
                 'timeNextHop' => $stop['timeNextHop'],
                 'distanceNextHop' => $stop['distanceNextHop'],
@@ -167,8 +162,13 @@ class ApiRoadmap extends Api
         for ($i = $roadmap['currentStop'] ; $i < count($roadmap['stops']) ; ++$i) {
             $kmNotDone += $roadmap['stops'][$i]['distanceNextHop'] ;
             $timeNotDone += $roadmap['stops'][$i]['timeNextHop'] ;
+            $this->resetParams();
+            self::$_set[] = 'status = ?';
+            self::$_params[] = 1;
+            $this->patch('PACKAGE', $roadmap['stops'][$i]['package']);
         }
 
+        $this->resetParams();
         $this->patchRoadmap($id, [
             'kmTotal' => $roadmap['kmTotal'] - $kmNotDone,
             'timeTotal' => $roadmap['timeTotal'] - $timeNotDone,
@@ -202,12 +202,12 @@ class ApiRoadmap extends Api
         foreach ($warehouses as $w) {
             $packages = $this->getExternData('ApiPackage', [
                 'dateDelivery' => 'now',
-                'status' => 2,
+                'status' => 1,
                 'warehouse' => $w['id'],
                 'order' => 'dateDelivery'
             ], 'getListPackages') ;
 
-            $deliverymen = $this->getExternData('ApiDeliveryMan', [
+            $deliverymen = $this->getExternData('ApiDeliveryman', [
                 'employed' => 1,
                 'warehouse' => $w['id'],
                 'order' => 'radius desc'
@@ -245,32 +245,36 @@ class ApiRoadmap extends Api
                 'packages' => []
             ];
         }
-        return $this->recursiveRoadmaps($roadmaps, 0, $packages, $nbDeliverymen, $nbPackages, $warehouseAddress) ;
+        require_once('ApiMail.php');
+        return $this->recursiveRoadmaps($roadmaps, 0, $packages, $nbDeliverymen, $warehouseAddress) ;
     }
 
-    private function recursiveRoadmaps (array $roadmaps, int $iter, array $packages, int $nbDeliverymen, int $nbPackages, string $warehouseAddress) :array {
-        if ($iter > 2 || count($packages) == 0)
-            return $roadmaps;
+    private function recursiveRoadmaps (array $roadmaps, int $iter, array $packages, int $nbDeliverymen, string $warehouseAddress) :array {
+        if ($iter > 2) return $roadmaps;
+
         $count = 0 ;
         $countGoogle = 0;
         $r = 0;
-        for ($p = 0 ; $p < $nbPackages ; ++$p) {
+        for ($p = 0 ; $p < count($packages) ; ++$p) {
             var_dump($p);
-            if (isset($packages[$p])) {
+            if (!isset($packages[$p]['isInRoadmap'])) {
                 $dtFromWarehouse = $this->computeRoute([$warehouseAddress], [$packages[$p]['address']]);
                 if ($dtFromWarehouse != null) {
-                    $volumeM3 = $packages[$p]['volume'] / 1000;
-                    if ($dtFromWarehouse[0][0]['distance'] < $roadmaps[$r]['deliveryRadius'] &&
+                    $roadTime = $dtFromWarehouse[0][0]['time'];
+                    $roadDistance = $dtFromWarehouse[0][0]['distance'];
+                    $volumeM3 = $packages[$p]['volume'] / 1000000;
+
+                    if ($roadDistance < $roadmaps[$r]['deliveryRadius'] &&
                         $roadmaps[$r]['availableVolume'] - $volumeM3 >= 0 &&
-                        $roadmaps[$r]['roadTime'] + 2*$dtFromWarehouse[0][0]['time'] < $this->_maxTimeByDeliveryman &&
-                        $roadmaps[$r]['roadDistance'] + 2*$dtFromWarehouse[0][0]['distance'] < $this->_maxDistanceByDeliveryman)
+                        $roadmaps[$r]['roadTime'] + 2 * $roadTime < $this->_maxTimeByDeliveryman &&
+                        $roadmaps[$r]['roadDistance'] + 2 * $roadDistance < $this->_maxDistanceByDeliveryman)
                     {
                         $roadmaps[$r]['availableVolume'] -= $volumeM3;
-                        $roadmaps[$r]['roadTime'] += 2 * $dtFromWarehouse[0][0]['time'];
-                        $roadmaps[$r]['roadDistance'] += 2 * $dtFromWarehouse[0][0]['distance'];
+                        $roadmaps[$r]['roadTime'] += 2 * $roadTime;
+                        $roadmaps[$r]['roadDistance'] += 2 * $roadDistance;
                         $roadmaps[$r]['packages'][] = $packages[$p];
-                        //mail to recipient
-                        unset($packages[$p]);
+                        $mail = new ApiMail($packages[$p]['email'], "Livraison de votre colis", $this->_mailDelivered);
+                        $packages[$p]['isInRoadmap'] = true;
                     }
                 }
                 $countGoogle++;
@@ -279,7 +283,7 @@ class ApiRoadmap extends Api
             $count++;
         }
         echo "COUNT GOOGLE $countGoogle / COUNT ITER $count // ";
-        $roadmaps = $this->recursiveRoadmaps($roadmaps, $iter + 1, $packages, $nbDeliverymen, $nbPackages, $warehouseAddress);
+        $roadmaps = $this->recursiveRoadmaps($roadmaps, $iter + 1, $packages, $nbDeliverymen, $warehouseAddress);
         return $roadmaps;
     }
 
@@ -313,6 +317,10 @@ class ApiRoadmap extends Api
                 $pkg['distanceNextHop']
             ];
             $this->add('STOP');
+            $this->resetParams();
+            self::$_set[] = 'status = ?';
+            self::$_params[] = 2;
+            $this->patch('PACKAGE', $pkg['id']);
             $i++;
         }
         $this->resetParams();
@@ -433,24 +441,6 @@ class ApiRoadmap extends Api
         foreach ($encodingMap as $character => $replacement)
             $str = str_replace($character, $replacement, $str);
         return $str;
-    }
-
-    private function getExternData (string $api, array $get, $function) :array {
-        require_once($api . '.php') ;
-        $_GET = [
-            'limit' => 50,
-            'offset' => 0
-        ] ;
-        $_GET = array_merge($_GET, $get) ;
-
-        $class = new $api([], 'GET') ;
-        $i = 0 ;
-        $data = [] ;
-        while (!empty($rows = $class->$function())) {
-            $data = array_merge($data, $rows) ;
-            $_GET['offset'] = ++$i * $_GET['limit'];
-        }
-        return $data ;
     }
 
 }

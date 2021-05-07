@@ -271,6 +271,7 @@ class ControllerAdmin {
             foreach($buttonsValues as $link => $inner){
                 $buttons[] = '<button onclick="'. $link .'('.$delivery["id"].')" id="'.$delivery["id"].'" type="button" class="btn btn-primary btn-sm">' . $inner . '</button>';
             }
+            $buttons[] = '<a href="../deliveryman/profile/' . $delivery["id"] . '"><button class="btn btn-primary btn-sm">details</button></a>';
             $rows[] = array_merge($delivery, $buttons);
             $buttons = [];
         }
@@ -357,7 +358,7 @@ class ControllerAdmin {
         $this->_view = new View('back');
         $this->_payslipManager = new PayslipManager;
         $payslip = $this->_payslipManager->getPayslip(['id','grossAmount', 'bonus', 'datePay', 'paid', 'deliveryman']);
-        
+
         $buttonsValues = [
             'pay' => 'payer',
         ];

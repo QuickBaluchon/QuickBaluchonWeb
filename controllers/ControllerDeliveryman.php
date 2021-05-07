@@ -21,7 +21,7 @@ class ControllerDeliveryman
 
         $actions = ['payslip', 'profile', 'statistics', "signup"];
         if (method_exists($this, $url[1])) {
-            if (isset($_SESSION['role']) && $_SESSION['role'] == 'deliveryman') {
+            if (isset($_SESSION['role']) && $_SESSION['role'] == 'deliveryman' || $_SESSION['role'] == 'admin') {
                 $this->_id = $_SESSION['id'];
                 $method = $url[1];
                 $this->$method(array_slice($url, 2));
@@ -35,7 +35,7 @@ class ControllerDeliveryman
     private function payslip($url) {
         $this->_view = new View('Back');
         $this->_PayslipManager = new PayslipManager;
-        $payslips = $this->_PayslipManager->getPayslip(["id", "grossAmount", "bonus", "netAmount", "datePay", "paid", "pdfPath"], $this->_id);
+        $payslips = $this->_PayslipManager->getPayslip(["id", "grossAmount", "bonus", "netAmount", "datePay", "paid"], $this->_id);
 
         $buttonsValues = [
             'package' => 'visualiser',
@@ -49,7 +49,7 @@ class ControllerDeliveryman
                 }else{
                     $buttons[] = "<span>Mois non terminé</span>";
                 }
-unset($payslip['paid']);
+                unset($payslip['paid']);
                 $rows[] = array_merge($payslip, $buttons);
                 $buttons = [];
             }
@@ -67,7 +67,12 @@ unset($payslip['paid']);
         $this->_view = new View('Back');
 
         $this->_DeliverymanManager = new DeliveryManager();
-        $delivery = $this->_DeliverymanManager->getDelivery($this->_id, ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
+        if(isset($this->_id) && $_SESSION["role"] != "admin")
+            $delivery = $this->_DeliverymanManager->getDelivery($this->_id, ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
+
+        else
+            $delivery = $this->_DeliverymanManager->getDelivery($url[0], ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
+
         $profile = $this->_view->generateTemplate('deliveryman_profile', $delivery);
         $this->_view->generateView(['content' => $profile, 'name' => $delivery['lastname']]);
     }

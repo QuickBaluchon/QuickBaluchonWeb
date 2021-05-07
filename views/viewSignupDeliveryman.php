@@ -62,7 +62,7 @@ extract($this->_content) ;
 
 
                                 <hr class="my-4">
-                                
+
                                 <h2 class="h3"><?= $TitleDelivery ?></h1>
                                     <div class="form-row">
                                         <div class="form-group col-md-4">
@@ -96,7 +96,7 @@ extract($this->_content) ;
                                         <hr class="my-4">
                                         <div class="form-group row">
                                             <div class="col-sm-10">
-                                                <input class="btn btn-round btn-primary" type="submit" onclick="signup()" value="<?= $ButtonRegister ?>"></input>
+                                                <input class="btn btn-round btn-success" type="submit" onclick="signup()" value="<?= $ButtonRegister ?>"/>
                                             </div>
                                         </div>
                                     </form>

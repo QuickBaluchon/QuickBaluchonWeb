@@ -44,7 +44,9 @@ function signup() {
 }
 
 function hello(response) {
+    console.log(response);
     let id = JSON.parse(response).id;
+    console.log(id);
     form.action = "../api/deliveryman/register&id=" + id
     form.submit();
     console.log("hello", reponse);

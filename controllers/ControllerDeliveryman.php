@@ -21,7 +21,7 @@ class ControllerDeliveryman
 
         $actions = ['payslip', 'profile', 'statistics', "signup"];
         if (method_exists($this, $url[1])) {
-            if (isset($_SESSION['role']) && $_SESSION['role'] == 'deliveryman' || $_SESSION['role'] == 'admin') {
+            if (isset($_SESSION['role']) && ($_SESSION['role'] == 'deliveryman' || $_SESSION['role'] == 'admin')) {
                 $this->_id = $_SESSION['id'];
                 $method = $url[1];
                 $this->$method(array_slice($url, 2));

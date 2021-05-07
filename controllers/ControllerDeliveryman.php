@@ -44,23 +44,21 @@ class ControllerDeliveryman
 
         if($payslips != null){
             foreach ($payslips as $payslip) {
-                $payslip['paid'] = $payslip['paid'] == 1 ? '<a href="'. WEB_ROOT . "paidPayslip/" . $payslip['id'] .'.pdf"><button type="button" class="btn btn-primary btn-sm">Paiement</button></a>' : "&#x10102" ;
-                foreach($buttonsValues as $link => $inner){
-                    if($payslip["pdfPath"] != NULL){
-                        $buttons[] = '<a href="'. WEB_ROOT . "payslip/" . $payslip['id'] .'.pdf"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
-                        unset($payslip["pdfPath"]);
-                    }else
-                        $buttons[] = '<span> mois non terminé</span';
-              }
-              $rows[] = array_merge($payslip, $buttons);
-              $buttons = [];
-
+                if($payslip['paid'] == 1){
+                    $buttons[] = '<a href="'. WEB_ROOT . "uploads/paidPayslip/" . $payslip['id'] .'.pdf"><button type="button" class="btn btn-primary btn-sm">Visualiser</button></a>';
+                }else{
+                    $buttons[] = "<span>Mois non terminé</span>";
+                }
+unset($payslip['paid']);
+                $rows[] = array_merge($payslip, $buttons);
+                $buttons = [];
             }
+
         }else {
             $rows = [];
         }
 
-        $cols = ["id", "grossAmount", "bonus", "datePay", "paid", "visualiser"];
+        $cols = ["id", "grossAmount", "bonus", "datePay", "visualiser"];
         $paySlip = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->generateView(['content' => $paySlip, 'name' => 'QuickBaluchon']);
     }

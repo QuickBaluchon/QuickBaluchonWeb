@@ -28,9 +28,10 @@ class ApiPayslip extends Api {
                 case 'GET': $this->createPdfBill($id); break;
                 default: $this->catError(405); break;
             }
-            echo json_encode($this->_data, JSON_PRETTY_PRINT);
+
 
         }
+        echo json_encode($this->_data, JSON_PRETTY_PRINT);
     }
 
     public function getListPayslip (): array  {
@@ -46,7 +47,7 @@ class ApiPayslip extends Api {
                     self::$_params[] = intval($_GET['id']);
                 }
 
-                self::$_columns = ["id", "grossAmount", "bonus", "datePay", "pdfPath",	"paid", "deliveryman", "pdfPaidPayslipPath"];
+                self::$_columns = ["id", "grossAmount", "bonus", "datePay",	"paid", "deliveryman"];
                 self::$_offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
                 self::$_limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 

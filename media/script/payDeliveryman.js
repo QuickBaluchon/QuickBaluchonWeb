@@ -10,7 +10,7 @@ function pay(idPayslip, idDeliveryman) {
         idAdmin: idAdmin,
         paid : 1
     } );
-    //ajax('/api/payslip', json, 'PATCH', reload);
+    ajax('/api/payslip', json, 'PATCH', reload);
 }
 
 

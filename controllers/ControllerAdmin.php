@@ -357,7 +357,7 @@ class ControllerAdmin {
         $this->_view = new View('back');
         $this->_payslipManager = new PayslipManager;
         $payslip = $this->_payslipManager->getPayslip(['id','grossAmount', 'bonus', 'datePay', 'paid', 'deliveryman']);
-
+        
         $buttonsValues = [
             'pay' => 'payer',
         ];

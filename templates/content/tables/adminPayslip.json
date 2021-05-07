@@ -1,0 +1,18 @@
+{
+  "FR":{
+    "0": "Salaire",
+    "1": "Bonus",
+    "2": "Date du paiement",
+    "3": "Payé",
+    "4": "Livreur",
+    "5": "Payer"
+  },
+  "EN":{
+    "0": "Amount",
+    "1": "Bonus",
+    "2": "Date pay",
+    "3": "Paid",
+    "4": "Deliveryman",
+    "5": "Pay"
+  }
+}

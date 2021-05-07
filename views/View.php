@@ -67,4 +67,16 @@ class View
             throw new Exception("File " . $file . 'not found');
 
     }
+
+    public function getJsonArrayNames ($path, $file) {
+        $location = $path . $file . '.json' ;
+        if (file_exists($location)) {
+            $json = json_decode(file_get_contents($location), true);
+            $sh = $_SESSION['defaultLang']['shortcut'];
+            if (!key_exists($sh, $json))
+                $sh = 'FR';
+            return $json[$sh];
+        }
+        return null;
+    }
 }

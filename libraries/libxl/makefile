@@ -33,7 +33,7 @@ CFLAGS = -I include_c -L $(LIBPATH) -lxl -Wl,-rpath,$(LIBPATH)
 # 	$(CC) -o performance performance.c $(CFLAGS)
 
 serverC: main.c
-	$(CC) -o ../../main main.c $(CFLAGS) -l curl
+	$(CC) -o ../../readxl main.c $(CFLAGS) -l curl
 
 clean:
 	rm -f generate extract edit custom format invoice performance *.xls *.xlsx

@@ -110,7 +110,7 @@ uint8_t saveData (Data *datas, char **argv) {
             argv[1],
             datas[i].nameRecipient
         );
-printf("%s\n", insert);
+
         strcat(strcat(strcpy(json,"{ \"insert\": \""), insert), "\"}");
 
         curl = curl_easy_init();

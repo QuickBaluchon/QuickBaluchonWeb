@@ -45,27 +45,25 @@ extract($this->_content) ;
                   };
 
                   // store mouse pointer coordinates, and whether the button is pressed
-                  let curX;
-                  let curY;
-                  let pressed = true;
+                  let curX, curY;
+                  let x, y;
+                  let lastX, lastY;
+                  let pressed = false;
 
                   // update mouse pointer coordinates
-                  document.addEventListener("touchmove", move, false);
-                  document.addEventListener("touchstart", start, false);
+                  document.addEventListener("mousemove", move);
+                  document.addEventListener("mousedown", function(e){pressed = true});
+                  document.addEventListener("mouseup", up);
 
                   function move(e) {
-                    let change = e.changedTouches
-                    curX = change[0].pageX;
-                    curY = change[0].pageY;
-                    console.log(curX);
+                    curX = e.x;
+                    curY = e.y;
                   }
 
-                  function start() {
-                    pressed = true;
-                  }
-
-                  canvas.onmouseup = function() {
-                    pressed = false;
+                  function up(e) {
+                      pressed = false
+                      lastY = null
+                      lastX = null
                   }
 
                   clearBtn.onclick = function() {
@@ -74,15 +72,23 @@ extract($this->_content) ;
                   }
 
                   function draw() {
-
-                    if(pressed) {
-                      ctx.fillStyle = colorPicker.value;
-                      ctx.beginPath();
-                      ctx.arc(curX, curY-85, sizePicker.value, degToRad(0), degToRad(360), false);
-                      ctx.fill();
-
-                    }
-
+                      offset = canvas.getBoundingClientRect();
+                      lastX = x
+                      lastY = y
+                      x = curX - offset.left
+                      y = curY - offset.top
+                      if(pressed) {
+                          ctx.fillStyle = 'black';
+                          ctx.lineWidth = 3;
+                          ctx.beginPath();
+                          ctx.moveTo(lastX, lastY);
+                          ctx.lineTo(x, y);
+                          ctx.stroke();
+                          ctx.fill();
+                    }else {
+                          lastX = curX
+                          lastY = curY
+                      }
                     requestAnimationFrame(draw)
                   }
 

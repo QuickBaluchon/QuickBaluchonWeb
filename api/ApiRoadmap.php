@@ -162,8 +162,13 @@ class ApiRoadmap extends Api
         for ($i = $roadmap['currentStop'] ; $i < count($roadmap['stops']) ; ++$i) {
             $kmNotDone += $roadmap['stops'][$i]['distanceNextHop'] ;
             $timeNotDone += $roadmap['stops'][$i]['timeNextHop'] ;
+            $this->resetParams();
+            self::$_set[] = 'status = ?';
+            self::$_params[] = 1;
+            $this->patch('PACKAGE', $roadmap['stops'][$i]['package']);
         }
 
+        $this->resetParams();
         $this->patchRoadmap($id, [
             'kmTotal' => $roadmap['kmTotal'] - $kmNotDone,
             'timeTotal' => $roadmap['timeTotal'] - $timeNotDone,

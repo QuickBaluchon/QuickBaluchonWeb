@@ -224,7 +224,7 @@ class ControllerAdmin {
         $this->_view = new View('Back');
         $this->_view->_js[] = 'pricelist/addPrice';
         $this->_pricelistManager = new PricelistManager;
-        $list = $this->_pricelistManager->getPricelists([]);
+        $list = $this->_pricelistManager->getPricelists(['id', 'maxWeight', 'ExpressPrice', 'StandardPrice', 'applicationDate']);
         if (!$list) $list = [];
 
         $buttonsValues = [

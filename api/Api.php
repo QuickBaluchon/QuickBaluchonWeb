@@ -242,7 +242,6 @@ abstract class Api {
     }
 
     private function checkJWT($header, $playload, $signature): bool {
-
         if( intval(json_decode($playload, true)['exp']) < time() )
             self::catError(401); // Unauthorized -> token expired
 
@@ -250,35 +249,6 @@ abstract class Api {
         return $hash == $signature;
     }
 
-    protected function authentication ($allowedRoles=null, $allowedId=null) {
-        if( $allowedId == null && $allowedRoles == null )
-            return true;
-
-        $headers = getallheaders();
-        if( isset($headers['Authorization']) ){
-            $checkSum = 0 ;
-            $jwt = $this->decodeJWT($headers['Authorization']);
-            $playload = json_decode($jwt['playload'],true);
-
-            $playload['sub'] = intval($playload['sub']);
-            $status = true;
-
-            if( $allowedRoles && !$allowedId )
-                $status = in_array($playload['role'], $allowedRoles);
-            elseif ( !$allowedRoles && $allowedId )
-                $status = in_array($playload['sub'], $allowedId);
-
-            elseif ( $allowedRoles && $allowedId )
-                $status = in_array($playload['role'], $allowedRoles) && in_array($playload['sub'], $allowedId);
-
-            if( !$status )
-                self::catError(401);
-
-        }
-        else
-            self::catError(400);
-
-    }
 
     protected function catError($code){
         header("Content-Type: text/html; charset=utf-8");
@@ -313,7 +283,7 @@ abstract class Api {
             $jwt=explode(" ", $header["Authorization"]);
             return $this->decodeJWT($jwt[1]);
         }else{
-            $this->catError(403);
+            return false;
         }
 
     }
@@ -324,7 +294,6 @@ abstract class Api {
             if($value == $role["role"])
                 return (int) true;
         }
-
         http_response_code(401);
         exit();
     }

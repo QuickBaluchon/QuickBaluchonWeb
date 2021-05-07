@@ -6,10 +6,12 @@ class ApiPackage extends Api {
 
     private $_method;
     private $_data = [];
+    private $_jwt;
 
     public function __construct($url, $method) {
 
         $this->_method = $method;
+        $this->_jwt = $this->getJwtFromHeader();
 
         if (count($url) == 0)
             $this->_data = $this->getListPackages();     // list of packages - /api/package
@@ -28,6 +30,7 @@ class ApiPackage extends Api {
     }
 
     public function getListPackages ($columns = null): array  {
+        $this->checkRole(["admin", "deliveryman"], $this->_jwt);
         if ($columns == null)
             $columns = ['PACKAGE.id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'excelPath', 'dateDeposit'];
         if(isset($_GET['inner'])) {
@@ -85,6 +88,7 @@ class ApiPackage extends Api {
     }
 
     public function getPackage($id): array {
+        $this->checkRole(["admin", "deliveryman"], $this->_jwt);
         if(isset($_GET['inner'])) {
             $columns[] = 'PRICELIST.ExpressPrice, ' . 'PRICELIST.StandardPrice';
             self::$_inner = explode(',',$_GET['inner']);
@@ -102,6 +106,7 @@ class ApiPackage extends Api {
     }
 
     public function updatePackage (int $id) {
+        $this->checkRole(["admin", "deliveryman", "system"], $this->_jwt);
         $data = $this->getJsonArray();
         $allowed = ['weight', 'address', 'email', 'delay', 'status', 'dateDeposit', 'dateDelivery', 'signature'];
         if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
@@ -144,6 +149,7 @@ class ApiPackage extends Api {
     }
 
     public function updateWarehouseVolume (int $pkg, int $status) {
+        $this->checkRole(["admin", "system"], $this->_jwt);
         if (!isset($_SESSION['warehouse'])) {
             http_response_code(401) ;
             return -1 ;
@@ -186,6 +192,7 @@ class ApiPackage extends Api {
     }
 
     public function insertPackage() {
+        $this->checkRole(["system"], $this->_jwt);
         $sql = $this->getJsonArray();
         $connect = $this->getDb();
         $stmt = $connect->prepare($sql['insert']);

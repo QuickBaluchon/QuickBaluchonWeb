@@ -7,10 +7,12 @@ abstract class Model {
         $url = API_ROOT . $collection;
         $params = $this->strCond($cond);
         $url = $params === '' ? $url : $url . '&' . $params;
-        if(isset($_COOKIE["access_token"]))
-            return $this->curl($url, null, ["Autorisation:" . $_COOKIE["access_token"]]);
+        //$_COOKIE["access_token"]
+        if(isset($_SESSION['jwt']))
+            return $this->curl($url, null, ["Authorization:Bearer " . $_SESSION['jwt']]);
         else
             return $this->curl($url);
+
     }
 
     protected function getRessource($collection, $id, $cond) {

@@ -97,14 +97,16 @@ class ApiClient extends Api
             if (count($client) == 1) {
                 $id = $client[0]['id'];
                 $expire = 60 * 20;
+                $jwt = $this->generateJWT($id, 'client', $expire);
                 $response = [
                     'id' => $id,
                     'role' => 'client',
-                    'access_token' => $this->generateJWT($id, 'client', $expire)
+                    'access_token' => $jwt
                 ];
 
                 $_SESSION['id'] = $id;
                 $_SESSION['role'] = 'client';
+                $_SESSION['jwt'] = $jwt;
                 $this->_data = $response;
             } else {
                 // login/password false
@@ -128,6 +130,8 @@ class ApiClient extends Api
             unset($this->_data['role']);
             unset($this->_data['access_token']);
         }
+
+        setcookie("access_token", "", 1);
 
         $this->_data = WEB_ROOT;
     }

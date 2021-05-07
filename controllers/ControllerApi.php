@@ -6,7 +6,6 @@ class ControllerApi {
     private $_method;
 
     public function __construct($url) {
-
         if( !isset($url) )
             // API NOT FOUND : 404
             http_response_code(404) ;

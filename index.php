@@ -8,8 +8,14 @@ define('API_ROOT', WEB_ROOT . 'api/');
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
-require_once('controllers/Router.php');
 session_start();
+
+//authorization
+if(isset($_SESSION['jwt'])){
+    header("Authorization:Bearer " . $_SESSION['jwt'] );
+}
+
+require_once('controllers/Router.php');
 
 $router = new Router();
 $router->routeReq();

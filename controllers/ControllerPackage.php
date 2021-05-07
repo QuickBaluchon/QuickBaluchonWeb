@@ -45,7 +45,7 @@ class ControllerPackage {
         $this->_id = intval($id) ;
         $this->_data = $this->_packageManager->getPackage($this->_id, ['PACKAGE.id', 'PACKAGE.status', 'dateDeposit']) ;
 
-        return count($this->_data) ;
+        return count($this->_data);
     }
 
     private function deliverPackage () {

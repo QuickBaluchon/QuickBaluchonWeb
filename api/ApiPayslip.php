@@ -6,13 +6,14 @@ class ApiPayslip extends Api {
 
   private $_method;
   private $_data = [];
+  private $_jwt;
   private $id = 5;
   private $_apiPayslip;
   public function __construct($url, $method) {
 
 
     $this->_method = $method;
-
+    $this->_jwt = $this->getJwtFromHeader();
 
     if (count($url) == 0){
         switch ($method) {
@@ -38,6 +39,7 @@ class ApiPayslip extends Api {
   }
 
   public function getListPayslip (): array  {
+      $this->checkRole(["admin", "deliveryman"], $this->_jwt);
     $packages = [];
     if($this->_method != 'GET') $this->catError(405);
 

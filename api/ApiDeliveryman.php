@@ -13,7 +13,6 @@ class ApiDeliveryMan extends Api {
 
         $this->_method = $method;
         $this->_jwt = $this->getJwtFromHeader();
-
         if (count($url) == 0)
             $this->_data = $this->getListDelivery();     // list of deliveryman - /api/deliveryman
 
@@ -61,7 +60,7 @@ class ApiDeliveryMan extends Api {
 
     public function getDelivery($id): array {
         if ($this->_method != 'GET') $this->catError(405);
-        $this->checkRole(["admin", "deliveryman"], $this->_jwt);
+        //$this->checkRole(["admin", "deliveryman"], $this->_jwt);
 
         $columns = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'licenseImg', "registrationIMG"];
         self::$_where[] = 'id = ?';
@@ -119,17 +118,20 @@ class ApiDeliveryMan extends Api {
         $deliveryman = $this->get('DELIVERYMAN');
         if (count($deliveryman) == 1) {
             $id = $deliveryman[0]['id'];
-            $expire = 60 * 20; // 20 min
+            $expire = 60 * 60 * 24 * 15; // 15 days
             $role = 'deliveryman';
+            $jwt = $this->generateJWT($id, $role, $expire);
             $response = [
                 'id' => $id,
                 'role' => $role,
-                'access_token' => $this->generateJWT($id, $role, $expire)
+                'access_token' => $jwt
             ];
+
+            setcookie("access_token", $jwt);
 
             $_SESSION['id'] = $id;
             $_SESSION['role'] = $role;
-            $_SESSION['warehouse'] = $deliveryman[0]['warehouse'] ;
+            $_SESSION['jwt'] = $jwt ;
             $this->_data = $response;
         } else {
             // email/password false

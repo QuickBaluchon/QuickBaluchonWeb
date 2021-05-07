@@ -76,12 +76,18 @@ class ApiAdmin extends Api {
             if (count($admin) == 1) {
                 $id = $admin[0]['id'];
                 $expire = 60 * 20; // 20 min
+                $jwt = $this->generateJWT($id, 'admin', $expire);
                 $response = [
                     'id' => $id,
                     'role' => 'admin',
-                    'access_token' => $this->generateJWT($id, 'admin', $expire),
+                    'access_token' => $jwt,
                     'warehouse' => $admin[0]['warehouse']
                 ];
+
+                $_SESSION['id'] = $id;
+                $_SESSION['role'] = 'admin';
+                $_SESSION['jwt'] = $jwt;
+
                 echo json_encode($response, JSON_PRETTY_PRINT);
                 exit;
             } else {

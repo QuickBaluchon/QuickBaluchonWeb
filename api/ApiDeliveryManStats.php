@@ -6,6 +6,7 @@ class ApiDeliveryManStats extends Api
 
     private $_method;
     private $_data = [];
+    private $_jwt;
     private $_joinPackage = [
         [
             'type' => 'inner',
@@ -60,6 +61,8 @@ class ApiDeliveryManStats extends Api
     public function __construct ($url, $method) {
 
         $this->_method = $method;
+        $this->_jwt = $this->getJwtFromHeader();
+        $this->checkRole(["admin", "deliveryman"], $this->_jwt);
         $this->_data = $this->getStats($url[0], $method);
 
         echo json_encode($this->_data, JSON_PRETTY_PRINT);

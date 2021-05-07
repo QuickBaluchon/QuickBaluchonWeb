@@ -203,19 +203,18 @@ class ControllerAdmin {
             foreach ($buttonsValues as $link => $inner) {
                 $buttons[] = '<a href="' . WEB_ROOT . "admin/$link/" . $warehouse['id'] . '"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
             }
-
+            unset($warehouse['id']);
             $rows[] = array_merge($warehouse, $buttons);
             $buttons = [];
         }
 
         $rows[] = [
-            null,
             '<input type="text" class="form-control" id="address" placeholder="address">',
             '<input type="number" class="form-control" id="volume" placeholder="volume">',
             '<button type="button" class="btn btn-success btn-sm" onclick="addWarehouse()">Ajouter</button>'
         ] ;
 
-        $cols = ['#', 'address', 'volume', 'AvailableVolume', 'active', 'delete'];
+        $cols = $this->_view->getJsonArrayNames($this->_tableLangTemplates, 'adminWarehouse');
         if (!isset($rows)) $rows = [];
         $this->_view->_js[] = 'warehouse/updateWarehouse';
         $this->_view->_js[] = 'warehouse/addWarehouse';

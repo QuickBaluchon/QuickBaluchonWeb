@@ -97,10 +97,10 @@ unset($payslip['paid']);
         $this->_view = new View('Back');
         $this->_view->_js[] = 'deliveryman/deliveries';
         $this->_roadmapManager = new RoadmapManager();
-        $roadmap = $this->_roadmapManager->getRoadmap(null, ["id", "kmTotal", "timeTotal", "nbPackages", "datePay", "currentStop", 'delivery'], null, date("Y-m-d"));
+        $roadmap = $this->_roadmapManager->getRoadmap(null, ["id", "kmTotal", "timeTotal", "nbPackages", "currentStop", 'delivery'], null, date("Y-m-d"));
 
         $this->_DeliverymanManager = new DeliveryManager();
-        $delivery = $this->_DeliverymanManager->getDelivery($this->_id, ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
+        $delivery = $this->_DeliverymanManager->getDelivery($this->_id, ["firstname", "lastname"]);
         $roadmap = $this->_view->generateTemplate('deliveryman_roadmap', ['roadmap' => $roadmap, 'deliveryman' => $delivery]);
 
         $this->_view->generateView(['content' => $roadmap, 'name' => $delivery['lastname']]);

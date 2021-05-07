@@ -1,0 +1,28 @@
+{
+  "FR":{
+    "0": "Prénom",
+    "1": "Nom",
+    "2": "Téléphone",
+    "3": "Email",
+    "4": "Volume",
+    "5": "Rayon",
+    "6": "IBAN",
+    "7": "Entrepôt",
+    "8": "Employer",
+    "9": "Refuser",
+    "10": "Profil"
+  },
+  "EN": {
+    "0": "Name",
+    "1": "Surname",
+    "2": "Phone",
+    "3": "Email",
+    "4": "Volume",
+    "5": "Radius",
+    "6": "IBAN",
+    "7": "Warehouse",
+    "8": "Employ",
+    "9": "Refuse",
+    "10": "Profile"
+  }
+}

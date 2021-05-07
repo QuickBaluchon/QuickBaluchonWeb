@@ -1,0 +1,16 @@
+{
+  "FR": {
+    "0": "Adresse",
+    "1": "Volume",
+    "2": "Volume disponible",
+    "3": "Active",
+    "4": "Mettre à jour"
+  },
+  "EN": {
+    "0": "Address",
+    "1": "Volume",
+    "2": "Available volume",
+    "3": "Active",
+    "4": "Update"
+  }
+}

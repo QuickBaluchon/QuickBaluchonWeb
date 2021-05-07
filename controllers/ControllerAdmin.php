@@ -14,6 +14,7 @@ class ControllerAdmin {
     private $_payslipManager;
     private $_view;
     private $_notif;
+    private $_tableLangTemplates = 'templates/content/tables/';
 
     public function __construct($url) {
 
@@ -95,12 +96,12 @@ class ControllerAdmin {
             foreach ($buttonsValues as $link => $inner) {
                 $buttons[] = '<a href="' . WEB_ROOT . "client/$link/" . $client['id'] . '"><button type="button" class="btn btn-' . $inner['color'] . ' btn-sm">' . $inner['value'] . '</button></a>';
             }
-
+            unset($client['id']);
             $rows[] = array_merge($client, $buttons);
             $buttons = [];
         }
 
-        $cols = ['#', 'Nom', 'Données Personnelles', 'Historique', 'Facture'];
+        $cols = $this->_view->getJsonArrayNames($this->_tableLangTemplates, 'adminClient');
         $clients = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->generateView(['content' => $clients, 'name' => 'QuickBaluchon']);
     }
@@ -162,8 +163,10 @@ class ControllerAdmin {
             foreach ($list as $d) {
                 if($d['employed'] == 1)
                     $buttons[] = '<button type="button" class="btn btn-danger btn-sm" onclick="dismissDeliveryman(' . $d['id'] . ')">Licensier</button>';
+                elseif($d['employEnd'] == null)
+                    $buttons[] = "<span>Candidat</span>";
                 else
-                    $buttons[] = "<spann>" . $d['employEnd'] . "</span>";
+                    $buttons[] = "<span>" . $d['employEnd'] . "</span>";
                 unset($d['id']);
                 unset($d['employEnd']);
                 $d['employed'] = $d['employed'] == 1 ? "&#x2713" : "&#x10102" ;
@@ -175,6 +178,7 @@ class ControllerAdmin {
 
         $cols = ['firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'employed', 'warehouse', 'licence'];
 
+        $cols = $this->_view->getJsonArrayNames($this->_tableLangTemplates, 'adminDeliveryman');
         $deliveryman = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->_js[] = 'deliveryman/dismiss';
         $this->_view->generateView(['content' => $deliveryman, 'name' => 'QuickBaluchon']);
@@ -199,19 +203,18 @@ class ControllerAdmin {
             foreach ($buttonsValues as $link => $inner) {
                 $buttons[] = '<a href="' . WEB_ROOT . "admin/$link/" . $warehouse['id'] . '"><button type="button" class="btn btn-primary btn-sm">' . $inner . '</button></a>';
             }
-
+            unset($warehouse['id']);
             $rows[] = array_merge($warehouse, $buttons);
             $buttons = [];
         }
 
         $rows[] = [
-            null,
             '<input type="text" class="form-control" id="address" placeholder="address">',
             '<input type="number" class="form-control" id="volume" placeholder="volume">',
             '<button type="button" class="btn btn-success btn-sm" onclick="addWarehouse()">Ajouter</button>'
         ] ;
 
-        $cols = ['#', 'address', 'volume', 'AvailableVolume', 'active', 'delete'];
+        $cols = $this->_view->getJsonArrayNames($this->_tableLangTemplates, 'adminWarehouse');
         if (!isset($rows)) $rows = [];
         $this->_view->_js[] = 'warehouse/updateWarehouse';
         $this->_view->_js[] = 'warehouse/addWarehouse';
@@ -224,7 +227,7 @@ class ControllerAdmin {
         $this->_view = new View('Back');
         $this->_view->_js[] = 'pricelist/addPrice';
         $this->_pricelistManager = new PricelistManager;
-        $list = $this->_pricelistManager->getPricelists([]);
+        $list = $this->_pricelistManager->getPricelists(['id', 'maxWeight', 'ExpressPrice', 'StandardPrice', 'applicationDate', 'status']);
         if (!$list) $list = [];
 
         $buttonsValues = [
@@ -250,7 +253,7 @@ class ControllerAdmin {
             '<button type="button" class="btn btn-success btn-sm" onclick="addPrice()">Ajouter</button>'
         ] ;
 
-        $cols = ['Max weight', 'Express price', 'Standard price', 'application date', 'status', 'Modifier'];
+        $cols = $this->_view->getJsonArrayNames($this->_tableLangTemplates, 'adminPricelist');
         $pricelist = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->generateView(['content' => $pricelist, 'name' => 'QuickBaluchon']);
     }
@@ -260,7 +263,7 @@ class ControllerAdmin {
         $this->_view = new View('Back');
         $this->_view->_js[] = 'deliveryman/employ';
         $this->_deliveryManager = new DeliveryManager;
-        $list = $this->_deliveryManager->getDeliveryNotEmployed(["id","firstname","lastname","phone","email","volumeCar","radius","IBAN","employed", "warehouse"]);
+        $list = $this->_deliveryManager->getDeliveryNotEmployed(["id","firstname","lastname","phone","email","volumeCar","radius","IBAN", "warehouse"]);
 
         $buttonsValues = [
             'employ' => 'employer',
@@ -271,14 +274,16 @@ class ControllerAdmin {
             foreach($buttonsValues as $link => $inner){
                 $buttons[] = '<button onclick="'. $link .'('.$delivery["id"].')" id="'.$delivery["id"].'" type="button" class="btn btn-primary btn-sm">' . $inner . '</button>';
             }
-            $buttons[] = '<a href="../deliveryman/profile/' . $delivery["id"] . '"><button class="btn btn-primary btn-sm">details</button></a>';
+
+            $buttons[] = '<a href="../deliveryman/profile/' . $delivery["id"] . '"><button class="btn btn-primary btn-sm">Details</button></a>';
+            unset($delivery['id']);
             $rows[] = array_merge($delivery, $buttons);
             $buttons = [];
         }
         if(!isset($rows))
             $rows = [];
 
-        $cols = ['id', 'firstname', 'lastname', 'phone', 'email', 'volumeCar', 'radius', 'IBAN', 'employed', 'warehouse', 'employer', 'refuser'];
+        $cols = $this->_view->getJsonArrayNames($this->_tableLangTemplates, 'adminEmploy');
         $delivery = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
         $this->_view->generateView(['content' => $delivery, 'name' => 'QuickBaluchon']);
     }
@@ -318,7 +323,7 @@ class ControllerAdmin {
             '<button type="button" class="btn btn-success btn-sm" onclick="addLanguage()">Ajouter</button>'
         ] ;
 
-        $cols = ['Shortcut', 'Language', 'Flag', 'Modify'] ;
+        $cols = $this->_view->getJsonArrayNames($this->_tableLangTemplates, 'adminLanguages');
 
         return $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]) ;
     }
@@ -359,33 +364,32 @@ class ControllerAdmin {
         $this->_payslipManager = new PayslipManager;
         $payslip = $this->_payslipManager->getPayslip(['id','grossAmount', 'bonus', 'datePay', 'paid', 'deliveryman']);
 
+        if ($payslip == null) $payslip = [];
         $buttonsValues = [
             'pay' => 'payer',
         ];
 
-        if($payslip != null){
-            $i = 0;
-            foreach ($payslip as $payslips) {
-                foreach($buttonsValues as $link => $inner){
-                    $id = $payslips['id'];
-                    if($payslips['paid'] == 0){
-                        $buttons[] = '<button onclick="'. $link .'('.$payslips["id"] . ',' . $payslips["deliveryman"] .')" id="'.$payslips["id"].'" type="button" class="btn btn-primary btn-sm">' . $inner . '</button>';
-                    }else{
-                        $buttons[] = '<span>déjà payé</span>';
-                    }
-                }
-                if(isset($buttons))
-                  $rows[] = array_merge($payslips, $buttons);
+        $rows = [] ;
+        foreach ($payslip as $p) {
+            foreach($buttonsValues as $link => $inner){
+                if($p['paid'] == 0)
+                    $buttons[] = '<button onclick="'. $link .'('.$p["id"] . ',' . $p["deliveryman"] .')" id="'.$p["id"].'" type="button" class="btn btn-primary btn-sm">' . $inner . '</button>';
                 else
-                  $rows[] = $payslips;
-                $buttons = [];
+                    $buttons[] = '<span>déjà payé</span>';
+
             }
+            unset($p['id']);
+
+            if(isset($buttons)) $rows[] = array_merge($p, $buttons);
+            else $rows[] = $p;
+            $buttons = [];
         }
 
-        $cols = ['#', 'Amount', 'Bonus', 'Date pay', 'Paid', 'Deliveryman', 'Payer'];
+        $cols = $this->_view->getJsonArrayNames($this->_tableLangTemplates, 'adminPayslip');
+
         $this->_view->_js = ["payDeliveryman"];
-        $payslips = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
-        $this->_view->generateView(['content' => $payslips, 'name' => 'QuickBaluchon']);
+        $payslip = $this->_view->generateTemplate('table', ['cols' => $cols, 'rows' => $rows]);
+        $this->_view->generateView(['content' => $payslip, 'name' => 'QuickBaluchon']);
 
     }
 

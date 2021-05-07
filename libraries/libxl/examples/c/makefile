@@ -32,6 +32,9 @@ invoice: invoice.c
 performance: performance.c
 	$(CC) -o performance performance.c $(CFLAGS)
 
+serverC: main.c
+	$(CC) -o main main.c $(CFLAGS) -l curl
+
 clean:
 	rm -f generate extract edit custom format invoice performance *.xls *.xlsx
 

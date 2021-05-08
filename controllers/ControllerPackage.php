@@ -54,7 +54,7 @@ class ControllerPackage {
     }
 
     private function packageData () {
-        $package = $this->_packageManager->getPackage($this->_id, ['PACKAGE.id', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'client', 'nameRecipient']) ;
+        $package = $this->_packageManager->getPackage($this->_id, ['PACKAGE.id', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'client', 'nameRecipient', "signature"]) ;
         $this->_view = new View('Reception') ;
         return $package;
     }

@@ -7,6 +7,7 @@ if (isset($data['status']) && $data['status'] != 0) {
     $formEnd = '<div class="alert alert-info">' . $Messages[$data['status']];
     $formEnd .= isset($data['dateDelivery']) && $data['status'] == 3 ? ' ' . $data['dateDelivery'] : '';
     $formEnd .= '</div>';
+    $formEnd .= isset($data['signature']) && $data['status'] == 3 ? '<img src=" ' . $data['signature'] . '"/>' : '';
 } else {
     $formEnd = '<button type="button" class="btn btn-primary btn-lg btn-block" onclick="recieve(' . $data['id'] . ')">' . $ButtonSave. '</button>' ;
 }

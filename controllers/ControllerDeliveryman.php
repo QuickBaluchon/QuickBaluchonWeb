@@ -67,12 +67,16 @@ class ControllerDeliveryman
         $this->_view = new View('Back');
 
         $this->_DeliverymanManager = new DeliveryManager();
-        if(isset($this->_id) && $_SESSION["role"] != "admin")
+        if(isset($this->_id) && $_SESSION["role"] != "admin"){
             $delivery = $this->_DeliverymanManager->getDelivery($this->_id, ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
+            $delivery['id'] = $_SESSION['id'];
+        }
 
-        else
+        else {
             $delivery = $this->_DeliverymanManager->getDelivery($url[0], ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
-
+            $delivery['id'] = $url[0];
+        }
+        
         $profile = $this->_view->generateTemplate('deliveryman_profile', $delivery);
         $this->_view->generateView(['content' => $profile, 'name' => $delivery['lastname']]);
     }

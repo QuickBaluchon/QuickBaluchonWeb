@@ -283,7 +283,8 @@ abstract class Api {
             $jwt=explode(" ", $header["Authorization"]);
             return $this->decodeJWT($jwt[1]);
         }else{
-            return false;
+            http_response_code(400);
+            exit();
         }
 
     }

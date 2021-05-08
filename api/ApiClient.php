@@ -170,7 +170,7 @@ class ApiClient extends Api
             $filepath = $path . $_FILES['excel']['name'];
             move_uploaded_file($_FILES['excel']['tmp_name'], $filepath);
 
-            $exec = "./readxl $_FILES['excel']['name'] $userID $nbPkg";
+            $exec = "./readxl $_FILES[excel][name] $userID $nbPkg";
             exec($exec, $outputs, $rescode);
             print_r( $outputs );
             echo '  rescode: ' . $rescode ;

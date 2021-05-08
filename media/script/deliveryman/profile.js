@@ -12,7 +12,7 @@ function updateProfile() {
     if( json.length > 2 ) {
         let idDeliveryman = getIdClient();
         if( idDeliveryman )
-            ajax(`../api/deliveryman/${idDeliveryman}`, json, 'PATCH', updated)
+            ajaxWithToken(`../api/deliveryman/${idDeliveryman}`, json, 'PATCH', updated)
         else return false;
     }
     else return false;
@@ -40,7 +40,7 @@ function updateCar() {
     if( json.length > 2 ) {
         let idDeliveryman = getIdClient();
         if( idDeliveryman )
-            ajax(`../api/deliveryman/${idDeliveryman}`, json, 'PATCH', updated)
+            ajaxWithToken(`../api/deliveryman/${idDeliveryman}`, json, 'PATCH', updated)
         else return false;
     }
     else return false;

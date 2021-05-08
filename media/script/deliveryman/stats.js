@@ -6,13 +6,13 @@ window.onload = function () {
 }
 
 function displayStatsPackages(stats) {
-
     if( !stats ) {
         let json = JSON.stringify({
             stats: "package",
             deliveryman: 4
         }) ;
-        ajax('../api/deliveryManStats/6', json, 'POST', displayStatsPackages, console.log) ;
+        ajaxWithToken('../api/deliveryManStats/6', json, 'POST', displayStatsPackages, console.log)
+
     }
 
     let packages;
@@ -63,7 +63,7 @@ function fetchKilometers() {
         stats: "km",
         deliveryman: 4
     }) ;
-    ajax('../api/deliveryManStats/6', json, 'POST', fetchActivity, console.log) ;
+    ajaxWithToken('../api/deliveryManStats/6', json, 'POST', fetchActivity, console.log)
 }
 
 function fetchActivity(data) {
@@ -73,7 +73,8 @@ function fetchActivity(data) {
         stats: "activity",
         deliveryman: 4
     }) ;
-    ajax('../api/deliveryManStats/6', json, 'POST', displayStats, console.log) ;
+    ajaxWithToken('../api/deliveryManStats/6', json, 'POST', displayStats, console.log)
+
 }
 
 function displayStats(activity) {

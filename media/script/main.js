@@ -34,7 +34,7 @@ function login(jwt, location) {
 
 }
 
-function ajax(url, json, method, callback, error) {
+function ajax(url, json, method, callback, error, headers) {
     let request = new XMLHttpRequest();
     request.onreadystatechange = function() {
         if(request.readyState === 4) {
@@ -49,7 +49,19 @@ function ajax(url, json, method, callback, error) {
     }
     request.open(method, url, true);
     request.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    for(const key in headers)
+        request.setRequestHeader(key, headers[key]);
+
     request.send(json);
+}
+
+function ajaxWithToken(url, json, method, callback, error) {
+    let jwt = getCookie('access_token');
+    if(jwt){
+        let header = {'Authorization': 'Bearer ' + jwt};
+        ajax(url, json, method, callback, error, header) ;
+    }else
+        console.log('Token not found')
 }
 
 function getCookie(cname) {
@@ -65,7 +77,7 @@ function getCookie(cname) {
             return c.substring(name.length, c.length);
         }
     }
-    return "";
+    return null;
 }
 
 function getIdClient() {

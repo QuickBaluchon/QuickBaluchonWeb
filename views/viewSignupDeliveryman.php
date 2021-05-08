@@ -96,7 +96,7 @@ extract($this->_content) ;
                                         <hr class="my-4">
                                         <div class="form-group row">
                                             <div class="col-sm-10">
-                                                <input class="btn btn-round btn-success" type="submit" onclick="signup()" value="<?= $ButtonRegister ?>"/>
+                                                <input id="buttonSignup" class="btn btn-round btn-success" type="submit" onclick="signup()" value="<?= $ButtonRegister ?>"/>
                                             </div>
                                         </div>
                                     </form>

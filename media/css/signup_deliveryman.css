@@ -9,6 +9,11 @@
   border: none;
 }
 
+#buttonSignup{
+    color: #fff;
+    background-color: #28a745 !important;
+}
+
 #signup input[type=file]{
   background-color: #efefef;
   border-radius: 0px;

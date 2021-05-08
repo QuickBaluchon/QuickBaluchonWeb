@@ -16,7 +16,7 @@ function updateProfile() {
     if( json.length > 2 ) {
         let idClient = getIdClient();
         if( idClient )
-            ajax('../api/client/' + idClient, json, 'PATCH', updated)
+            ajaxWithToken('../api/client/' + idClient, json, 'PATCH', updated)
         else return false;
     }
     else return false;

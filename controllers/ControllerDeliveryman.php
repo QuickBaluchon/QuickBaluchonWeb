@@ -76,7 +76,8 @@ class ControllerDeliveryman
             $delivery = $this->_DeliverymanManager->getDelivery($url[0], ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
             $delivery['id'] = $url[0];
         }
-        if( count($delivery) > 1 ){
+
+        if( $delivery != NULL && count($delivery) > 1 ){
             $profile = $this->_view->generateTemplate('deliveryman_profile', $delivery);
         }
         else {

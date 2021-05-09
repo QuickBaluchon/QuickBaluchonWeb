@@ -69,22 +69,29 @@ class ControllerClient
         $this->_view->generateView([]);
     }
 
-    private function profile($id){
+    private function profile($url){
         $this->_view = new View('Back');
         $this->_clientManager = new ClientManager();
 
-        if(isset($this->_id))
+        if(isset($this->_id) && $_SESSION["role"] != "admin"){
             $client = $this->_clientManager->getClient($this->_id, ['name', 'website']);
-        else
-            $client = $this->_clientManager->getClient($id[0], ['name', 'website']);
-
-        if ($client == null) {
-            $this->_view = new View('Error');
-            $this->_view->generateView(['cat' => 404]);
-        } else {
-            $profile = $this->_view->generateTemplate('client_profile', $client);
-            $this->_view->generateView(['content' => $profile, 'name' => $client['website']]);
+            $delivery['id'] = $_SESSION['id'];
         }
+        else{
+            $client = $this->_clientManager->getClient($url[0], ['name', 'website']);
+            $delivery['id'] = $url[0];
+        }
+
+        if( $client != NULL && count($client) > 1 ) {
+            $profile = $this->_view->generateTemplate('client_profile', $client);
+        }
+        else {
+            http_response_code(404);
+            $profile = $this->_view->generateTemplate('Error', ['code'=>404]);
+            $client['website'] = '';
+        }
+
+        $this->_view->generateView(['content' => $profile, 'name' => $client['website']]);
     }
 
     private function bills() {

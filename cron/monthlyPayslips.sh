@@ -1,4 +1,4 @@
 #!/bin/bash
 
 #launch le java
-date >> dailyBillsLogs.txt
+date >> /var/www/html/cron/dailyBillsLogs.txt

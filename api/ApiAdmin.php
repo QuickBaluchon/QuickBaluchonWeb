@@ -53,7 +53,7 @@ class ApiAdmin extends Api {
         if($this->_method != 'GET') $this->catError(405);
         $columns = ["id", "lastname", "firstname", "sector", "username", "employed"];
         self::$_where[] = 'id = ?';
-        self::$_params[] = $id;
+        self::$_params[] = $id[0];
 
         $staff = $this->get('STAFF', $columns);
         if( count($staff) == 1 )
@@ -106,6 +106,11 @@ class ApiAdmin extends Api {
         }
 
         $this->patch('STAFF', $data["id"]);
+    }
+
+    public function getData()
+    {
+        return $this->_data;
     }
 
 }

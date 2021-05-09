@@ -1,4 +1,4 @@
 #!/bin/bash
 
 curl -X POST "http://localhost/api/roadmap"
-date >> dailyRoadmapsLogs.txt
+date >> /var/www/html/cron/dailyRoadmapsLogs.txt

@@ -129,7 +129,7 @@ class ApiPayslip extends Api {
                 $allowed = ["idPayslip", "idAdmin" ,'paid', "idDeliveryman"];
 
                 if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
-		    http_response_code(400);
+		            http_response_code(400);
                     exit(0);
                 }
 
@@ -143,8 +143,8 @@ class ApiPayslip extends Api {
 
     private function createPdfPaidPayslip($data){
                 require_once('ApiAdmin.php') ;
-                $staff = new ApiAdmin([""], 'GET');
-                $staff = $staff->getStaffById($data["idAdmin"]);
+                $apiAdmin = new ApiAdmin(["getStaffById", "$data[idAdmin]"], 'GET');
+                $staff = $apiAdmin->getData();
                 $amount = $this->getPayslip($data["idPayslip"]);
                 require_once($_SERVER['DOCUMENT_ROOT'] . "/media/fpdf/fpdf.php");
                 $cols = ['Montant', "administrateur", 'date'];
@@ -170,6 +170,7 @@ class ApiPayslip extends Api {
                // self::$_set[] = 'pdfPaidPayslipPath = ?' ;
                // self::$_params[] =  '/uploads/paidPayslip/' . $data["idPayslip"] . '.pdf' ;
                //$this->patch('PAYSLIP', $data["idPayslip"]) ;
+
                 require_once("ApiDeliveryman.php");
                 $email = new ApiDeliveryMan([$data["idDeliveryman"]], "GET");
                 $email = $email->getDelivery($data["idDeliveryman"]);

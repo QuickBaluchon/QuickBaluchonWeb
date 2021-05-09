@@ -15,5 +15,5 @@ function pay(idPayslip, idDeliveryman) {
 
 
 function reload(){
-    document.location.reload();
+    //document.location.reload();
 }

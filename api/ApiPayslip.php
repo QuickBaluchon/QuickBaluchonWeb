@@ -129,7 +129,6 @@ class ApiPayslip extends Api {
                 $allowed = ["idPayslip", "idAdmin" ,'paid', "idDeliveryman"];
 
                 if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
-                    echo "coucou";
 		    http_response_code(400);
                     exit(0);
                 }

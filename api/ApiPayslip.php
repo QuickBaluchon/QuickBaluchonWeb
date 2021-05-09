@@ -115,7 +115,7 @@ class ApiPayslip extends Api {
 
                 $filename = $_SERVER['DOCUMENT_ROOT'] . "/payslip/$id.pdf" ;
                 $pdf->Output($filename, 'F');
-                $this->updatePathPayslip($id);
+                //$this->updatePathPayslip($id);
             }
 
     private function updatePathPayslip($id){
@@ -129,7 +129,8 @@ class ApiPayslip extends Api {
                 $allowed = ["idPayslip", "idAdmin" ,'paid', "idDeliveryman"];
 
                 if( count(array_diff(array_keys($data), $allowed)) > 0 ) {
-                    http_response_code(400);
+                    echo "coucou";
+		    http_response_code(400);
                     exit(0);
                 }
 
@@ -167,9 +168,9 @@ class ApiPayslip extends Api {
                 $filename = $_SERVER['DOCUMENT_ROOT'] . '/uploads/paidPayslip/' . $data["idPayslip"] . '.pdf' ;
                 $pdf->Output($filename, 'F');
 
-                self::$_set[] = 'pdfPaidPayslipPath = ?' ;
-                self::$_params[] =  '/uploads/paidPayslip/' . $data["idPayslip"] . '.pdf' ;
-                $this->patch('PAYSLIP', $data["idPayslip"]) ;
+               // self::$_set[] = 'pdfPaidPayslipPath = ?' ;
+               // self::$_params[] =  '/uploads/paidPayslip/' . $data["idPayslip"] . '.pdf' ;
+               //$this->patch('PAYSLIP', $data["idPayslip"]) ;
                 require_once("ApiDeliveryman.php");
                 $email = new ApiDeliveryMan([$data["idDeliveryman"]], "GET");
                 $email = $email->getDelivery($data["idDeliveryman"]);

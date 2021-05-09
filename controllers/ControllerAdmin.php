@@ -360,7 +360,7 @@ class ControllerAdmin {
     }
 
     private function paidPayslip($url) {
-        $this->_view = new View('back');
+        $this->_view = new View('Back');
         $this->_payslipManager = new PayslipManager;
         $payslip = $this->_payslipManager->getPayslip(['id','grossAmount', 'bonus', 'datePay', 'paid', 'deliveryman']);
 

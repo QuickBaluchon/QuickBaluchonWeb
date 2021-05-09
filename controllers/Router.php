@@ -10,8 +10,7 @@ class Router {
         try {
 
             spl_autoload_register(function ($class) {
-                if (substr_compare($class, "SendGrid", 0, strlen("SendGrid")))
-                    require_once('models/' . $class . '.php' );
+                require_once('models/' . $class . '.php' );
             });
 
             $languagesManager = new LanguagesManager() ;

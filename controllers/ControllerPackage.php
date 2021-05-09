@@ -44,8 +44,7 @@ class ControllerPackage {
         $this->_packageManager = new PackageManager() ;
         $this->_id = intval($id) ;
         $this->_data = $this->_packageManager->getPackage($this->_id, ['PACKAGE.id', 'PACKAGE.status', 'dateDeposit']) ;
-
-        return count($this->_data) ;
+        return count($this->_data);
     }
 
     private function deliverPackage () {
@@ -54,7 +53,7 @@ class ControllerPackage {
     }
 
     private function packageData () {
-        $package = $this->_packageManager->getPackage($this->_id, ['PACKAGE.id', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'client', 'nameRecipient']) ;
+        $package = $this->_packageManager->getPackage($this->_id, ['PACKAGE.id', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'client', 'nameRecipient', "signature"]) ;
         $this->_view = new View('Reception') ;
         return $package;
     }

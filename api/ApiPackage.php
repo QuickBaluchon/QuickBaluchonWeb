@@ -89,7 +89,7 @@ class ApiPackage extends Api {
             $columns[] = 'PRICELIST.ExpressPrice, ' . 'PRICELIST.StandardPrice';
             self::$_inner = explode(',',$_GET['inner']);
         }
-        $columns = ['PACKAGE.id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'excelPath', 'dateDeposit', 'nameRecipient'];
+        $columns = ['PACKAGE.id', 'client', 'ordernb', 'weight', 'volume', 'address', 'email', 'delay', 'dateDelivery', 'PACKAGE.status', 'excelPath', 'dateDeposit', 'nameRecipient', "signature"];
 
         self::$_where[] = 'PACKAGE.id = ?';
         self::$_params[] = $id;

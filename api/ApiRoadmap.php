@@ -226,7 +226,6 @@ class ApiRoadmap extends Api
                 'order' => 'radius desc'
             ], 'getListDelivery') ;
 
-            echo "START DISPATCHING // ";
 
             if ($w['active'] == 1) {
                 $dailyRoadmaps = $this->dispatchPackages($packages, $deliverymen, $w['address']);
@@ -246,7 +245,6 @@ class ApiRoadmap extends Api
 
     private function dispatchPackages (array $packages, array $deliverymen, string $warehouseAddress) :array {
         $nbDeliverymen = count($deliverymen);
-        $nbPackages = count($packages);
         $roadmaps = [];
         foreach ($deliverymen as $d) {
             $roadmaps[] = [
@@ -269,7 +267,6 @@ class ApiRoadmap extends Api
         $countGoogle = 0;
         $r = 0;
         for ($p = 0 ; $p < count($packages) ; ++$p) {
-            var_dump($p);
             if (!isset($packages[$p]['isInRoadmap'])) {
                 $dtFromWarehouse = $this->computeRoute([$warehouseAddress], [$packages[$p]['address']]);
                 if ($dtFromWarehouse != null) {
@@ -295,7 +292,7 @@ class ApiRoadmap extends Api
             }
             $count++;
         }
-        echo "COUNT GOOGLE $countGoogle / COUNT ITER $count // ";
+        //echo "COUNT GOOGLE $countGoogle / COUNT ITER $count // ";
         $roadmaps = $this->recursiveRoadmaps($roadmaps, $iter + 1, $packages, $nbDeliverymen, $warehouseAddress);
         return $roadmaps;
     }
@@ -339,7 +336,6 @@ class ApiRoadmap extends Api
         $this->resetParams();
     }
 
-    //to do if opti
     private function sortPackagesByDistance (array $packages) {
         $count = 0 ;
         for ($i = 0 ; $i < count($packages) ; ++$i) {
@@ -349,8 +345,6 @@ class ApiRoadmap extends Api
 
             if ($destinations != null) {
                 $routes = $this->computeRoute([$packages[$i]['address']], $destinations);
-                echo "ROUTES SORTING // ";
-                var_dump($routes);
                 $closestStopIndex = $this->findClosestStop($routes[0]);
 
                 //Switching order of packages if necessary
@@ -366,11 +360,9 @@ class ApiRoadmap extends Api
                 $packages[$i]['distanceNextHop'] = 0.0;
             }
             $count ++;
-            echo "PACKAGES SORTING // ";
 
         }
-        var_dump($packages);
-        echo "TOTAL ITER FOR SORTING : $count / " . count($packages) ;
+        //echo "TOTAL ITER FOR SORTING : $count / " . count($packages) ;
         return $packages;
     }
 
@@ -410,8 +402,6 @@ class ApiRoadmap extends Api
                 $o++;
             }
         }
-        echo "DISTANCE AND TIME";
-        var_dump($distanceAndTime);
         return $distanceAndTime;
     }
 

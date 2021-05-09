@@ -42,8 +42,6 @@ class ApiRoadmap extends Api
     }
 
     public function getListRoadmaps(): array {
-        if($this->_method != 'GET') $this->catError(405);
-
         //$this->authentication(['admin']);
         if (!isset($_GET['fields']))
             $columns = ['ROADMAP.id', 'kmTotal', 'timeTotal', 'nbPackages', 'currentStop', 'dateRoute', 'deliveryman'];
@@ -68,6 +66,11 @@ class ApiRoadmap extends Api
             $date = explode('-', $_GET['date']);
             self::$_where[] = 'MONTH(dateRoute) = ?';
             self::$_params[] = $date[1];
+        }
+
+        if(isset($_GET['finished'])) {
+            self::$_where[] = 'finished = ?';
+            self::$_params[] = $_GET['finished'];
         }
 
         self::$_order = 'dateRoute DESC';
@@ -198,6 +201,16 @@ class ApiRoadmap extends Api
     }
 
     public function createDailyRoadmaps () {
+        //First cancel any left roadmap from previous day
+        $_GET = [ 'finished' => 0 ] ;
+        $prevRoadmaps = $this->getListRoadmaps();
+        foreach ($prevRoadmaps as $pr) {
+            $this->resetParams();
+            $this->deleteRoadmap($pr['id']);
+        }
+        $this->resetParams();
+
+        //Then create daily roadmaps
         $warehouses = $this->getExternData('ApiWarehouse', [], 'getListWarehouse') ;
         foreach ($warehouses as $w) {
             $packages = $this->getExternData('ApiPackage', [

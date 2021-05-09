@@ -1,4 +1,4 @@
 #!/bin/bash
 
 curl -X POST "http://localhost/api/bill"
-date >> dailyBillsLogs.txt
+date >> /var/www/html/cron/dailyBillsLogs.txt

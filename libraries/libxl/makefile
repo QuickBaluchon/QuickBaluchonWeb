@@ -33,6 +33,7 @@ CFLAGS = -I include_c -L $(LIBPATH) -lxl -Wl,-rpath,$(LIBPATH)
 # 	$(CC) -o performance performance.c $(CFLAGS)
 
 serverC: main.c
+	#install_name_tool -change libxl.dylib /var/www/html/libxl.dylib /var/www/html/readxl
 	$(CC) -o ../../readxl main.c $(CFLAGS) -l curl
 
 clean:

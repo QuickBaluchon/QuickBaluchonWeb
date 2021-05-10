@@ -24,6 +24,10 @@
       "itemName": "Livraisons",
       "svg": "box-seam"
     },
+    "paidPayslip": {
+      "itemName": "Fiches de paie",
+      "svg": "paidPayslip"
+    },
     "languages": {
       "itemName": "Langue",
       "svg": "open-book"
@@ -53,6 +57,10 @@
     "deliveries": {
       "itemName": "Deliveries",
       "svg": "box-seam"
+    },
+    "paidPayslip": {
+      "itemName": "Payslips",
+      "svg": "paidPayslip"
     },
     "languages": {
       "itemName": "Languages",

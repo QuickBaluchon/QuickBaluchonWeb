@@ -15,7 +15,7 @@ extract($this->_content) ;
           <h1 class="display-4"><?= $TitleDelivery ?></h1>
           <p class="lead"><?= $TextDelivery ?></p>
           <p class="lead">
-            <a class="btn btn-round btn-primary btn-lg" href="<?= WEB_ROOT . 'login#signup-links' ?>" role="button"><?= $ButtonBegin ?></a>
+            <a class="btn btn-round btn-danger btn-lg" href="<?= WEB_ROOT . 'login#signup-links' ?>" role="button"><?= $ButtonBegin ?></a>
           </p>
         </div>
       </div>

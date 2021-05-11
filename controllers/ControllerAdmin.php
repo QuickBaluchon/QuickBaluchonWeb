@@ -162,7 +162,7 @@ class ControllerAdmin {
         if ($list != null) {
             foreach ($list as $d) {
                 if($d['employed'] == 1)
-                    $buttons[] = '<button type="button" class="btn btn-danger btn-sm" onclick="dismissDeliveryman(' . $d['id'] . ')">Licensier</button>';
+                    $buttons[] = '<button type="button" class="btn btn-danger btn-sm" onclick="dismissDeliveryman(' . $d['id'] . ')">Licencier</button>';
                 elseif($d['employEnd'] == null)
                     $buttons[] = "<span>Candidat</span>";
                 else
@@ -351,7 +351,7 @@ class ControllerAdmin {
         $this->_view = new View('Back');
 
         $this->_roadmapsManager = new RoadmapManager ;
-        $join = ['deliveryman', 'DELIVERYMAN.id', 'ROADMAP.deliveryman'];
+        $join = ['DELIVERYMAN', 'DELIVERYMAN.id', 'ROADMAP.deliveryman'];
         $fields = ['firstname', 'lastname', 'kmTotal', 'timeTotal', 'finished', 'nbPackages','currentStop', 'dateRoute'];
         $roadmaps = $this->_roadmapsManager->getRoadmaps($fields, $join, date("Y-m-d"));
 

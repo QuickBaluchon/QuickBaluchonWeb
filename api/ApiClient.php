@@ -159,21 +159,22 @@ class ApiClient extends Api
         $url = array_slice($url, 1);
         $userID = $url[0] ;
         $nbPkg = $url[1] ;
-        $path = 'uploads/excel/';
+        $path = $_SERVER['DOCUMENT_ROOT'] . '/uploads/excel/';
+
+
 
         if (isset($_FILES) && !empty($_FILES) && isset($url[0]) && !empty($url[0])) {
 
             if (!file_exists($path)) {
                 mkdir($path, 0777, true);
             }
-
+            $_ENV['LD_LIBRARY_PATH'] = '/var/www/html/libraries/libxl/lib/:/var/www/html/libraries/libxl/lib64/';
             $filepath = $path . $_FILES['excel']['name'];
             move_uploaded_file($_FILES['excel']['tmp_name'], $filepath);
-
-            $exec = "./readxl $_FILES[excel][name] $userID $nbPkg";
+            $exec = "/var/www/html/readxl " . $_FILES['excel']['name'] . " $userID $nbPkg" ;
             exec($exec, $outputs, $rescode);
             print_r( $outputs );
-            echo '  rescode: ' . $rescode ;
+            echo '  rescode: ' . $rescode . "; " ;
 
         } else {
             echo 'Error with the Excel file';

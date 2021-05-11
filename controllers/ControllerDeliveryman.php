@@ -76,8 +76,17 @@ class ControllerDeliveryman
             $delivery = $this->_DeliverymanManager->getDelivery($url[0], ["firstname", "lastname", "phone", "email", "licenseImg", "registrationIMG", "volumeCar", "radius"]);
             $delivery['id'] = $url[0];
         }
-        
-        $profile = $this->_view->generateTemplate('deliveryman_profile', $delivery);
+
+        if( $delivery != NULL && count($delivery) > 1 ){
+            $profile = $this->_view->generateTemplate('deliveryman_profile', $delivery);
+        }
+        else {
+            http_response_code(404);
+            $profile = $this->_view->generateTemplate('Error', ['code'=>404]);
+            $delivery['lastname'] = '';
+        }
+
+
         $this->_view->generateView(['content' => $profile, 'name' => $delivery['lastname']]);
     }
 

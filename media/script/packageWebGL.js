@@ -177,7 +177,6 @@ function checkCollision () {
 function checkRoadExit () {
     let roadOffset = 400;
     if (truck.position.x < -1000 - roadOffset || truck.position.x > -1000 + roadOffset) {
-        console.log("ok");
         resetTruck();
     }
 }
@@ -227,10 +226,9 @@ function render(){
 }
 
 function removeMonster(){
-    console.log("ok");
+
 
     for (i = 0 ; i < monsterNb ; ++i) {
-        console.log(intersection[0].object.matrixWorld.elements[12]);
 
         if (parseInt(intersection[0].object.matrixWorld.elements[12]) == parseInt(monsters[i].position.x) &&
             parseInt(intersection[0].object.matrixWorld.elements[14]) == parseInt(monsters[i].position.z)) {
@@ -466,7 +464,6 @@ function createMonster(i) {
 
     const loader = new GLTFLoader(loadingManager);
     loader.load("../media/webGl/monster/scene.gltf", function(obj){
-        console.log('ok monster');
 
 
         monsterMixers[i] = new THREE.AnimationMixer( obj.scene );
@@ -501,7 +498,6 @@ function createRoad (i) {
 
     const loader = new GLTFLoader(loadingManager);
     loader.load("../media/webGl/road/scene.gltf", function(obj){
-        console.log('ok road');
 
         //animation
         roadMixers[i] = new THREE.AnimationMixer( obj.scene );

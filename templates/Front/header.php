@@ -16,7 +16,7 @@
         <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><?= $LinkDownload ; ?></a>
+                    <a class="nav-link" href="/download"><?= $LinkDownload ; ?></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/prices"><?= $LinkPrice ; ?></a>

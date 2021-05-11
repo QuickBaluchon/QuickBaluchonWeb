@@ -70,12 +70,25 @@ class ApiStop extends Api {
     }
 
     public function updateStop ($pkg) {
-        $sql = "UPDATE STOP SET delivery = now() WHERE package = $pkg AND delivery IS NULL" ;
+        self::$_columns[] = 'MAX(roadmap) AS rdm';
+
+        self::$_where[] = 'package = ?';
+        self::$_params[] = $pkg;
+        self::$_where[] = 'delivery IS NULL';
+        $roadmap = $this->get('STOP');
+        if (count($roadmap) != 0)
+            $roadmap = $roadmap[0]['rdm'];
+        else {
+            http_response_code(404);
+            return;
+        }
+        $this->resetParams();
+
+        $sql = "UPDATE STOP SET delivery = now() WHERE package = $pkg AND roadmap = $roadmap" ;
         $stmt = $this->getDb()->prepare($sql);
         if ($stmt) {
             $success = $stmt->execute(self::$_params);
             if ($success) {
-                // OK
                 $this->resetParams();
                 http_response_code(200);
             } else {
@@ -84,5 +97,8 @@ class ApiStop extends Api {
         } else {
             http_response_code(500);
         }
+
+        self::$_set[] = 'currentStop = currentStop + 1';
+        $this->patch('ROADMAP', $roadmap);
     }
 }

@@ -24,3 +24,18 @@
   display: none;
   width: inherit;
 }
+
+.btn-primary {
+  background-color: #3D405B; !important;
+  border-color: #3D405B; !important;
+}
+
+.btn-danger {
+  background-color: #E07A5F; !important;
+  border-color: #E07A5F; !important;
+}
+
+.btn-success {
+  background-color: #81B29A; !important;
+  border-color: #81B29A; !important;
+}

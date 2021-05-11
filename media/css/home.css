@@ -2,8 +2,8 @@
 /* HERO BANNER */
 #heroBanner-home{ margin-top: 100px; margin-bottom: 100px; }
 
-#heroBanner-img-delivery{
-  width: 580px;
+#heroBanner-img-delivery, #heroBanner-img-macbook{
+  width: 400px;
   display: none;
 }
 

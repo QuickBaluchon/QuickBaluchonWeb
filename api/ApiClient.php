@@ -168,17 +168,11 @@ class ApiClient extends Api
             if (!file_exists($path)) {
                 mkdir($path, 0777, true);
             }
-$_ENV['LD_LIBRARY_PATH'] = '/var/www/html/libraries/libxl/lib/:/var/www/html/libraries/libxl/lib64/';
-//var_dump($_ENV);
-//	Ãputenv('LD_LIBRARY_PATH=/var/www/html/libraries/libxl/lib/:/var/www/html/libraries/libxl/lib64/');
+            $_ENV['LD_LIBRARY_PATH'] = '/var/www/html/libraries/libxl/lib/:/var/www/html/libraries/libxl/lib64/';
             $filepath = $path . $_FILES['excel']['name'];
             move_uploaded_file($_FILES['excel']['tmp_name'], $filepath);
-	  //  $exec = "bash export LD_LIBRARY_PATH=/var/www/html/libraries/libxl/lib/:/var/www/html/libraries/libxl/lib64/;";
-            //$exec = "./serverC " . $_FILES['excel']['name'] . " $userID $nbPkg >> err.txt";
-//$exec = 'bash /var/www/html/serverC.sh ' . $_FILES['excel']['name'] . " $userID $nbPkg";
-            //echo $exec;
-	    $exec = "/var/www/html/readxl " . $_FILES['excel']['name'] . " $userID $nbPkg" ;
-	    exec($exec, $outputs, $rescode);
+            $exec = "/var/www/html/readxl " . $_FILES['excel']['name'] . " $userID $nbPkg" ;
+            exec($exec, $outputs, $rescode);
             print_r( $outputs );
             echo '  rescode: ' . $rescode . "; " ;
 
